@@ -159,7 +159,26 @@ function renderFullCart(){
  $$('[data-fremove-slug]').forEach(b=>b.onclick=()=>removeFromCart(b.dataset.fremoveSlug,b.dataset.fremoveVariant));
  tickReservation();
 }
-function initCheckout(){const f=$('#checkoutForm');if(f)f.onsubmit=e=>{e.preventDefault();$('#checkoutStatus').textContent='Checkout UI is complete. Connect the server-side crypto provider before accepting payments.'};renderCheckout()}
+function initCheckout(){
+ const f=$('#checkoutForm');if(!f){renderCheckout();return}
+ const country=$('#country');
+ if(country){
+   const codes=["US","CA","MX","GB","IE","FR","DE","ES","PT","IT","NL","BE","LU","CH","AT","DK","SE","NO","FI","IS","PL","CZ","SK","HU","RO","BG","GR","HR","SI","RS","BA","ME","MK","AL","EE","LV","LT","UA","MD","BY","RU","TR","CY","MT","AD","MC","SM","VA","LI","AU","NZ","JP","KR","CN","HK","MO","TW","SG","MY","TH","VN","PH","ID","BN","KH","LA","MM","IN","PK","BD","LK","NP","BT","MV","AF","KZ","UZ","TM","KG","TJ","MN","AE","SA","QA","KW","BH","OM","IL","JO","LB","SY","IQ","IR","YE","GE","AM","AZ","ZA","EG","MA","DZ","TN","LY","SD","SS","ET","ER","DJ","SO","KE","UG","TZ","RW","BI","CD","CG","GA","GQ","CM","CF","TD","NG","NE","ML","BF","SN","GM","GW","GN","SL","LR","CI","GH","TG","BJ","MR","CV","ST","AO","ZM","ZW","BW","NA","SZ","LS","MZ","MW","MG","MU","SC","KM","BR","AR","CL","PE","BO","PY","UY","CO","VE","EC","GY","SR","GF","PA","CR","NI","HN","SV","GT","BZ","CU","DO","HT","JM","TT","BB","BS","GD","LC","VC","AG","DM","KN","PR","VI","BM","GL","FO","AI","AW","CW","SX","BQ","KY","TC","VG","MS","FK","GI","JE","GG","IM","AX","SJ","PM","PF","NC","WF","FJ","PG","SB","VU","WS","TO","KI","TV","NR","PW","FM","MH","CK","NU","TK","GU","MP","AS","UM","CC","CX","NF","HM","TF","AQ","BV","SH","IO","PS","EH"];
+   let display=null;try{display=new Intl.DisplayNames([navigator.language||'en'],{type:'region'})}catch(e){}
+   const options=codes.map(code=>({code,name:display?display.of(code):code})).filter(x=>x.name).sort((a,b)=>a.name.localeCompare(b.name));
+   country.insertAdjacentHTML('beforeend',options.map(x=>'<option value="'+x.code+'">'+x.name+'</option>').join(''));
+ }
+ $('.checkout-method input[type="radio"]').forEach(input=>input.addEventListener('change',()=>{
+   const name=input.name;$('.checkout-method input[name="'+name+'"]').forEach(r=>r.closest('.checkout-method').classList.toggle('selected',r.checked))
+ }));
+ f.onsubmit=e=>{
+   e.preventDefault();
+   const status=$('#checkoutStatus');
+   if(!cart.length){status.textContent='Your cart is empty. Add a product before continuing to payment.';return}
+   status.textContent='Checkout details are complete. Connect the production payment backend to create the secure payment session.';
+ };
+ renderCheckout();
+}
 function bindGlobal(){
  $('.menu-trigger').onclick=openMenu;$('.menu-close').onclick=closeMenu;$('.menu-overlay').onclick=closeMenu;$$('.cart-trigger').forEach(b=>b.onclick=openCart);$('.cart-close').onclick=closeCart;$('.cart-overlay').onclick=closeCart;$$('[data-year]').forEach(e=>e.textContent=new Date().getFullYear());renderCart();startReservationTimer()
 }
