@@ -169,7 +169,13 @@ function initCheckout(){
    country.insertAdjacentHTML('beforeend',options.map(x=>'<option value="'+x.code+'">'+x.name+'</option>').join(''));
  }
  $('.checkout-method input[type="radio"]').forEach(input=>input.addEventListener('change',()=>{
-   const name=input.name;$('.checkout-method input[name="'+name+'"]').forEach(r=>r.closest('.checkout-method').classList.toggle('selected',r.checked))
+   const name=input.name;
+   $('.checkout-method input[name="'+name+'"]').forEach(r=>r.closest('.checkout-method').classList.toggle('selected',r.checked));
+ }));
+ $('.checkout-method').forEach(card=>card.addEventListener('click',()=>{
+   const input=card.querySelector('input[type="radio"]');
+   if(!input||input.disabled)return;
+   if(!input.checked){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}))}
  }));
  f.onsubmit=e=>{
    e.preventDefault();
