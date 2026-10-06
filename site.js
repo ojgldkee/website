@@ -133,25 +133,35 @@ function renderProduct(){
    '<div class="purchase-box" id="purchaseBox">'+
     '<label class="option-label" for="variantSelect">Choose size</label><div class="variant-select-wrap"><select id="variantSelect" class="variant-select">'+variants.map((v,i)=>'<option value="'+v.label+'" '+(i===0?'selected':'')+'>'+v.label+' — '+money(v.price)+'</option>').join('')+'</select><span class="variant-chevron">⌄</span></div>'+
     '<span id="selectedVariantLabel" class="selected-variant-hidden">'+first.label+'</span>'+
-    '<label class="option-label">Quantity</label><div class="qty-box qty-box-v2"><button id="prodDec" type="button" aria-label="Decrease quantity">−</button><span id="prodQty">1</span><button id="prodInc" type="button" aria-label="Increase quantity">+</button></div>'+
-    '<div class="purchase-actions"><button class="product-add" id="prodAdd" type="button">Add to cart</button><button class="buy-now" id="buyNow" type="button">Buy now</button></div>'+
-    '<div class="purchase-microcopy"><span>Secure checkout</span><span>•</span><span>Tracked shipping options at checkout</span></div>'+
+    '<label class="option-label">Quantity</label><div class="qty-box qty-box-v3"><button id="prodDec" type="button" aria-label="Decrease quantity">−</button><span id="prodQty">1</span><button id="prodInc" type="button" aria-label="Increase quantity">+</button></div>'+
+    '<div class="purchase-actions"><button class="product-add" id="prodAdd" type="button">Add to cart</button><button class="buy-now coa-button" id="viewCoa" type="button">View COA</button></div>'+
+    '<div class="purchase-quick-trust">'+
+      '<div><span class="quick-trust-icon">'+icon('delivery')+'</span><strong>U.S. delivery</strong><small>3–5 business days</small></div>'+
+      '<div><span class="quick-trust-icon">'+icon('shield')+'</span><strong>Secure checkout</strong><small>Protected payment flow</small></div>'+
+      '<div><span class="quick-trust-icon">'+icon('track')+'</span><strong>Ships from Florida</strong><small>Tracked fulfillment</small></div>'+
+    '</div>'+
     '<div class="purchase-benefits">'+
       '<div class="purchase-benefit"><span class="purchase-benefit-icon">'+icon('delivery')+'</span><div><strong>Same-day shipping</strong><small>Eligible orders placed before '+shippingCutoff+' are prepared for same-day shipment.</small></div></div>'+
       '<div class="purchase-benefit"><span class="purchase-benefit-icon">'+icon('shield')+'</span><div><strong>'+guaranteeDays+'-day money-back guarantee</strong><small>Eligible orders are covered under the store refund policy.</small></div></div>'+
     '</div>'+
    '</div>'+
-   '<div class="product-accordions"><details open><summary>Product information</summary><p>'+p.description+'</p></details><details><summary>Specifications</summary><div class="spec-table">'+p.specs.map(x=>'<div class="spec-row"><span>'+x[0]+'</span><span>'+x[1]+'</span></div>').join('')+'</div></details><details><summary>Documentation</summary><p>'+p.document+'. Replace this with the final product documentation link.</p></details><details><summary>Shipping & support</summary><div class="shipping-details-list"><div class="shipping-detail-row"><span>U.S. standard shipping</span><strong>3-5 business days</strong></div><div class="shipping-detail-row"><span>U.S. priority shipping</span><strong>1-3 business days</strong></div><div class="shipping-detail-row"><span>Worldwide shipping</span><strong>6-8 business days</strong></div></div><p class="shipping-detail-note">Estimated transit times may vary by destination or carrier.</p></details></div>'+
+   '<div class="product-accordions premium-product-accordions">'+
+    '<details class="product-detail-panel" name="product-detail" open><summary><span>Product information</span><span class="detail-toggle">+</span></summary><div class="detail-body"><p class="detail-lead">'+p.description+'</p><div class="detail-tags"><span>Research use only</span><span>Batch documented</span><span>Florida fulfillment</span></div></div></details>'+
+    '<details class="product-detail-panel" name="product-detail"><summary><span>Specifications</span><span class="detail-toggle">+</span></summary><div class="detail-body"><div class="spec-table spec-table-v2">'+p.specs.map(x=>'<div class="spec-row"><span>'+x[0]+'</span><strong>'+x[1]+'</strong></div>').join('')+'</div></div></details>'+
+    '<details class="product-detail-panel" id="productDocumentation" name="product-detail"><summary><span>Documentation</span><span class="detail-toggle">+</span></summary><div class="detail-body"><p class="detail-lead">Certificate of Analysis (COA) and batch documentation are organized by product lot for this listing.</p></div></details>'+
+    '<details class="product-detail-panel" name="product-detail"><summary><span>Shipping & support</span><span class="detail-toggle">+</span></summary><div class="detail-body"><div class="shipping-details-list"><div class="shipping-detail-row"><span>U.S. standard shipping</span><strong>3–5 business days</strong></div><div class="shipping-detail-row"><span>U.S. priority shipping</span><strong>1–3 business days</strong></div><div class="shipping-detail-row"><span>Worldwide shipping</span><strong>6–8 business days</strong></div></div><p class="shipping-detail-note">Estimated transit times may vary by destination or carrier.</p></div></details>'+
+   '</div>'+
   '</div>'+
- '</div>'+'<section class="why-brand-section">'+
+ '</div>'+
+ '<section class="why-brand-section">'+
   '<div class="why-brand-head"><p class="eyebrow">WHY FORMA RESEARCH</p><h2>Why customers choose Forma Research.</h2><p>Clear product information, straightforward fulfillment, and a simpler buying experience from cart to delivery.</p></div>'+
   '<div class="why-brand-grid">'+
-   '<article><span class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v11H3z"/><path d="M14 9h4l3 4v4h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg></span><div><strong>Ships from Florida</strong><small>Domestic fulfillment with tracked shipping options.</small></div></article>'+
-   '<article><span class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 7 8-4 8 4-8 4-8-4Z"/><path d="m4 7v10l8 4 8-4V7"/><path d="M12 11v10"/></svg></span><div><strong>Free shipping $250+</strong><small>Qualifying orders unlock free shipping automatically.</small></div></article>'+
-   '<article><span class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg></span><div><strong>Batch documentation</strong><small>Product documentation is kept alongside the catalog.</small></div></article>'+
-   '<article><span class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v11H3z"/><path d="M14 9h4l3 4v4h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg></span><div><strong>Same-day fulfillment</strong><small>Eligible orders placed before 2 PM are prepared the same day.</small></div></article>'+
-   '<article><span class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.6 2.8 8.6 7 10 4.2-1.4 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><div><strong>30-day guarantee</strong><small>Eligible orders are covered under the store refund policy.</small></div></article>'+
-   '<article><span class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v12H8l-4 3V5Z"/><path d="M8 9h8M8 13h5"/></svg></span><div><strong>Responsive support</strong><small>Help with orders, shipping, and product information.</small></div></article>'+
+   '<article><span class="why-icon">'+icon('delivery')+'</span><div><strong>Ships from Florida</strong><small>Domestic fulfillment with tracked shipping options.</small></div></article>'+
+   '<article><span class="why-icon">'+icon('products')+'</span><div><strong>Free shipping $250+</strong><small>Qualifying orders unlock free shipping automatically.</small></div></article>'+
+   '<article><span class="why-icon">'+icon('document')+'</span><div><strong>Batch documentation</strong><small>Product documentation is kept alongside the catalog.</small></div></article>'+
+   '<article><span class="why-icon">'+icon('track')+'</span><div><strong>Same-day fulfillment</strong><small>Eligible orders placed before 2 PM are prepared the same day.</small></div></article>'+
+   '<article><span class="why-icon">'+icon('shield')+'</span><div><strong>30-day guarantee</strong><small>Eligible orders are covered under the store refund policy.</small></div></article>'+
+   '<article><span class="why-icon">'+icon('contact')+'</span><div><strong>Responsive support</strong><small>Help with orders, shipping, and product information.</small></div></article>'+
   '</div>'+
  '</section>'+
  '<div class="sticky-atc premium-sticky-atc product-sticky-v2" id="stickyAtc"><div class="sticky-reserve" data-reserve-wrap hidden><span>Cart reserved</span><strong data-reserve-time>10:00</strong></div><div class="sticky-product"><img src="'+p.image+'" alt=""><div class="sticky-info"><strong>'+p.name+'</strong><small><span id="stickyVariant">'+first.label+'</span> · <span id="stickyPrice">'+money(first.price)+'</span></small></div><div class="sticky-qty"><button id="stickyDec" type="button">−</button><span id="stickyQty">1</span><button id="stickyInc" type="button">+</button></div><button id="stickyAdd" class="sticky-add-btn" type="button">Add to cart</button></div></div>';
@@ -174,7 +184,11 @@ function renderProduct(){
  if($('#stickyInc'))$('#stickyInc').onclick=()=>{q++;syncQty()};if($('#stickyDec'))$('#stickyDec').onclick=()=>{q=Math.max(1,q-1);syncQty()};
  $('#prodAdd').onclick=()=>addToCart(p.slug,q,selected.label,true);
  $('#stickyAdd').onclick=()=>addToCart(p.slug,q,selected.label,true);
- $('#buyNow').onclick=()=>{addToCart(p.slug,q,selected.label,false);location.href='checkout.html'};
+
+ const detailEls=$$('.product-accordions details');
+ detailEls.forEach(d=>d.addEventListener('toggle',()=>{if(d.open)detailEls.forEach(o=>{if(o!==d)o.open=false})}));
+ const viewCoa=$('#viewCoa');
+ if(viewCoa)viewCoa.onclick=()=>{const doc=$('#productDocumentation');if(doc){doc.open=true;doc.scrollIntoView({behavior:'smooth',block:'start'})}};
 
  const track=$('#galleryTrack'),slides=$$('.product-slide',track),dots=$$('.gallery-dot');
  const goTo=i=>{currentSlide=(i+gallery.length)%gallery.length;slides[currentSlide].scrollIntoView({behavior:'smooth',inline:'start',block:'nearest'});dots.forEach((d,n)=>d.classList.toggle('active',n===currentSlide))};
