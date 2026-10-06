@@ -113,11 +113,47 @@ function renderProduct(){
  const variants=productVariants(p),gallery=(Array.isArray(p.gallery)&&p.gallery.length?p.gallery:[p.image]),first=variants[0];
  let selected=first,q=1,currentSlide=0;
  document.title=p.name+' — '+S.name;
- root.innerHTML='<div class="product-breadcrumb"><a href="index.html">Home</a><span>›</span><a href="collections.html">Products</a><span>›</span><strong>'+p.name+'</strong></div><div class="product-layout product-layout-v2"><div class="product-gallery"><div class="gallery-shell"><button class="gallery-arrow gallery-prev" type="button" aria-label="Previous image">←</button><div class="product-gallery-track" id="galleryTrack">'+gallery.map((img,i)=>'<figure class="product-slide" data-slide="'+i+'"><img src="'+img+'" alt="'+p.name+' image '+(i+1)+'"></figure>').join('')+'</div><button class="gallery-arrow gallery-next" type="button" aria-label="Next image">→</button><div class="gallery-dots">'+gallery.map((_,i)=>'<button type="button" class="gallery-dot '+(i===0?'active':'')+'" data-dot="'+i+'" aria-label="Go to image '+(i+1)+'"></button>').join('')+'</div></div></div><div class="product-gallery-trust"><div><span class="benefit-icon">'+icon('shield')+'</span><strong>99%+ purity</strong><small>Show only with supporting COA</small></div><div><span class="benefit-icon">'+icon('document')+'</span><strong>COA included</strong><small>Documentation available</small></div><div><span class="benefit-icon">'+icon('delivery')+'</span><strong>U.S. shipped</strong><small>Use only if accurate for fulfillment</small></div></div></div><div class="product-info product-info-v2"><p class="eyebrow">'+p.category+'</p><h1>'+p.name+'</h1><p class="product-sub">'+p.subtitle+'</p><div class="product-main-price" id="productPrice"><strong>'+money(first.price)+'</strong>'+(first.compareAt?'<s>'+money(first.compareAt)+'</s>':'')+'</div><p class="product-sub product-description">'+p.description+'</p><div class="purchase-box" id="purchaseBox"><label class="option-label" for="variantSelect">Choose size</label><div class="variant-select-wrap"><select id="variantSelect" class="variant-select">'+variants.map((v,i)=>'<option value="'+v.label+'" '+(i===0?'selected':'')+'>'+v.label+' — '+money(v.price)+'</option>').join('')+'</select><span class="variant-chevron">⌄</span></div><div class="selected-variant-note"><span>Lowest size selected automatically</span><strong id="selectedVariantLabel">'+first.label+'</strong></div><label class="option-label">Quantity</label><div class="qty-box qty-box-v2"><button id="prodDec" type="button" aria-label="Decrease quantity">−</button><span id="prodQty">1</span><button id="prodInc" type="button" aria-label="Increase quantity">+</button></div><div class="purchase-actions"><button class="product-add" id="prodAdd" type="button">Add to cart</button><button class="buy-now" id="buyNow" type="button">Buy now</button></div><div class="purchase-microcopy"><span>Secure checkout</span><span>•</span><span>Shipping calculated at checkout</span></div></div><div class="product-accordions"><details open><summary>Product information</summary><p>'+p.description+'</p></details><details><summary>Specifications</summary><div class="spec-table">'+p.specs.map(x=>'<div class="spec-row"><span>'+x[0]+'</span><span>'+x[1]+'</span></div>').join('')+'</div></details><details><summary>Documentation</summary><p>'+p.document+'. Replace this with the final product documentation link.</p></details><details><summary>Shipping & support</summary><p>Shipping options and final availability are shown at checkout. Visit support if you need help before ordering.</p></details></div></div></div><div class="sticky-atc premium-sticky-atc product-sticky-v2" id="stickyAtc"><div class="sticky-reserve" data-reserve-wrap hidden><span>Cart reserved</span><strong data-reserve-time>10:00</strong></div><div class="sticky-product"><img src="'+p.image+'" alt=""><div class="sticky-info"><strong>'+p.name+'</strong><small><span id="stickyVariant">'+first.label+'</span> · <span id="stickyPrice">'+money(first.price)+'</span></small></div><div class="sticky-qty"><button id="stickyDec" type="button">−</button><span id="stickyQty">1</span><button id="stickyInc" type="button">+</button></div><button id="stickyAdd" class="sticky-add-btn" type="button">Add to cart</button></div></div>';
+ const shippingCutoff=(S.sameDayShipping&&S.sameDayShipping.cutoff)||'2 PM';
+ const guaranteeDays=S.moneyBackDays||30;
+ root.innerHTML='<div class="product-breadcrumb"><a href="index.html">Home</a><span>›</span><a href="collections.html">Products</a><span>›</span><strong>'+p.name+'</strong></div>'+
+ '<div class="product-layout product-layout-v2">'+
+  '<div class="product-gallery">'+
+   '<div class="gallery-shell"><span class="product-sale-pill" id="productSalePill" hidden>SALE</span><button class="gallery-arrow gallery-prev" type="button" aria-label="Previous image">←</button><div class="product-gallery-track" id="galleryTrack">'+gallery.map((img,i)=>'<figure class="product-slide" data-slide="'+i+'"><img src="'+img+'" alt="'+p.name+' image '+(i+1)+'"></figure>').join('')+'</div><button class="gallery-arrow gallery-next" type="button" aria-label="Next image">→</button><div class="gallery-dots">'+gallery.map((_,i)=>'<button type="button" class="gallery-dot '+(i===0?'active':'')+'" data-dot="'+i+'" aria-label="Go to image '+(i+1)+'"></button>').join('')+'</div></div>'+
+   '<div class="product-gallery-trust"><div><span class="benefit-icon">'+icon('shield')+'</span><strong>99%+ purity</strong><small>Show only with supporting COA</small></div><div><span class="benefit-icon">'+icon('document')+'</span><strong>COA included</strong><small>Documentation available</small></div><div><span class="benefit-icon">'+icon('delivery')+'</span><strong>U.S. shipped</strong><small>Use only if accurate for fulfillment</small></div></div>'+
+  '</div>'+
+  '<div class="product-info product-info-v2">'+
+   '<p class="eyebrow">'+p.category+'</p><h1>'+p.name+'</h1><p class="product-sub">'+p.subtitle+'</p>'+
+   '<div class="product-price-row"><div class="product-main-price" id="productPrice"><strong>'+money(first.price)+'</strong>'+(first.compareAt?'<s>'+money(first.compareAt)+'</s>':'')+'</div><span class="save-badge" id="saveBadge" hidden></span></div>'+
+   '<p class="product-sub product-description">'+p.description+'</p>'+
+   '<div class="purchase-box" id="purchaseBox">'+
+    '<label class="option-label" for="variantSelect">Choose size</label><div class="variant-select-wrap"><select id="variantSelect" class="variant-select">'+variants.map((v,i)=>'<option value="'+v.label+'" '+(i===0?'selected':'')+'>'+v.label+' — '+money(v.price)+'</option>').join('')+'</select><span class="variant-chevron">⌄</span></div>'+
+    '<div class="selected-variant-note"><span>Lowest size selected automatically</span><strong id="selectedVariantLabel">'+first.label+'</strong></div>'+
+    '<label class="option-label">Quantity</label><div class="qty-box qty-box-v2"><button id="prodDec" type="button" aria-label="Decrease quantity">−</button><span id="prodQty">1</span><button id="prodInc" type="button" aria-label="Increase quantity">+</button></div>'+
+    '<div class="purchase-actions"><button class="product-add" id="prodAdd" type="button">Add to cart</button><button class="buy-now" id="buyNow" type="button">Buy now</button></div>'+
+    '<div class="purchase-microcopy"><span>Secure checkout</span><span>•</span><span>Shipping calculated at checkout</span></div>'+
+    '<div class="purchase-benefits">'+
+      '<div class="purchase-benefit"><span class="purchase-benefit-icon">'+icon('delivery')+'</span><div><strong>Same-day shipping</strong><small>Eligible orders placed before '+shippingCutoff+' are prepared for same-day shipment.</small></div></div>'+
+      '<div class="purchase-benefit"><span class="purchase-benefit-icon">'+icon('shield')+'</span><div><strong>'+guaranteeDays+'-day money-back guarantee</strong><small>Eligible orders are covered under the store refund policy.</small></div></div>'+
+    '</div>'+
+   '</div>'+
+   '<div class="product-accordions"><details open><summary>Product information</summary><p>'+p.description+'</p></details><details><summary>Specifications</summary><div class="spec-table">'+p.specs.map(x=>'<div class="spec-row"><span>'+x[0]+'</span><span>'+x[1]+'</span></div>').join('')+'</div></details><details><summary>Documentation</summary><p>'+p.document+'. Replace this with the final product documentation link.</p></details><details><summary>Shipping & support</summary><p>Shipping options and final availability are shown at checkout. Visit support if you need help before ordering.</p></details></div>'+
+  '</div>'+
+ '</div>'+
+ '<div class="sticky-atc premium-sticky-atc product-sticky-v2" id="stickyAtc"><div class="sticky-reserve" data-reserve-wrap hidden><span>Cart reserved</span><strong data-reserve-time>10:00</strong></div><div class="sticky-product"><img src="'+p.image+'" alt=""><div class="sticky-info"><strong>'+p.name+'</strong><small><span id="stickyVariant">'+first.label+'</span> · <span id="stickyPrice">'+money(first.price)+'</span></small></div><div class="sticky-qty"><button id="stickyDec" type="button">−</button><span id="stickyQty">1</span><button id="stickyInc" type="button">+</button></div><button id="stickyAdd" class="sticky-add-btn" type="button">Add to cart</button></div></div>';
 
- const qEl=$('#prodQty'),sq=$('#stickyQty'),priceEl=$('#productPrice'),variantLabel=$('#selectedVariantLabel'),stickyVariant=$('#stickyVariant'),stickyPrice=$('#stickyPrice'),select=$('#variantSelect');
+ const qEl=$('#prodQty'),sq=$('#stickyQty'),priceEl=$('#productPrice'),variantLabel=$('#selectedVariantLabel'),stickyVariant=$('#stickyVariant'),stickyPrice=$('#stickyPrice'),select=$('#variantSelect'),saveBadge=$('#saveBadge'),salePill=$('#productSalePill');
  const syncQty=()=>{qEl.textContent=q;if(sq)sq.textContent=q};
- const syncVariant=()=>{priceEl.innerHTML='<strong>'+money(selected.price)+'</strong>'+(selected.compareAt?'<s>'+money(selected.compareAt)+'</s>':'');variantLabel.textContent=selected.label;if(stickyVariant)stickyVariant.textContent=selected.label;if(stickyPrice)stickyPrice.textContent=money(selected.price)};
+ const syncVariant=()=>{
+   const compare=Number(selected.compareAt||0),price=Number(selected.price||0),hasSale=compare>price;
+   const savings=hasSale?Math.round((1-price/compare)*100):0;
+   priceEl.innerHTML='<strong>'+money(price)+'</strong>'+(hasSale?'<s>'+money(compare)+'</s>':'');
+   if(saveBadge){saveBadge.hidden=!hasSale;saveBadge.textContent=hasSale?'Save '+savings+'%':''}
+   if(salePill)salePill.hidden=!hasSale;
+   variantLabel.textContent=selected.label;
+   if(stickyVariant)stickyVariant.textContent=selected.label;
+   if(stickyPrice)stickyPrice.textContent=money(price);
+ };
+ syncVariant();
  select.onchange=()=>{selected=variantFor(p,select.value);syncVariant()};
  $('#prodInc').onclick=()=>{q++;syncQty()};$('#prodDec').onclick=()=>{q=Math.max(1,q-1);syncQty()};
  if($('#stickyInc'))$('#stickyInc').onclick=()=>{q++;syncQty()};if($('#stickyDec'))$('#stickyDec').onclick=()=>{q=Math.max(1,q-1);syncQty()};
@@ -125,9 +161,10 @@ function renderProduct(){
  $('#stickyAdd').onclick=()=>addToCart(p.slug,q,selected.label,true);
  $('#buyNow').onclick=()=>{addToCart(p.slug,q,selected.label,false);location.href='checkout.html'};
 
- const track=$('#galleryTrack'),slides=$('.product-slide',track),dots=$('.gallery-dot');
+ const track=$('#galleryTrack'),slides=$$('.product-slide',track),dots=$$('.gallery-dot');
  const goTo=i=>{currentSlide=(i+gallery.length)%gallery.length;slides[currentSlide].scrollIntoView({behavior:'smooth',inline:'start',block:'nearest'});dots.forEach((d,n)=>d.classList.toggle('active',n===currentSlide))};
- $('.gallery-prev').onclick=()=>goTo(currentSlide-1);$('.gallery-next').onclick=()=>goTo(currentSlide+1);dots.forEach(d=>d.onclick=()=>goTo(Number(d.dataset.dot)));
+ const prev=$('.gallery-prev'),next=$('.gallery-next');
+ if(prev)prev.onclick=()=>goTo(currentSlide-1);if(next)next.onclick=()=>goTo(currentSlide+1);dots.forEach(d=>d.onclick=()=>goTo(Number(d.dataset.dot)));
  let scrollTick=null;track.addEventListener('scroll',()=>{clearTimeout(scrollTick);scrollTick=setTimeout(()=>{const w=track.clientWidth||1;currentSlide=Math.round(track.scrollLeft/w);dots.forEach((d,n)=>d.classList.toggle('active',n===currentSlide))},80)},{passive:true});
 
  const atc=$('#stickyAtc'),purchase=$('#purchaseBox');
@@ -138,6 +175,7 @@ function renderProduct(){
   window.addEventListener('scroll',()=>{const r=purchase.getBoundingClientRect();atc.classList.toggle('show',r.bottom<0)},{passive:true});
  }
 }
+
 function initCatalog(){
  const grid=$('#catalog-grid'),search=$('#catalogSearch');if(!grid)return;let active=(new URLSearchParams(location.search).get('filter')||'all').toLowerCase();const apply=()=>{const q=(search?.value||'').toLowerCase();const items=P.filter(p=>(active==='all'||p.category.toLowerCase()===active)&&(!q||p.name.toLowerCase().includes(q)||p.category.toLowerCase().includes(q)));renderGrid('#catalog-grid',items);const n=$('#catalogCount');if(n)n.textContent=items.length+' products'};renderGrid('#catalog-grid');search&&search.addEventListener('input',apply);$$('[data-filter]').forEach(b=>{b.classList.toggle('active',b.dataset.filter.toLowerCase()===active);b.onclick=()=>{active=b.dataset.filter.toLowerCase();$$('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));apply()}});apply()
 }
