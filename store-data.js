@@ -24,7 +24,7 @@ window.PRODUCTS = [
   {
     slug: "product-one",
     name: "Product One",
-    category: "Featured",
+    category: "Peptides",
     price: 49.99,
     compareAt: 59.99,
     badge: "BEST SELLER",
@@ -39,7 +39,7 @@ window.PRODUCTS = [
   {
     slug: "product-two",
     name: "Product Two",
-    category: "New arrival",
+    category: "Peptides",
     price: 59.99,
     compareAt: null,
     badge: "NEW",
@@ -54,7 +54,7 @@ window.PRODUCTS = [
   {
     slug: "product-three",
     name: "Product Three",
-    category: "Featured",
+    category: "HGH",
     price: 44.99,
     compareAt: 54.99,
     badge: "POPULAR",
@@ -69,7 +69,7 @@ window.PRODUCTS = [
   {
     slug: "product-four",
     name: "Product Four",
-    category: "Essentials",
+    category: "Kits",
     price: 39.99,
     compareAt: null,
     badge: "",
@@ -84,7 +84,7 @@ window.PRODUCTS = [
   {
     slug: "product-five",
     name: "Product Five",
-    category: "Reference",
+    category: "HGH",
     price: 64.99,
     compareAt: 74.99,
     badge: "LIMITED",
@@ -99,7 +99,7 @@ window.PRODUCTS = [
   {
     slug: "product-six",
     name: "Product Six",
-    category: "Accessories",
+    category: "Kits",
     price: 24.99,
     compareAt: null,
     badge: "",
