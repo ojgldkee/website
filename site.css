@@ -1860,3 +1860,70 @@ body{font-size:16px}
  .summary-head h2{font-size:20px}
  .checkout-pay-button{min-height:56px;font-size:11px}
 }
+
+/* ===== Checkout targeted polish v8 ===== */
+.checkout-step-head .checkout-step-icon{
+  width:34px;height:34px;
+  border-radius:11px;
+  background:#eaf2ec;
+  color:#1c563f;
+  display:grid;
+  place-items:center;
+}
+.checkout-step-head .checkout-step-icon svg{width:19px;height:19px}
+.checkout-step-head .crypto-step-icon{
+  background:#eaf2ec;
+  color:#16513d;
+}
+.country-select-wrap{
+  position:relative;
+  width:100%;
+}
+.country-select-wrap select{
+  width:100%;
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  padding-right:46px!important;
+  background:#fbfcfa!important;
+  color:#102019!important;
+  border:1px solid #d6dfd8!important;
+  border-radius:13px!important;
+  min-height:52px;
+  font-size:13px!important;
+  font-weight:600;
+}
+.country-select-wrap select:focus{
+  outline:2px solid rgba(18,60,46,.12);
+  border-color:#8eaa99!important;
+}
+.country-select-icon{
+  position:absolute;
+  right:15px;
+  top:50%;
+  transform:translateY(-52%);
+  pointer-events:none;
+  width:28px;height:28px;
+  display:grid;place-items:center;
+  border-radius:9px;
+  background:#eef4ef;
+  color:#174e3b;
+  font-size:17px;
+  font-weight:800;
+}
+.crypto-only-method{
+  grid-template-columns:22px 44px minmax(0,1fr)!important;
+}
+.crypto-payment-icon{
+  width:42px!important;height:42px!important;
+  border-radius:13px!important;
+  background:#e8f1ea!important;
+  color:#15503a!important;
+}
+.crypto-payment-icon svg{width:23px;height:23px}
+@media(max-width:620px){
+  .checkout-step-head .checkout-step-icon{width:31px;height:31px;border-radius:10px}
+  .checkout-step-head .checkout-step-icon svg{width:18px;height:18px}
+  .country-select-wrap select{min-height:54px;font-size:14px!important;padding-right:48px!important}
+  .country-select-icon{right:13px}
+  .crypto-only-method{grid-template-columns:21px 42px minmax(0,1fr)!important}
+}
