@@ -2519,3 +2519,47 @@ body{font-size:16px}
     padding:0 12px!important;
   }
 }
+
+/* ===== Product shipping accordion v16 ===== */
+.shipping-details-list{
+  display:grid;
+  gap:8px;
+  margin-top:4px;
+}
+.shipping-detail-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:12px 14px;
+  border-radius:14px;
+  background:#f5f8f5;
+  border:1px solid #e1e8e3;
+}
+.shipping-detail-row span{
+  color:#62736a;
+  font-size:11px;
+  line-height:1.35;
+}
+.shipping-detail-row strong{
+  color:#123c2e;
+  font-size:11px;
+  line-height:1.35;
+  text-align:right;
+  white-space:nowrap;
+}
+.shipping-detail-note{
+  margin:10px 2px 0!important;
+  color:#7a8780!important;
+  font-size:9.5px!important;
+  line-height:1.5!important;
+}
+@media(max-width:759px){
+  .shipping-detail-row{
+    padding:11px 12px;
+    border-radius:13px;
+  }
+  .shipping-detail-row span,
+  .shipping-detail-row strong{font-size:10.5px}
+  .shipping-detail-note{font-size:9px!important}
+}
