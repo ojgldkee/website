@@ -1927,3 +1927,32 @@ body{font-size:16px}
   .country-select-icon{right:13px}
   .crypto-only-method{grid-template-columns:21px 42px minmax(0,1fr)!important}
 }
+
+/* ===== Checkout icon polish v9 ===== */
+.checkout-step-head .checkout-step-icon{
+  width:34px!important;height:34px!important;border-radius:11px!important;
+  background:#eaf2ec!important;color:#17513d!important;
+  display:grid!important;place-items:center!important
+}
+.checkout-step-head .checkout-step-icon svg{width:19px!important;height:19px!important}
+.payment-step-icon{background:#e7f0ea!important}
+.crypto-payment-icon{
+  width:42px!important;height:42px!important;border-radius:13px!important;
+  background:#e5f0e8!important;color:#14513b!important
+}
+.crypto-payment-icon svg{width:24px!important;height:24px!important}
+.checkout-method{
+  cursor:pointer!important;-webkit-tap-highlight-color:transparent;
+  transition:border-color .16s ease,background .16s ease,box-shadow .16s ease,transform .16s ease
+}
+.checkout-method:active{transform:scale(.995)}
+#shippingMethods .checkout-method.selected{
+  border-color:#6f9a82!important;background:#f3f8f4!important;
+  box-shadow:inset 0 0 0 1px #6f9a82!important
+}
+@media(max-width:620px){
+ .checkout-step-head .checkout-step-icon{width:31px!important;height:31px!important}
+ .checkout-step-head .checkout-step-icon svg{width:18px!important;height:18px!important}
+ .crypto-payment-icon{width:40px!important;height:40px!important}
+ .crypto-payment-icon svg{width:23px!important;height:23px!important}
+}
