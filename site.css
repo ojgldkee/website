@@ -2453,3 +2453,29 @@ body{font-size:16px}
   .why-icon{width:38px;height:38px;border-radius:12px}.why-icon svg{width:20px;height:20px}
   .why-brand-grid strong{font-size:11px}.why-brand-grid small{font-size:8.5px}
 }
+
+/* ===== ETATRUTIDE launch + product top spacing v14 ===== */
+.product-page-wrap{
+  padding-top:0!important;
+}
+.product-page-wrap>.product-breadcrumb{
+  margin:0 0 10px!important;
+  padding:10px 14px!important;
+  background:#fbfcfa!important;
+  border-bottom:1px solid #e4e9e5!important;
+}
+.product-layout-v2{
+  margin-top:0!important;
+}
+.product-gallery{
+  padding-top:0!important;
+}
+@media(max-width:759px){
+  .product-page-wrap>.product-breadcrumb{
+    margin-bottom:10px!important;
+    padding:9px 12px!important;
+  }
+  .product-gallery{
+    padding:0 12px!important;
+  }
+}
