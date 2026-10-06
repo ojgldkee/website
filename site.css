@@ -439,3 +439,183 @@ body{font-weight:500}
 }
 
 .cart-reserve[hidden],.premium-shipping[hidden],[data-reserve-wrap][hidden]{display:none!important}
+
+/* ===== Navigation drawer v2 ===== */
+.header-left .menu-trigger{
+  border:1px solid #dfe6e1;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 5px 16px rgba(18,60,46,.045);
+}
+.header-left .menu-trigger:hover{background:#f2f6f3}
+.premium-menu{
+  width:min(420px,94vw)!important;
+  background:#f7f9f6!important;
+  box-shadow:28px 0 70px rgba(4,22,16,.16);
+}
+.premium-menu-top{
+  min-height:82px;
+  padding:16px 18px!important;
+  background:#fff;
+}
+.menu-brand-lockup{display:flex;flex-direction:column;gap:3px;min-width:0}
+.menu-brand-lockup strong{
+  font-size:18px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:-.025em;
+  color:#102019;
+}
+.menu-brand-lockup small{
+  font-size:7px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:.34em;
+  color:#738178;
+}
+.premium-menu-top .close-btn{
+  width:42px;height:42px;
+  border-radius:50%;
+  background:#f1f4f1;
+  display:grid;place-items:center;
+  font-size:27px;
+  font-weight:500;
+}
+.menu-intro{
+  padding:22px 18px 10px;
+  background:#f7f9f6;
+}
+.menu-intro span{
+  display:block;
+  color:#7b8a81;
+  font-size:7px;
+  font-weight:800;
+  letter-spacing:.18em;
+}
+.menu-intro strong{
+  display:block;
+  margin-top:6px;
+  color:#102019;
+  font-size:20px;
+  line-height:1.1;
+  font-weight:800;
+  letter-spacing:-.035em;
+}
+.premium-menu-links{
+  padding:8px 12px 14px!important;
+  display:grid;
+  gap:7px;
+}
+.premium-menu-links a{
+  display:grid!important;
+  grid-template-columns:32px minmax(0,1fr) 24px;
+  gap:10px;
+  align-items:center;
+  min-height:66px;
+  padding:10px 12px!important;
+  border:1px solid #e0e7e1!important;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 4px 14px rgba(18,60,46,.025);
+  transition:.18s ease;
+}
+.premium-menu-links a:hover{
+  border-color:#cbd8cf!important;
+  background:#fdfefd;
+  transform:translateX(2px);
+}
+.premium-menu-links .nav-index{
+  width:28px;height:28px;
+  display:grid;place-items:center;
+  border-radius:9px;
+  background:#edf3ee;
+  color:#2a5d48;
+  font-size:7px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+.premium-menu-links .nav-copy{min-width:0}
+.premium-menu-links .nav-copy strong{
+  display:block;
+  font-size:14px;
+  line-height:1.15;
+  font-weight:800;
+  letter-spacing:-.02em;
+  color:#102019;
+}
+.premium-menu-links .nav-copy small{
+  display:block;
+  margin-top:4px;
+  font-size:8px;
+  line-height:1.2;
+  font-weight:600;
+  letter-spacing:0;
+  color:#819087;
+}
+.premium-menu-links .nav-arrow{
+  color:#2c604a;
+  font-size:15px;
+  text-align:right;
+}
+.premium-menu-meta{
+  margin-top:auto!important;
+  padding:16px 18px 18px!important;
+  background:#0e3327!important;
+  color:#fff;
+  border-top:0!important;
+}
+.premium-menu-meta>div{margin-bottom:12px}
+.menu-meta-label{
+  display:block;
+  margin-bottom:5px;
+  color:#9db4a8;
+  font-size:7px;
+  font-weight:800;
+  letter-spacing:.16em;
+}
+.premium-menu-meta strong{
+  display:block;
+  font-size:13px;
+  line-height:1.35;
+  font-weight:700;
+}
+.premium-menu-meta a{
+  display:inline-block!important;
+  margin:0!important;
+  padding-bottom:2px;
+  border-bottom:1px solid rgba(255,255,255,.5)!important;
+  color:#fff!important;
+  font-size:9px!important;
+  font-weight:800;
+}
+
+/* ===== Checkout CTA alignment refinement ===== */
+.premium-checkout{
+  position:relative!important;
+  justify-content:center!important;
+  text-align:center!important;
+  font-size:13px!important;
+  font-weight:800!important;
+  letter-spacing:.08em!important;
+}
+.premium-checkout span:first-child{display:block;width:100%;text-align:center}
+.premium-checkout span:last-child{
+  position:absolute;
+  right:21px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:17px;
+  line-height:1;
+}
+.view-cart-link{
+  font-size:11px!important;
+  font-weight:800!important;
+}
+@media(max-width:520px){
+  .premium-menu{width:94vw!important}
+  .premium-menu-top{min-height:76px}
+  .menu-intro{padding-top:18px}
+  .premium-menu-links a{min-height:62px}
+  .premium-menu-links .nav-copy strong{font-size:13px}
+  .premium-checkout{font-size:12px!important}
+}
