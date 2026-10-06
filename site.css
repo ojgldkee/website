@@ -2479,3 +2479,43 @@ body{font-size:16px}
     padding:0 12px!important;
   }
 }
+
+/* ===== RETATRUTIDE product top spacing fix v15 ===== */
+#product-page.product-page-wrap{
+  padding-top:0!important;
+}
+#product-page.product-page-wrap > .product-breadcrumb{
+  margin:0 0 8px!important;
+  padding:7px 14px!important;
+  min-height:0!important;
+  height:auto!important;
+  border:0!important;
+  border-bottom:0!important;
+  box-shadow:none!important;
+  background:#fbfcfa!important;
+}
+#product-page.product-page-wrap > .product-breadcrumb::after,
+#product-page.product-page-wrap > .product-breadcrumb::before{
+  display:none!important;
+  content:none!important;
+}
+#product-page.product-page-wrap .product-layout-v2{
+  margin-top:0!important;
+}
+#product-page.product-page-wrap .product-gallery{
+  padding-top:0!important;
+}
+@media(max-width:759px){
+  #product-page.product-page-wrap{
+    padding:0 0 88px!important;
+  }
+  #product-page.product-page-wrap > .product-breadcrumb{
+    margin:0 0 8px!important;
+    padding:7px 12px!important;
+    border:0!important;
+    border-bottom:0!important;
+  }
+  #product-page.product-page-wrap .product-gallery{
+    padding:0 12px!important;
+  }
+}
