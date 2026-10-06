@@ -5,6 +5,8 @@ window.STORE = {
   currency: "USD",
   shippingThreshold: 150,
   cartReservationMinutes: 10,
+  sameDayShipping: { enabled: true, cutoff: "2 PM" },
+  moneyBackDays: 30,
   promo: {
     enabled: false,
     label: "",
