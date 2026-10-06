@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123c2e"><title>Checkout — Forma Research</title><link rel="stylesheet" href="site.css?v=20261006-checkout7"><script src="store-data.js?v=20261006-checkout7"></script><script src="site.js?v=20261006-checkout7" defer></script></head>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123c2e"><title>Checkout — Forma Research</title><link rel="stylesheet" href="site.css?v=20261006-checkout8"><script src="store-data.js?v=20261006-checkout7"></script><script src="site.js?v=20261006-checkout7" defer></script></head>
 <body class="checkout-page">
 <div id="site-top"></div>
 <header class="checkout-header"><a class="checkout-logo" href="index.html"><strong>FORMA</strong><span>RESEARCH</span></a><div class="checkout-secure"><span class="checkout-lock">✓</span><span>Secure checkout</span></div><a class="checkout-back" href="cart.html">Return to cart</a></header>
@@ -20,7 +20,7 @@
           <div class="field"><label for="firstName">First name</label><input id="firstName" name="firstName" autocomplete="given-name" required></div>
           <div class="field"><label for="lastName">Last name</label><input id="lastName" name="lastName" autocomplete="family-name" required></div>
         </div>
-        <div class="field"><label for="country">Country / region</label><select id="country" name="country" autocomplete="country" required><option value="">Select country / region</option></select></div>
+        <div class="field"><label for="country">Country / region</label><div class="country-select-wrap"><select id="country" name="country" autocomplete="country" required><option value="">Select country / region</option></select><span class="country-select-icon">⌄</span></div></div>
         <div class="field"><label for="address1">Street address</label><input id="address1" name="address1" autocomplete="address-line1" required placeholder="Street address"></div>
         <div class="field"><label for="address2">Apartment, suite, etc. <span>Optional</span></label><input id="address2" name="address2" autocomplete="address-line2" placeholder="Apartment, suite, unit"></div>
         <div class="checkout-fields three-col">
@@ -31,7 +31,7 @@
       </section>
 
       <section class="checkout-section checkout-card">
-        <div class="checkout-step-head"><span>03</span><div><h2>Shipping method</h2><p>Choose the option that works best for you.</p></div></div>
+        <div class="checkout-step-head"><span class="checkout-step-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v11H3z"/><path d="M14 9h4l3 4v4h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg></span><div><h2>Shipping method</h2><p>Choose the option that works best for you.</p></div></div>
         <div class="checkout-methods" id="shippingMethods">
           <label class="checkout-method selected"><input type="radio" name="ship" value="standard" checked><span class="method-radio"></span><span class="method-copy"><strong>Standard tracked shipping</strong><small>Estimated 4–7 business days after processing</small></span><span class="method-price">Calculated</span></label>
           <label class="checkout-method"><input type="radio" name="ship" value="priority"><span class="method-radio"></span><span class="method-copy"><strong>Priority tracked shipping</strong><small>Estimated 2–3 business days after processing</small></span><span class="method-price">Calculated</span></label>
@@ -39,10 +39,9 @@
       </section>
 
       <section class="checkout-section checkout-card">
-        <div class="checkout-step-head"><span>04</span><div><h2>Payment method</h2><p>Your payment will be handled through a secure provider.</p></div></div>
+        <div class="checkout-step-head"><span class="checkout-step-icon crypto-step-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M9 8.5h4.5a2 2 0 0 1 0 4H9m0 0h5a2 2 0 0 1 0 4H9m2-10v11m3-11v2m0 8v2"/></svg></span><div><h2>Payment method</h2><p>Your payment will be handled through a secure provider.</p></div></div>
         <div class="checkout-methods" id="paymentMethods">
-          <label class="checkout-method selected payment-method"><input type="radio" name="payment" value="crypto" checked><span class="method-radio"></span><span class="payment-icon">◇</span><span class="method-copy"><strong>Crypto</strong><small>Continue to the secure payment provider after review.</small></span></label>
-          <label class="checkout-method payment-method disabled-method"><input type="radio" name="payment" value="card" disabled><span class="method-radio"></span><span class="payment-icon">▭</span><span class="method-copy"><strong>Card</strong><small>Placeholder — connect a card processor to enable.</small></span><span class="coming-soon">Not connected</span></label>
+          <label class="checkout-method selected payment-method crypto-only-method"><input type="radio" name="payment" value="crypto" checked><span class="method-radio"></span><span class="payment-icon crypto-payment-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M9 8.5h4.5a2 2 0 0 1 0 4H9m0 0h5a2 2 0 0 1 0 4H9m2-10v11m3-11v2m0 8v2"/></svg></span><span class="method-copy"><strong>Crypto</strong><small>Continue to the secure crypto payment provider after review.</small></span></label>
         </div>
       </section>
 
