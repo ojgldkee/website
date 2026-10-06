@@ -2061,3 +2061,72 @@ body{font-size:16px}
 .purchase-benefit strong{font-size:12px}
 .purchase-benefit small{font-size:9.5px}
 }
+
+/* ===== Product purchase cleanup v8 ===== */
+.footer-cta{display:none!important}
+.footer-main{padding-top:46px!important}
+.selected-variant-hidden{
+  position:absolute!important;
+  width:1px!important;height:1px!important;
+  overflow:hidden!important;clip:rect(0 0 0 0)!important;
+  white-space:nowrap!important;
+}
+.purchase-box{
+  padding:20px!important;
+  border-radius:24px!important;
+  background:linear-gradient(180deg,#fbfcfa 0%,#f7faf7 100%)!important;
+}
+.purchase-box .option-label{
+  margin-bottom:9px!important;
+  font-size:10px!important;
+  letter-spacing:.12em!important;
+}
+.variant-select-wrap{margin-bottom:18px!important}
+.variant-select{
+  min-height:58px!important;
+  border-radius:17px!important;
+  font-size:14px!important;
+  font-weight:800!important;
+}
+.qty-box-v2{
+  min-height:58px!important;
+  border-radius:17px!important;
+  margin-bottom:16px!important;
+}
+.purchase-actions{gap:10px!important}
+.purchase-actions button{
+  min-height:58px!important;
+  font-size:11px!important;
+  border-radius:999px!important;
+}
+.purchase-microcopy{
+  margin:14px 0 2px!important;
+  font-size:9.5px!important;
+}
+.purchase-benefits{
+  margin-top:14px!important;
+  gap:8px!important;
+}
+.purchase-benefit{
+  padding:13px 14px!important;
+  border-radius:16px!important;
+  background:#fff!important;
+}
+.purchase-benefit strong{font-size:12.5px!important}
+.purchase-benefit small{font-size:9.5px!important}
+.product-gallery-trust small{
+  color:#6f7c74!important;
+  font-size:8.5px!important;
+  line-height:1.35!important;
+}
+@media(max-width:759px){
+  .footer-main{padding-top:34px!important}
+  .purchase-box{padding:16px!important;border-radius:20px!important}
+  .variant-select-wrap{margin-bottom:16px!important}
+  .variant-select{min-height:56px!important;font-size:14px!important}
+  .qty-box-v2{min-height:56px!important;margin-bottom:14px!important}
+  .purchase-actions button{min-height:56px!important}
+  .purchase-microcopy{font-size:9px!important}
+  .purchase-benefit{padding:12px!important}
+  .product-gallery-trust small{font-size:8px!important}
+}
