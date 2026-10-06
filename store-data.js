@@ -3,9 +3,10 @@ window.STORE = {
   shortName: "FORMA",
   subName: "RESEARCH",
   currency: "USD",
-  shippingThreshold: 150,
+  shippingThreshold: 250,
   cartReservationMinutes: 10,
   sameDayShipping: { enabled: true, cutoff: "2 PM" },
+  shippingOrigin: "Florida",
   moneyBackDays: 30,
   promo: {
     enabled: false,
@@ -15,7 +16,7 @@ window.STORE = {
     href: "collections.html"
   },
   announcements: [
-    "COMPLIMENTARY SHIPPING ON ORDERS $150+",
+    "FREE SHIPPING ON ORDERS $250+",
     "PRODUCT DOCUMENTATION ON EVERY LISTING",
     "TRACKED DELIVERY",
     "SUPPORT WHEN YOU NEED IT"
