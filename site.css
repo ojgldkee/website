@@ -2413,3 +2413,43 @@ body{font-size:16px}
   .category-card-copy strong{font-size:12px}
   .category-card-copy small{font-size:8px}
 }
+
+/* ===== Shipping reward + product trust section v13 ===== */
+.free-shipping-card .shipping-copy span{color:#5e7468!important;font-size:9px!important;letter-spacing:.13em!important;font-weight:800!important}
+.shipping-progress-row{display:grid;grid-template-columns:minmax(0,1fr) 42px;align-items:center;gap:10px;margin-top:11px}
+.shipping-progress-row .premium-progress{margin:0!important}
+.shipping-goal-icon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:1px solid #cddbd2;background:#f3f7f4;color:#2a624c;transition:.2s ease}
+.shipping-goal-icon svg{width:20px;height:20px}
+.shipping-goal-icon.complete,.shipping-unlocked .shipping-goal-icon{background:#123c2e;color:#fff;border-color:#123c2e;box-shadow:0 7px 18px rgba(18,60,46,.16)}
+.shipping-unlocked .shipping-copy strong{color:#17613f!important}
+.product-page-wrap>.product-breadcrumb{padding:9px 14px!important;min-height:auto!important}
+.product-layout-v2{margin-top:0!important}
+.product-gallery{padding-top:0!important}
+.gallery-shell{border-radius:26px!important;overflow:hidden!important;border:1px solid #dde5df!important}
+.product-slide{border-radius:26px!important;overflow:hidden!important}
+.product-slide img{border-radius:22px!important}
+.why-brand-section{margin:34px 0 10px;padding:28px;border-radius:26px;background:linear-gradient(145deg,#0e3528,#123f30);color:#fff}
+.why-brand-head{max-width:680px;margin-bottom:20px}
+.why-brand-head .eyebrow{color:#9db8aa!important;margin-bottom:8px}
+.why-brand-head h2{margin:0;color:#fff;font-size:clamp(30px,4.2vw,44px);line-height:1.04;letter-spacing:-.045em}
+.why-brand-head p{margin:10px 0 0;color:#b9cbc1;font-size:12px;line-height:1.6}
+.why-brand-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.why-brand-grid article{min-height:118px;padding:16px;border-radius:18px;background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.11);display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start}
+.why-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.1);color:#eaf4ee}
+.why-icon svg{width:22px;height:22px}
+.why-brand-grid strong{display:block;color:#fff;font-size:12px;line-height:1.3}
+.why-brand-grid small{display:block;margin-top:5px;color:#b7c9bf;font-size:9px;line-height:1.45}
+@media(max-width:759px){
+  .product-page-wrap>.product-breadcrumb{padding:8px 12px!important}
+  .product-page-wrap>.product-breadcrumb a,.product-page-wrap>.product-breadcrumb strong,.product-page-wrap>.product-breadcrumb span{font-size:13px!important}
+  .product-gallery{padding:0 12px!important}
+  .gallery-shell{margin:0!important;border-radius:22px!important}
+  .product-slide{border-radius:22px!important}.product-slide img{border-radius:18px!important}
+  .product-gallery-trust{padding-left:0!important;padding-right:0!important}
+  .why-brand-section{margin:24px 12px 8px;padding:20px 15px;border-radius:22px}
+  .why-brand-head h2{font-size:30px}.why-brand-head p{font-size:11px}
+  .why-brand-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .why-brand-grid article{min-height:118px;padding:13px;border-radius:16px;grid-template-columns:1fr;gap:9px}
+  .why-icon{width:38px;height:38px;border-radius:12px}.why-icon svg{width:20px;height:20px}
+  .why-brand-grid strong{font-size:11px}.why-brand-grid small{font-size:8.5px}
+}
