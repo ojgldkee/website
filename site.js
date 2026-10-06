@@ -57,7 +57,7 @@ function tickReservation(){
 }
 function startReservationTimer(){ensureReservation();tickReservation();if(reservationTimer)clearInterval(reservationTimer);reservationTimer=setInterval(tickReservation,1000)}
 function saveCart(){localStorage.setItem('forma-cart-v2',JSON.stringify(cart));ensureReservation();renderCart();renderCheckout&&renderCheckout();renderFullCart();tickReservation()}
-function productBySlug(slug){return P.find(p=>p.slug===slug)}
+function productBySlug(slug){if(slug==="etatrutide")slug="retatrutide";return P.find(p=>p.slug===slug)}
 function productVariants(p){return Array.isArray(p?.variants)&&p.variants.length?[...p.variants].sort((a,b)=>(a.amount??0)-(b.amount??0)):[{label:"Default",amount:0,price:p?.price||0,compareAt:p?.compareAt||null}]}
 function defaultVariant(p){return productVariants(p)[0]}
 function variantFor(p,label){const variants=productVariants(p);return variants.find(v=>v.label===label)||variants[0]}
