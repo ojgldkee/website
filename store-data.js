@@ -33,7 +33,7 @@ window.PRODUCTS = [
     subtitle: "Research reference · premium presentation",
     description: "A clean product template with room for final specifications, documentation, batch information, and fulfillment details.",
     specs: [["Format","Reference material"],["Availability","In stock"],["Documentation","Listing ready"],["Storage","See final documentation"]],
-    variants: ["Standard","Extended"],
+    variants: [{label:"5 mg",amount:5,price:49.99,compareAt:59.99},{label:"10 mg",amount:10,price:79.99,compareAt:89.99},{label:"20 mg",amount:20,price:119.99,compareAt:139.99}],
     document: "Documentation placeholder"
   },
   {
@@ -48,7 +48,7 @@ window.PRODUCTS = [
     subtitle: "New arrival · clear specifications",
     description: "A flexible product page example designed for variants, product notes, shipping information, and documentation links.",
     specs: [["Format","Reference material"],["Availability","In stock"],["Documentation","Listing ready"],["Shipping","Tracked"]],
-    variants: ["Standard","Plus"],
+    variants: [{label:"10 mg",amount:10,price:59.99},{label:"20 mg",amount:20,price:89.99},{label:"30 mg",amount:30,price:129.99}],
     document: "Documentation placeholder"
   },
   {
@@ -63,7 +63,7 @@ window.PRODUCTS = [
     subtitle: "Popular pick · streamlined ordering",
     description: "A product template with a strong information hierarchy, compact purchase controls, and room for final product-specific details.",
     specs: [["Format","Reference material"],["Availability","In stock"],["Documentation","Listing ready"],["Shipping","Tracked"]],
-    variants: ["Standard"],
+    variants: [{label:"5 mg",amount:5,price:44.99},{label:"10 mg",amount:10,price:69.99},{label:"20 mg",amount:20,price:104.99}],
     document: "Documentation placeholder"
   },
   {
@@ -78,7 +78,7 @@ window.PRODUCTS = [
     subtitle: "Essential · straightforward presentation",
     description: "A simple listing example for products that need less explanation while keeping the same polished purchase flow.",
     specs: [["Format","Essential"],["Availability","In stock"],["Documentation","Listing ready"],["Shipping","Tracked"]],
-    variants: ["Standard"],
+    variants: [{label:"10 mg",amount:10,price:39.99},{label:"20 mg",amount:20,price:64.99}],
     document: "Documentation placeholder"
   },
   {
@@ -93,7 +93,7 @@ window.PRODUCTS = [
     subtitle: "Reference series · limited release",
     description: "A higher-tier listing example with space for comparison pricing and expanded documentation.",
     specs: [["Format","Reference material"],["Availability","Limited"],["Documentation","Listing ready"],["Shipping","Tracked"]],
-    variants: ["Standard","Extended"],
+    variants: [{label:"5 mg",amount:5,price:64.99,compareAt:74.99},{label:"10 mg",amount:10,price:94.99,compareAt:109.99},{label:"20 mg",amount:20,price:139.99,compareAt:159.99}],
     document: "Documentation placeholder"
   },
   {
@@ -108,7 +108,7 @@ window.PRODUCTS = [
     subtitle: "Accessory · complete the setup",
     description: "A compact accessory listing that can be paired with related products and collections.",
     specs: [["Category","Accessory"],["Availability","In stock"],["Documentation","Not required"],["Shipping","Tracked"]],
-    variants: ["Single"],
+    variants: [{label:"Single",amount:1,price:24.99}],
     document: "Documentation placeholder"
   }
 ];
