@@ -6,7 +6,7 @@ window.STORE = {
   shippingThreshold: 150,
   promo: {
     enabled: true,
-    label: "LAUNCH WEEK ENDS",
+    label: "LAUNCH PREVIEW ENDS",
     endsAt: "2026-10-12T23:59:59-07:00",
     cta: "SHOP THE COLLECTION",
     href: "collections.html"
