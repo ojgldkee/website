@@ -1658,3 +1658,65 @@ body{font-size:16px}
   .collections-wrap .product-price strong{font-size:13px!important}
   .collections-wrap .quick-add{width:36px!important;height:36px!important}
 }
+
+/* ===== Product gallery trust + breadcrumb cleanup ===== */
+.site-main > .product-breadcrumb:not(.product-page-wrap .product-breadcrumb){display:none!important}
+.product-page-wrap > .product-breadcrumb{
+  margin:0!important;
+  padding:16px 18px!important;
+  background:#fbfcfa;
+  border-bottom:1px solid #e2e8e3;
+  font-size:15px!important;
+}
+.product-page-wrap > .product-breadcrumb a,
+.product-page-wrap > .product-breadcrumb strong,
+.product-page-wrap > .product-breadcrumb span{font-size:15px!important}
+.product-gallery-trust{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:14px 0 0;
+}
+.product-gallery-trust>div{
+  min-height:92px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:6px;
+  padding:14px 10px;
+  border:1px solid #dce5de;
+  border-radius:18px;
+  background:#fff;
+  box-shadow:0 8px 22px rgba(18,60,46,.035);
+}
+.product-gallery-trust .benefit-icon{
+  width:36px;height:36px;
+  border-radius:12px;
+  display:grid;place-items:center;
+  background:#edf4ef;
+  color:#19513d;
+}
+.product-gallery-trust .benefit-icon svg{width:20px;height:20px}
+.product-gallery-trust strong{font-size:12px;font-weight:800;color:#102019}
+.product-gallery-trust small{font-size:8px;line-height:1.35;color:#738078}
+.collections-wrap .filters{max-width:100%}
+@media(max-width:759px){
+  .product-page-wrap > .product-breadcrumb{
+    padding:14px 16px!important;
+    font-size:15px!important;
+  }
+  .product-gallery-trust{
+    padding:0 14px;
+    gap:8px;
+    margin-top:10px;
+  }
+  .product-gallery-trust>div{
+    min-height:88px;
+    border-radius:16px;
+    padding:12px 8px;
+  }
+  .product-gallery-trust strong{font-size:11px}
+  .product-gallery-trust small{font-size:7.5px}
+}
