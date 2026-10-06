@@ -2611,3 +2611,20 @@ body{font-size:16px}
  #product-page .detail-body{padding:0 15px 15px}
  #product-page .detail-lead{font-size:11.5px!important}
 }
+
+/* ===== Simplified product accordion v18 ===== */
+#product-page .premium-product-accordions{gap:8px!important;margin-top:16px!important}
+#product-page .premium-product-accordions summary{min-height:60px!important;padding:0 16px!important}
+#product-page .premium-product-accordions summary>span:first-child{flex:1!important;text-align:left!important}
+#product-page .detail-toggle{
+  margin-left:auto!important;width:36px!important;height:36px!important;min-width:36px!important;
+  border-radius:50%!important;font-size:24px!important;font-weight:500!important;
+  background:#edf4ef!important;color:#17513d!important
+}
+#product-page .premium-product-accordions summary::after{display:none!important;content:none!important}
+#product-page .premium-product-accordions details:not([open]) .detail-body{display:none!important}
+#product-page .premium-product-accordions details[open] .detail-toggle{transform:rotate(45deg)!important}
+@media(max-width:759px){
+ #product-page .premium-product-accordions summary{min-height:56px!important;padding:0 14px!important}
+ #product-page .detail-toggle{width:34px!important;height:34px!important;min-width:34px!important;font-size:23px!important}
+}
