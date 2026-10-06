@@ -1720,3 +1720,45 @@ body{font-size:16px}
   .product-gallery-trust strong{font-size:11px}
   .product-gallery-trust small{font-size:7.5px}
 }
+
+/* ===== Product gallery cleanup v6 ===== */
+.product-thumbs{display:none!important}
+.product-gallery{padding-bottom:0!important}
+.gallery-shell{margin-bottom:0!important;border-bottom:0!important}
+.product-gallery-trust{
+  margin:6px 0 0!important;
+  padding-top:0!important;
+  border-top:0!important;
+  gap:8px!important;
+}
+.product-gallery-trust>div{
+  border:0!important;
+  box-shadow:none!important;
+  background:#f4f7f4!important;
+  border-radius:16px!important;
+  min-height:84px!important;
+  padding:12px 8px!important;
+}
+.product-gallery-trust .benefit-icon{
+  width:34px!important;
+  height:34px!important;
+  border-radius:11px!important;
+  background:#e8f0ea!important;
+}
+.product-gallery-trust strong{font-size:12px!important}
+.product-gallery-trust small{font-size:8px!important}
+@media(max-width:759px){
+  .product-gallery{padding-bottom:0!important}
+  .product-gallery-trust{
+    margin:4px 0 0!important;
+    padding:0 10px 4px!important;
+    gap:6px!important;
+  }
+  .product-gallery-trust>div{
+    min-height:82px!important;
+    border-radius:14px!important;
+    padding:10px 6px!important;
+  }
+  .product-gallery-trust strong{font-size:11px!important}
+  .product-gallery-trust small{font-size:7.5px!important}
+}
