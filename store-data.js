@@ -35,7 +35,7 @@ window.PRODUCTS = [
     gallery: ["public/images/products/product-1.svg","public/images/products/detail.svg"],
     subtitle: "Research-use peptide · batch documentation available",
     description: "RETATRUTIDE is offered as a research-use peptide reference intended for laboratory and analytical research settings. Each listing is presented with clear concentration options, batch documentation, fulfillment details, and storage guidance where applicable. Not for human consumption or therapeutic use.",
-    specs: [["Product","RETATRUTIDE"],["Category","Research peptide"],["Available sizes","5 mg · 10 mg · 20 mg"],["Fulfillment","Florida, USA"],["Documentation","Batch COA"]],
+    specs: [["Product","RETATRUTIDE"],["Category","Research peptide"],["Purity","99%+ · see batch COA"],["Available sizes","5 mg · 10 mg · 20 mg"],["Fulfillment","Florida, USA"]],
     variants: [{label:"5 mg",amount:5,price:49.99,compareAt:57.99},{label:"10 mg",amount:10,price:79.99,compareAt:89.99},{label:"20 mg",amount:20,price:119.99,compareAt:139.99}],
     document: "Batch documentation"
   },
