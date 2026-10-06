@@ -146,9 +146,7 @@ function renderProduct(){
     '</div>'+
    '</div>'+
    '<div class="product-accordions premium-product-accordions">'+
-    '<details class="product-detail-panel" name="product-detail" open><summary><span>Product information</span><span class="detail-toggle">+</span></summary><div class="detail-body"><p class="detail-lead">'+p.description+'</p><div class="detail-tags"><span>Research use only</span><span>Batch documented</span><span>Florida fulfillment</span></div></div></details>'+
-    '<details class="product-detail-panel" name="product-detail"><summary><span>Specifications</span><span class="detail-toggle">+</span></summary><div class="detail-body"><div class="spec-table spec-table-v2">'+p.specs.map(x=>'<div class="spec-row"><span>'+x[0]+'</span><strong>'+x[1]+'</strong></div>').join('')+'</div></div></details>'+
-    '<details class="product-detail-panel" id="productDocumentation" name="product-detail"><summary><span>Documentation</span><span class="detail-toggle">+</span></summary><div class="detail-body"><p class="detail-lead">Certificate of Analysis (COA) and batch documentation are organized by product lot for this listing.</p></div></details>'+
+    '<details class="product-detail-panel" name="product-detail"><summary><span>Product information</span><span class="detail-toggle">+</span></summary><div class="detail-body"><div class="spec-table spec-table-v2">'+p.specs.map(x=>'<div class="spec-row"><span>'+x[0]+'</span><strong>'+x[1]+'</strong></div>').join('')+'</div></div></details>'+
     '<details class="product-detail-panel" name="product-detail"><summary><span>Shipping & support</span><span class="detail-toggle">+</span></summary><div class="detail-body"><div class="shipping-details-list"><div class="shipping-detail-row"><span>U.S. standard shipping</span><strong>3–5 business days</strong></div><div class="shipping-detail-row"><span>U.S. priority shipping</span><strong>1–3 business days</strong></div><div class="shipping-detail-row"><span>Worldwide shipping</span><strong>6–8 business days</strong></div></div><p class="shipping-detail-note">Estimated transit times may vary by destination or carrier.</p></div></details>'+
    '</div>'+
   '</div>'+
@@ -185,10 +183,10 @@ function renderProduct(){
  $('#prodAdd').onclick=()=>addToCart(p.slug,q,selected.label,true);
  $('#stickyAdd').onclick=()=>addToCart(p.slug,q,selected.label,true);
 
- const detailEls=$$('.product-accordions details');
+ const detailEls=$('.product-accordions details');
  detailEls.forEach(d=>d.addEventListener('toggle',()=>{if(d.open)detailEls.forEach(o=>{if(o!==d)o.open=false})}));
  const viewCoa=$('#viewCoa');
- if(viewCoa)viewCoa.onclick=()=>{const doc=$('#productDocumentation');if(doc){doc.open=true;doc.scrollIntoView({behavior:'smooth',block:'start'})}};
+ if(viewCoa)viewCoa.onclick=()=>{location.href='documentation.html'};
 
  const track=$('#galleryTrack'),slides=$$('.product-slide',track),dots=$$('.gallery-dot');
  const goTo=i=>{currentSlide=(i+gallery.length)%gallery.length;slides[currentSlide].scrollIntoView({behavior:'smooth',inline:'start',block:'nearest'});dots.forEach((d,n)=>d.classList.toggle('active',n===currentSlide))};
