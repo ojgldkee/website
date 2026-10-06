@@ -1357,3 +1357,145 @@ body{font-weight:500}
 }
 /* product pages no longer show related products */
 .related-section{display:none!important}
+
+/* ===== Readability + icon refinement ===== */
+body{font-size:16px}
+.marquee-set span{font-size:10px!important}
+.desktop-nav a{font-size:13px!important}
+.brand{font-size:23px!important}.brand span{font-size:8px!important}
+.page-hero p,.support-copy p,.faq-intro p,.standard-copy>p{font-size:14px!important}
+.text-link{font-size:12px!important}
+.button{font-size:11px!important}
+.form-note{font-size:11px!important}
+.field label{font-size:9px!important}
+.field input,.field textarea,.field select{font-size:13px!important}
+.product-meta{font-size:9px!important}
+.product-body h3{font-size:18px!important}
+.product-price{font-size:13px!important}
+.product-description{font-size:13px!important}
+.purchase-microcopy{font-size:10px!important}
+.product-accordions summary{font-size:14px!important}
+.product-accordions details p,.product-accordions details li{font-size:12px!important}
+.spec-row{font-size:12px!important}
+
+/* menu icons + larger readable menu */
+.premium-menu{width:min(440px,95vw)!important}
+.premium-menu-links{gap:10px!important}
+.premium-menu-links a{
+  grid-template-columns:46px minmax(0,1fr) 28px!important;
+  min-height:76px!important;
+  padding:13px 14px!important;
+  border-radius:16px!important;
+}
+.nav-icon{
+  width:42px;height:42px;
+  border-radius:13px;
+  background:#edf3ee;
+  color:#235a43;
+  display:grid;place-items:center;
+}
+.nav-icon svg{width:22px;height:22px}
+.premium-menu-links .nav-copy strong{font-size:16px!important}
+.premium-menu-links .nav-copy small{font-size:10px!important;line-height:1.35!important;margin-top:5px!important}
+.premium-menu-links .nav-arrow{font-size:19px!important}
+.menu-intro span{font-size:8px!important}.menu-intro strong{font-size:23px!important}
+.menu-brand-lockup strong{font-size:20px!important}.menu-brand-lockup small{font-size:8px!important}
+.account-menu-cta{
+  display:grid;
+  grid-template-columns:46px 1fr;
+  gap:12px;
+  align-items:center;
+  padding:19px!important;
+}
+.account-menu-icon{
+  width:46px;height:46px;border-radius:14px;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+}
+.account-menu-icon svg{width:24px;height:24px}
+.account-menu-copy{min-width:0}
+.account-menu-cta strong{font-size:14px!important}
+.account-menu-cta a{
+  grid-column:1/-1;
+  width:100%;
+  min-height:48px;
+  display:flex!important;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,.24)!important;
+  border-radius:999px;
+  text-decoration:none!important;
+  font-size:10px!important;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+/* product benefit icons */
+.product-benefits>div{min-height:104px!important}
+.product-benefits .benefit-icon{
+  width:38px!important;height:38px!important;
+  border-radius:12px!important;
+  background:#edf4ef!important;
+  color:#17523d!important;
+  display:grid!important;place-items:center!important;
+}
+.product-benefits .benefit-icon svg{width:21px;height:21px}
+.product-benefits strong{font-size:11px!important}
+.product-benefits small{font-size:9px!important;line-height:1.45!important}
+
+/* sticky ATC readability */
+.product-sticky-v2 .sticky-info strong{font-size:15px!important}
+.product-sticky-v2 .sticky-info small{font-size:11px!important;margin-top:4px!important}
+.product-sticky-v2 .sticky-add-btn{
+  min-width:150px!important;
+  height:46px!important;
+  font-size:10px!important;
+  letter-spacing:.09em!important;
+}
+.sticky-reserve{font-size:9px!important}.sticky-reserve strong{font-size:11px!important}
+
+/* footer readability */
+.footer-kicker{font-size:10px!important}
+.footer-cta p{font-size:14px!important}
+.footer-primary,.footer-secondary{font-size:11px!important}
+.footer-logo-v2 strong{font-size:25px!important}.footer-logo-v2 span{font-size:8px!important}
+.footer-brand-v2 p{font-size:14px!important}
+.footer-badges span{font-size:10px!important;min-height:36px!important;padding:0 12px!important}
+.footer-links h4{font-size:10px!important}
+.footer-links a{font-size:13px!important;margin-bottom:14px!important}
+.footer-bottom-v2{font-size:10px!important}
+
+@media(max-width:759px){
+  .page-hero p{font-size:13px!important}
+  .product-info-v2 h1{font-size:42px!important}
+  .product-sub{font-size:13px!important}
+  .product-description{font-size:13px!important}
+  .product-benefits>div{
+    grid-template-columns:42px 1fr!important;
+    padding:13px!important;
+  }
+  .product-benefits .benefit-icon{width:42px!important;height:42px!important}
+  .product-benefits .benefit-icon svg{width:22px;height:22px}
+  .product-benefits strong{font-size:12px!important}
+  .product-benefits small{font-size:10px!important}
+  .purchase-box .option-label{font-size:10px!important}
+  .variant-select{font-size:14px!important}
+  .selected-variant-note{font-size:10px!important}
+  .selected-variant-note strong{font-size:10px!important}
+  .purchase-actions button{font-size:11px!important}
+  .purchase-microcopy{font-size:10px!important}
+  .product-accordions summary{font-size:15px!important}
+  .product-accordions details p,.product-accordions details li{font-size:12px!important}
+  .product-sticky-v2 .sticky-info strong{font-size:14px!important}
+  .product-sticky-v2 .sticky-info small{font-size:10px!important}
+  .product-sticky-v2 .sticky-add-btn{min-width:138px!important;font-size:10px!important}
+  .footer-cta h2{font-size:31px!important}
+  .footer-cta p{font-size:13px!important}
+  .footer-primary,.footer-secondary{font-size:10px!important}
+  .footer-brand-v2 p{font-size:13px!important}
+  .footer-badges span{font-size:9px!important}
+  .footer-links h4{font-size:10px!important}
+  .footer-links a{font-size:13px!important}
+  .footer-bottom-v2{font-size:9px!important}
+}
