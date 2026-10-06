@@ -1,13 +1,66 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123c2e"><title>Checkout — Forma Research</title><link rel="stylesheet" href="site.css?v=20261006-catalog3"><script src="store-data.js?v=20261006-catalog3"></script><script src="site.js?v=20261006-catalog3" defer></script></head><body><div id="site-top"></div><main class="site-main">
-<section class="page-hero"><p class="eyebrow">SECURE CHECKOUT</p><h1 class="display">Complete your order.</h1><p>The frontend checkout flow is structured now. Live order creation, taxes, inventory, and crypto payment sessions still require a server-side deployment.</p></section>
-<section class="page-wrap checkout-layout">
-  <form id="checkoutForm">
-    <section class="checkout-section"><p class="eyebrow">01 · CONTACT</p><h2>Where should we send updates?</h2><div class="field"><label>Email</label><input type="email" required></div></section>
-    <section class="checkout-section"><p class="eyebrow">02 · SHIPPING</p><h2>Delivery address.</h2><div class="field"><label>Full name</label><input required></div><div class="field"><label>Address</label><input required></div><div class="field"><label>City</label><input required></div><div class="field"><label>State / region</label><input required></div><div class="field"><label>Postal code</label><input required></div></section>
-    <section class="checkout-section"><p class="eyebrow">03 · DELIVERY</p><h2>Choose a method.</h2><label class="method-card selected"><input type="radio" checked name="ship"> <span><strong>Standard</strong><br><small>Estimated 4–7 business days</small></span></label><label class="method-card" style="margin-top:8px"><input type="radio" name="ship"> <span><strong>Priority</strong><br><small>Estimated 2–3 business days</small></span></label></section>
-    <section class="checkout-section"><p class="eyebrow">04 · PAYMENT</p><h2>Crypto checkout.</h2><div class="method-card selected"><span style="font-size:22px">◇</span><div><strong>Pay with crypto</strong><p class="form-note">A secure provider session will be created server-side. No wallet secrets or API keys belong in frontend code.</p></div></div></section>
-    <button class="button" type="submit">Continue to payment →</button><p class="form-note" id="checkoutStatus"></p>
-  </form>
-  <aside class="order-summary"><p class="eyebrow">YOUR ORDER</p><div id="checkout-summary"></div></aside>
-</section>
-</main><div id="site-bottom"></div></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123c2e"><title>Checkout — Forma Research</title><link rel="stylesheet" href="site.css?v=20261006-checkout7"><script src="store-data.js?v=20261006-checkout7"></script><script src="site.js?v=20261006-checkout7" defer></script></head>
+<body class="checkout-page">
+<div id="site-top"></div>
+<header class="checkout-header"><a class="checkout-logo" href="index.html"><strong>FORMA</strong><span>RESEARCH</span></a><div class="checkout-secure"><span class="checkout-lock">✓</span><span>Secure checkout</span></div><a class="checkout-back" href="cart.html">Return to cart</a></header>
+<main class="checkout-main">
+  <section class="checkout-heading"><p class="eyebrow">CHECKOUT</p><h1>Complete your order.</h1><p>Enter your contact, delivery, and payment details below.</p></section>
+  <section class="checkout-layout checkout-layout-v2">
+    <form id="checkoutForm" class="checkout-form-v2">
+      <section class="checkout-section checkout-card">
+        <div class="checkout-step-head"><span>01</span><div><h2>Contact</h2><p>We’ll send order and tracking updates here.</p></div></div>
+        <div class="checkout-fields two-col">
+          <div class="field"><label for="checkoutEmail">Email address</label><input id="checkoutEmail" name="email" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+          <div class="field"><label for="checkoutPhone">Phone number</label><input id="checkoutPhone" name="phone" type="tel" autocomplete="tel" required placeholder="+1 555 000 0000"></div>
+        </div>
+      </section>
+
+      <section class="checkout-section checkout-card">
+        <div class="checkout-step-head"><span>02</span><div><h2>Shipping address</h2><p>We support international addresses.</p></div></div>
+        <div class="checkout-fields two-col">
+          <div class="field"><label for="firstName">First name</label><input id="firstName" name="firstName" autocomplete="given-name" required></div>
+          <div class="field"><label for="lastName">Last name</label><input id="lastName" name="lastName" autocomplete="family-name" required></div>
+        </div>
+        <div class="field"><label for="country">Country / region</label><select id="country" name="country" autocomplete="country" required><option value="">Select country / region</option></select></div>
+        <div class="field"><label for="address1">Street address</label><input id="address1" name="address1" autocomplete="address-line1" required placeholder="Street address"></div>
+        <div class="field"><label for="address2">Apartment, suite, etc. <span>Optional</span></label><input id="address2" name="address2" autocomplete="address-line2" placeholder="Apartment, suite, unit"></div>
+        <div class="checkout-fields three-col">
+          <div class="field"><label for="city">City</label><input id="city" name="city" autocomplete="address-level2" required></div>
+          <div class="field"><label for="region">State / province / region</label><input id="region" name="region" autocomplete="address-level1" required></div>
+          <div class="field"><label for="postal">Postal code</label><input id="postal" name="postal" autocomplete="postal-code" required></div>
+        </div>
+      </section>
+
+      <section class="checkout-section checkout-card">
+        <div class="checkout-step-head"><span>03</span><div><h2>Shipping method</h2><p>Choose the option that works best for you.</p></div></div>
+        <div class="checkout-methods" id="shippingMethods">
+          <label class="checkout-method selected"><input type="radio" name="ship" value="standard" checked><span class="method-radio"></span><span class="method-copy"><strong>Standard tracked shipping</strong><small>Estimated 4–7 business days after processing</small></span><span class="method-price">Calculated</span></label>
+          <label class="checkout-method"><input type="radio" name="ship" value="priority"><span class="method-radio"></span><span class="method-copy"><strong>Priority tracked shipping</strong><small>Estimated 2–3 business days after processing</small></span><span class="method-price">Calculated</span></label>
+        </div>
+      </section>
+
+      <section class="checkout-section checkout-card">
+        <div class="checkout-step-head"><span>04</span><div><h2>Payment method</h2><p>Your payment will be handled through a secure provider.</p></div></div>
+        <div class="checkout-methods" id="paymentMethods">
+          <label class="checkout-method selected payment-method"><input type="radio" name="payment" value="crypto" checked><span class="method-radio"></span><span class="payment-icon">◇</span><span class="method-copy"><strong>Crypto</strong><small>Continue to the secure payment provider after review.</small></span></label>
+          <label class="checkout-method payment-method disabled-method"><input type="radio" name="payment" value="card" disabled><span class="method-radio"></span><span class="payment-icon">▭</span><span class="method-copy"><strong>Card</strong><small>Placeholder — connect a card processor to enable.</small></span><span class="coming-soon">Not connected</span></label>
+        </div>
+      </section>
+
+      <section class="checkout-section checkout-card checkout-review-card">
+        <div class="checkout-step-head"><span>05</span><div><h2>Review & pay</h2><p>Check your details before continuing.</p></div></div>
+        <label class="checkout-consent"><input type="checkbox" required><span>I agree to the <a href="terms.html">Terms of Service</a> and acknowledge the <a href="privacy.html">Privacy Policy</a>.</span></label>
+        <button class="checkout-pay-button" type="submit"><span>Continue to secure payment</span><span>→</span></button>
+        <div class="checkout-assurance"><span>✓ Secure checkout</span><span>○ Tracked shipping</span><span>◇ Order support</span></div>
+        <p class="checkout-status" id="checkoutStatus" role="status"></p>
+      </section>
+    </form>
+
+    <aside class="order-summary order-summary-v2">
+      <div class="summary-head"><div><p class="eyebrow">YOUR ORDER</p><h2>Order summary</h2></div><a href="cart.html">Edit cart</a></div>
+      <div id="checkout-summary"></div>
+      <div class="summary-note">Final shipping, taxes, and payment-network fees—if applicable—are calculated before payment is completed.</div>
+    </aside>
+  </section>
+</main>
+<div id="site-bottom"></div>
+</body></html>
