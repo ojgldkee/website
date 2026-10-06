@@ -437,3 +437,5 @@ body{font-weight:500}
   .sticky-qty{display:none!important}
   .sticky-add-btn{height:38px;padding:0 13px!important}
 }
+
+.cart-reserve[hidden],.premium-shipping[hidden],[data-reserve-wrap][hidden]{display:none!important}
