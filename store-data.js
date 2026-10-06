@@ -3,12 +3,13 @@ window.STORE = {
   shortName: "FORMA",
   subName: "RESEARCH",
   currency: "USD",
-  shippingThreshold: 150,\n  cartReservationMinutes: 10,
+  shippingThreshold: 150,
+  cartReservationMinutes: 10,
   promo: {
-    enabled: true,
-    label: "LAUNCH PREVIEW ENDS",
-    endsAt: "2026-10-12T23:59:59-07:00",
-    cta: "SHOP THE COLLECTION",
+    enabled: false,
+    label: "",
+    endsAt: "",
+    cta: "",
     href: "collections.html"
   },
   announcements: [
