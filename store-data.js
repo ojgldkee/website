@@ -3,7 +3,7 @@ window.STORE = {
   shortName: "FORMA",
   subName: "RESEARCH",
   currency: "USD",
-  shippingThreshold: 150,
+  shippingThreshold: 150,\n  cartReservationMinutes: 10,
   promo: {
     enabled: true,
     label: "LAUNCH PREVIEW ENDS",
