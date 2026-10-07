@@ -256,12 +256,10 @@ function syncCheckoutShippingOptions(){
  let current=selectedShippingMethod();
  if(qualifies){
    const saved=localStorage.getItem('aspen-checkout-shipping-method');
-   if(!saved||saved==='standard'||saved==='free'){
-     if(freeInput&&!freeInput.checked){
-       freeInput.checked=true;
-       current='free';
-       localStorage.setItem('aspen-checkout-shipping-method','free');
-     }
+   if(!saved&&freeInput){
+     freeInput.checked=true;
+     current='free';
+     localStorage.setItem('aspen-checkout-shipping-method','free');
    }
  }else if(current==='free'){
    const standard=$('.checkout-method input[name="ship"][value="standard"]');
