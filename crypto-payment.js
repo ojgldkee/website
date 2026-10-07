@@ -58,8 +58,7 @@ function coinUI(){
 }
 function amountString(amount,c){
  if(!Number.isFinite(amount)||amount<=0)return "—";
- const fixed=amount.toFixed(c.precision);
- return fixed.replace(/0+$/,"").replace(/\\.$/,"");
+ return Number(amount).toLocaleString("en-US",{useGrouping:false,maximumFractionDigits:c.precision});
 }
 function setRateStatus(message,failed=false){
  $("#cryptoRateStatus").textContent=message;
