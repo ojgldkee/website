@@ -119,6 +119,17 @@ async function fetchWithTimeout(url,ms=9000){
   return await res.json();
  }finally{clearTimeout(timer)}
 }
+async function fetchCoinLore(){
+ const json=await fetchWithTimeout("https://api.coinlore.net/api/tickers/?start=0&limit=100",8500);
+ if(!Array.isArray(json?.data))throw new Error("CoinLore response missing data");
+ const rates={},now=Math.floor(Date.now()/1000);
+ for(const c of COINS){
+  const entry=json.data.find(x=>x.symbol===c.symbol&&Number(x.price_usd)>0);
+  if(entry)rates[c.id]={usd:Number(entry.price_usd),last_updated_at:now};
+ }
+ if(!rates.bitcoin?.usd)throw new Error("Bitcoin not returned");
+ return {rates,source:"CoinLore"};
+}
 async function fetchCoinGecko(){
  const ids=COINS.map(c=>c.id).join(",");
  const url="https://api.coingecko.com/api/v3/simple/price?ids="+encodeURIComponent(ids)+"&vs_currencies=usd&include_last_updated_at=true";
@@ -139,21 +150,30 @@ async function fetchCryptoCompare(){
  return {rates,source:"CryptoCompare"};
 }
 async function fetchRates(){
- const b=$("#cryptoRefresh");b.disabled=true;
- setRateStatus("Connecting to live pricing…");
+ const button=$("#cryptoRefresh");button.disabled=true;
+ setRateStatus("Loading current market prices…");
+ const providers=[fetchCoinLore,fetchCryptoCompare,fetchCoinGecko],failures=[];
  try{
-  let result;
-  try{result=await fetchCoinGecko()}
-  catch(firstError){
-   setRateStatus("Primary source unavailable. Checking alternate market feed…");
-   result=await fetchCryptoCompare();
+  const combined={},sources=[];
+  for(const provider of providers){
+   try{
+    const response=await provider();
+    for(const coin of COINS){
+     const entry=response.rates?.[coin.id];
+     if(!combined[coin.id]&&Number(entry?.usd)>0)combined[coin.id]=entry;
+    }
+    sources.push(response.source);
+    if(COINS.every(coin=>Number(combined[coin.id]?.usd)>0))break;
+   }catch(err){failures.push(String(err?.message||"Network error"))}
   }
-  state.rates=result.rates;state.priceSource=result.source;
+  if(!Object.keys(combined).length)throw new Error(failures.join(" | ")||"Market feeds unavailable");
+  state.rates=combined;state.priceSource=sources.join(" + ");
   applyQuote(true);
  }catch(e){
-  resetQuote("Live rates unavailable. Check your connection and try again.");
-  $("#cryptoSpotRate").textContent="Both market sources are unavailable ("+String(e.message||"network error")+").";
- }finally{b.disabled=false}
+  resetQuote("Live prices could not be loaded. Try again.");
+  $("#cryptoSpotRate").textContent="Price lookup failed. A server-side rate service is needed if your browser blocks the public feeds.";
+  console.warn("Crypto rate providers:",e);
+ }finally{button.disabled=false}
 }
 function showWallet(){
  const wallet=WALLETS[state.coin.symbol]||"";
@@ -167,8 +187,38 @@ function showWallet(){
   $("#cryptoTagNote").textContent=state.coin.symbol==="XRP"?"An XRP destination tag may be required; configure it alongside the wallet before accepting payment.":"Verify the address and network before making any transfer.";
  }
 }
+
+function initWizard(){
+ let step=1,maxReached=1;
+ const panels=[...document.querySelectorAll(".crypto-wizard-panel")];
+ const tabs=[...document.querySelectorAll(".crypto-progress-tab")];
+ const go=(next)=>{
+  if(![1,2,3].includes(next)||next>maxReached+1)return;
+  step=next;maxReached=Math.max(maxReached,step);
+  panels.forEach(panel=>{panel.hidden=Number(panel.dataset.step)!==step;});
+  tabs.forEach(tab=>{
+   const n=Number(tab.dataset.goStep);
+   tab.classList.toggle("is-current",n===step);
+   tab.classList.toggle("is-done",n<step);
+   tab.setAttribute("aria-current",n===step?"step":"false");
+   tab.disabled=n>maxReached;
+  });
+  const isReview=step===2;
+  if(isReview&&!Number(state.rates[state.coin.id]?.usd))fetchRates();
+  const intro=document.querySelector(".crypto-progress");
+  if(intro)intro.scrollIntoView({behavior:"smooth",block:"start"});
+ };
+ document.querySelector("#cryptoNext1").onclick=()=>go(2);
+ document.querySelector("#cryptoPrev2").onclick=()=>go(1);
+ document.querySelector("#cryptoNext2").onclick=()=>go(3);
+ document.querySelector("#cryptoPrev3").onclick=()=>go(2);
+ tabs.forEach(t=>t.addEventListener("click",()=>go(Number(t.dataset.goStep))));
+ go(1);
+}
+
 document.addEventListener("DOMContentLoaded",()=>{
  orderSummary();coinUI();showWallet();
+ initWizard();
  $("#cryptoRefresh").onclick=fetchRates;
  $("#cryptoCopy").onclick=async()=>{try{await navigator.clipboard.writeText($("#cryptoAddress").textContent);$("#cryptoCopy").textContent="Copied";setTimeout(()=>$("#cryptoCopy").textContent="Copy",1800)}catch(_){$("#cryptoCopy").textContent="Select & copy"}};
  $("#cryptoSubmit").onclick=()=>{$("#cryptoSubmissionStatus").textContent="Manual payment submission needs a secure backend before it can accept transactions."};
