@@ -1,5 +1,6 @@
 (() => {
 "use strict";
+window.ASPEN_CHECKOUT_CONTROLLER=true;
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const STORE=window.STORE||{currency:"USD",shippingThreshold:250};
