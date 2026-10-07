@@ -2829,3 +2829,21 @@ body{font-size:16px}
     padding-bottom:14px!important;
   }
 }
+
+/* Aspen Labs brand assets */
+.brand-image{display:flex;align-items:center;justify-content:center;line-height:1}
+.brand-image img{display:block;width:clamp(138px,18vw,210px);height:auto;object-fit:contain}
+.menu-brand-image{display:block;max-width:210px}
+.menu-brand-image img{display:block;width:100%;height:auto}
+.footer-logo-image{display:block;max-width:240px}
+.footer-logo-image img{display:block;width:100%;height:auto}
+.checkout-logo-image{display:block;width:clamp(145px,24vw,220px)}
+.checkout-logo-image img{display:block;width:100%;height:auto}
+.kits-only-showcase .category-cards{grid-template-columns:minmax(0,420px)}
+.kits-only-showcase .category-card{border-radius:24px}
+@media(max-width:700px){
+ .brand-image img{width:145px}
+ .menu-brand-image{max-width:175px}
+ .footer-logo-image{max-width:205px}
+ .checkout-logo-image{width:155px}
+}
