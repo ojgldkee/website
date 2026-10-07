@@ -2847,3 +2847,7 @@ body{font-size:16px}
  .footer-logo-image{max-width:205px}
  .checkout-logo-image{width:155px}
 }
+
+/* Compact product detail accordions */
+.product-accordion,.product-accordion details,.product-info-accordion,.product-detail-accordion{margin-block:8px!important}
+.product-accordion summary,.product-info-accordion summary,.product-detail-accordion summary{padding-block:17px!important}
