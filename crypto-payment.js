@@ -1,14 +1,14 @@
 (() => {"use strict";
 const COINS=[
- {symbol:"BTC",name:"Bitcoin",id:"bitcoin",network:"Bitcoin",precision:8,mark:"₿",bg:"#fff0d8",fg:"#e18a0d"},
- {symbol:"ETH",name:"Ethereum",id:"ethereum",network:"Ethereum",precision:8,mark:"Ξ",bg:"#e9edff",fg:"#586edb"},
- {symbol:"USDT",name:"Tether",id:"tether",network:"Ethereum · ERC-20",precision:6,mark:"₮",bg:"#ddf5e9",fg:"#169b71"},
- {symbol:"USDC",name:"USD Coin",id:"usd-coin",network:"Ethereum · ERC-20",precision:6,mark:"$",bg:"#e5efff",fg:"#316fcd"},
- {symbol:"SOL",name:"Solana",id:"solana",network:"Solana",precision:8,mark:"◎",bg:"#e9f5f0",fg:"#0c9871"},
- {symbol:"LTC",name:"Litecoin",id:"litecoin",network:"Litecoin",precision:8,mark:"Ł",bg:"#eaeef4",fg:"#657484"},
- {symbol:"XRP",name:"XRP",id:"ripple",network:"XRP Ledger",precision:6,mark:"✕",bg:"#e9edf0",fg:"#23333e"},
- {symbol:"BNB",name:"BNB",id:"binancecoin",network:"BNB Smart Chain",precision:8,mark:"◆",bg:"#fff4d5",fg:"#aa760c"},
- {symbol:"XMR",name:"Monero",id:"monero",network:"Monero",precision:8,mark:"ɱ",bg:"#fff0e4",fg:"#d66c30"}
+ {symbol:"BTC",name:"Bitcoin",id:"bitcoin",network:"Bitcoin",precision:8,logo:"https://cdn.simpleicons.org/bitcoin/F7931A"},
+ {symbol:"ETH",name:"Ethereum",id:"ethereum",network:"Ethereum",precision:8,logo:"https://cdn.simpleicons.org/ethereum/627EEA"},
+ {symbol:"USDT",name:"Tether",id:"tether",network:"Ethereum · ERC-20",precision:6,logo:"https://cdn.simpleicons.org/tether/26A17B"},
+ {symbol:"USDC",name:"USD Coin",id:"usd-coin",network:"Ethereum · ERC-20",precision:6,logo:"https://cdn.simpleicons.org/usdc/2775CA"},
+ {symbol:"SOL",name:"Solana",id:"solana",network:"Solana",precision:8,logo:"https://cdn.simpleicons.org/solana/14F195"},
+ {symbol:"LTC",name:"Litecoin",id:"litecoin",network:"Litecoin",precision:8,logo:"https://cdn.simpleicons.org/litecoin/345D9D"},
+ {symbol:"XRP",name:"XRP",id:"ripple",network:"XRP Ledger",precision:6,logo:"https://cdn.simpleicons.org/xrp/23292F"},
+ {symbol:"BNB",name:"BNB",id:"binancecoin",network:"BNB Smart Chain",precision:8,logo:"https://cdn.simpleicons.org/binance/F3BA2F"},
+ {symbol:"XMR",name:"Monero",id:"monero",network:"Monero",precision:8,logo:"https://cdn.simpleicons.org/monero/FF6600"}
 ];
 // Public receiving addresses only. Never add seeds, private keys, or API secrets.
 // To activate a real merchant invoice, a secure order backend is also required.
@@ -61,14 +61,18 @@ function cartTotals(){
  if(details.length>3){const extra=document.createElement("span");extra.className="pay-product-entry";extra.textContent="+"+(details.length-3)+" more";root.append(extra)}
  $("#payOrderSubtitle").textContent=count===1?"1 item in your order · Choose your cryptocurrency":count+" items in your order · Choose your cryptocurrency";
 }
-function iconStyle(c){return "--logo:"+c.bg+";--logo-text:"+c.fg}
+function coinLogo(c,large=false){
+ const wrap=document.createElement("span");wrap.className="coin-logo"+(large?" coin-logo-large":"");
+ const img=document.createElement("img");img.src=c.logo;img.alt="";img.loading="eager";img.decoding="async";
+ wrap.appendChild(img);return wrap;
+}
 function makeList(){
  const root=$("#payCoinList");root.replaceChildren();
  for(const coin of COINS){
   const available=Boolean(WALLETS[coin.symbol]);
   const btn=document.createElement("button");btn.type="button";btn.className="coin-row"+(available?"":" coin-row-disabled");btn.disabled=!available;
   btn.setAttribute("aria-label",available?"Pay with "+coin.name:coin.name+" wallet not configured");
-  const logo=document.createElement("span");logo.className="coin-logo";logo.style.cssText=iconStyle(coin);logo.textContent=coin.mark;
+  const logo=coinLogo(coin);
   const name=document.createElement("strong");name.className="coin-title";name.textContent=coin.name;
   const network=document.createElement("small");network.className="coin-network";network.textContent=coin.network;
   const quote=document.createElement("span");quote.className="coin-conversion";const rate=Number(state.rates[coin.id]||0);
@@ -84,20 +88,20 @@ function updateClock(){
  const rest=state.expiresAt?Math.max(0,state.expiresAt-Date.now()):0,sec=Math.ceil(rest/1000);
  $("#invoiceClock").textContent=state.expiresAt?String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0"):"--:--";
  $("#invoiceTimerBar").style.width=(state.expiresAt?rest/3600000*100:0)+"%";
- if(state.expiresAt&&!rest){
+ if(state.expiresAt&&!rest&&!state.loading){
   state.expiresAt=0;state.quoted=null;
-  $("#invoiceClock").textContent="Expired";
-  $("#invoicePaymentStatus").textContent="Quote expired — refresh rate";
+  $("#invoiceClock").textContent="Updating";
+  $("#invoicePaymentStatus").textContent="Updating exchange rate…";
   $("#invoiceAmount").textContent="—";$("#walletAmount").value="—";
   $("#copyAmount").disabled=true;$("#copyWalletAmount").disabled=true;
-  disableWallet();
+  loadRates();
  }
 }
 function disableWallet(){
  $("#walletAddress").value="Not configured";
  $("#copyWallet").disabled=true;$("#qrPlaceholder").hidden=false;$("#qrCode").hidden=true;
  $("#qrCaption").textContent="Wallet not configured. Do not send any funds.";
- $("#invoiceStatus").textContent="Preview";
+ $("#invoiceStatus").textContent="Unavailable";
 }
 function paymentUri(c,address,amount){
  if(c.symbol==="BTC")return "bitcoin:"+address+"?amount="+encodeURIComponent(amount);
@@ -120,7 +124,7 @@ function invoiceDetails(){
  const c=state.coin,rate=Number(state.rates[c.id]||0);
  $("#invoiceCoinName").textContent=c.name;$("#invoiceSymbol").textContent=c.symbol;
  $("#invoiceNetwork").textContent=c.network;$("#walletAmountCoin").textContent=c.symbol;
- const logo=$("#invoiceCoinLogo");logo.style.cssText=iconStyle(c);logo.textContent=c.mark;
+ const logo=$("#invoiceCoinLogo");logo.replaceChildren();const logoImg=document.createElement("img");logoImg.src=c.logo;logoImg.alt="";logoImg.decoding="async";logo.appendChild(logoImg);
  $("#networkWarningTitle").textContent="Send only "+c.symbol+" on "+c.network;
  const address=WALLETS[c.symbol];
  const valid=Boolean(state.hasOrder&&state.expiresAt>Date.now()&&state.quoted>0&&rate>0);
@@ -136,7 +140,6 @@ function invoiceDetails(){
   disableWallet();
   $("#invoicePaymentStatus").textContent=!state.hasOrder?"No order in cart":!valid?"Waiting for current quote":"Wallet setup required";
  }
- $("#invoiceFootnote").textContent=address&&valid?"Send only the exact amount shown using the listed network. Payment confirmation is reviewed manually.":"Payment is not available until an order, current rate, and receiving wallet are ready.";
  updateClock();
 }
 function openInvoice(c){
@@ -179,30 +182,30 @@ async function sourceCoinGecko(){
 }
 async function loadRates(){
  if(state.loading)return;state.loading=true;
- $("#payRateStatus").textContent="Loading current market prices…";$("#retryRates").disabled=true;$("#refreshInvoice").disabled=true;
+ $("#payRateStatus").textContent="Loading current market prices…";
  const combined={},sources=[];
- // Any rate data must come from a successful live endpoint; do not manufacture rates.
  try{
   const responses=await Promise.allSettled([sourceCoinLore(),sourceCoinGecko()]);
-  for(const r of responses){if(r.status!=="fulfilled")continue;sources.push(r.value.name);
-   for(const [id,price]of Object.entries(r.value.rates))if(!combined[id]&&Number(price)>0)combined[id]=price;
+  for(const r of responses){
+   if(r.status!=="fulfilled")continue;
+   sources.push(r.value.name);
+   for(const [id,price] of Object.entries(r.value.rates))if(!combined[id]&&Number(price)>0)combined[id]=price;
   }
   state.rates=combined;state.source=sources.join(", ");
-  $("#payRateStatus").textContent=sources.length?"Live rates: "+state.source+" · "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}):"Live rates unavailable. Retry or use a hosted price endpoint.";
+  $("#payRateStatus").textContent=sources.length?"Live market rates · "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}):"Live rates are reconnecting…";
   makeList();
-  // Explicit refresh creates a new one-hour estimate for the selected currency.
   if(!$("#payInvoice").hidden){
    const rate=Number(state.rates[state.coin.id]||0);
    state.quoted=rate>0&&state.hasOrder?state.total/rate:null;
    state.expiresAt=state.quoted?Date.now()+3600000:0;
    invoiceDetails();
   }
- }finally{state.loading=false;$("#retryRates").disabled=false;$("#refreshInvoice").disabled=false}
+  if(!sources.length)setTimeout(loadRates,15000);
+ }finally{state.loading=false}
 }
 document.addEventListener("DOMContentLoaded",()=>{
  cartTotals();makeList();disableWallet();
  $("#changeCurrency").onclick=()=>selectScreen("choose");
- $("#retryRates").onclick=loadRates;$("#refreshInvoice").onclick=loadRates;
  $("#copyWallet").onclick=()=>copy($("#walletAddress").value,$("#copyWallet"));
  $("#copyAmount").onclick=()=>copy($("#walletAmount").value,$("#copyAmount"));
  $("#copyWalletAmount").onclick=()=>copy($("#walletAmount").value,$("#copyWalletAmount"));
