@@ -16,7 +16,7 @@ const COINS=[
 const WALLETS={BTC:"",ETH:"",USDT:"",USDC:"",SOL:"",LTC:"",XRP:"",BNB:"",XMR:""};
 const $=s=>document.querySelector(s),fmt=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(n);
 const cartKey="forma-cart-v2";
-const state={coin:COINS[0],usd:0,rates:{},expiresAt:0,quoteAmount:null,ready:false,quoteFetchedAt:0,interval:null};
+const state={coin:COINS[0],usd:0,rates:{},expiresAt:0,quoteAmount:null,ready:false,quoteFetchedAt:0,interval:null,priceSource:""};
 function getCart(){
  let lines=[];try{lines=JSON.parse(localStorage.getItem(cartKey)||"[]")}catch(_){}
  if(!Array.isArray(lines))return [];
@@ -58,55 +58,102 @@ function coinUI(){
 }
 function amountString(amount,c){
  if(!Number.isFinite(amount)||amount<=0)return "—";
- return amount.toFixed(c.precision).replace(/0+$/,"").replace(/\.$/,"");
+ const fixed=amount.toFixed(c.precision);
+ return fixed.replace(/0+$/,"").replace(/\\.$/,"");
 }
-function resetQuote(){
+function setRateStatus(message,failed=false){
+ $("#cryptoRateStatus").textContent=message;
+ $("#cryptoLiveDot").classList.toggle("failed",failed);
+}
+function resetQuote(message){
  state.quoteAmount=null;state.expiresAt=0;state.ready=false;
  $("#cryptoAmount").textContent="—";$("#cryptoClock").textContent="--:--";
- $("#cryptoRateStatus").textContent="Live price not available. Try again.";
- $("#cryptoTimeNote").textContent="No quote is active. Refresh to retrieve a new market estimate.";
+ setRateStatus(message||"Rates are not available right now.",true);
+ $("#cryptoTimeNote").textContent="Try refreshing the quote. No payment address is active.";
  $("#cryptoTimerFill").style.width="0%";
+ showWallet();
 }
-function applyQuote(reset){
- $("#cryptoSymbol").textContent=state.coin.symbol;
- const rate=Number(state.rates[state.coin.id]?.usd||0);
- const age=Math.floor(Date.now()/1000)-Number(state.rates[state.coin.id]?.last_updated_at||0);
- if(!rate||!state.usd||age>600||age< -120){resetQuote();$("#cryptoSpotRate").textContent="Quote unavailable";showWallet();return}
- if(reset||!state.quoteAmount){
-  state.quoteAmount=state.usd/rate;
-  state.expiresAt=Date.now()+30*60*1000;
+function applyQuote(reset=true){
+ const c=state.coin,rate=Number(state.rates[c.id]?.usd||0);
+ $("#cryptoSymbol").textContent=c.symbol;
+ if(!Number.isFinite(rate)||rate<=0){
+  resetQuote("Selected currency rate unavailable. Try refreshing.");
+  $("#cryptoSpotRate").textContent="Rate unavailable";return;
+ }
+ $("#cryptoSpotRate").textContent="1 "+c.symbol+" ≈ "+fmt(rate)+" · "+c.network;
+ const updatedAt=Number(state.rates[c.id]?.last_updated_at||0);
+ const updatedText=updatedAt?"Updated "+new Date(updatedAt*1000).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}):"Current market estimate";
+ setRateStatus("Rate loaded · "+state.priceSource+" · "+updatedText);
+ if(!state.usd){
+  state.ready=false;state.quoteAmount=null;state.expiresAt=0;
+  $("#cryptoAmount").textContent="—";$("#cryptoClock").textContent="--:--";
+  $("#cryptoTimerFill").style.width="0%";
+  $("#cryptoTimeNote").textContent="Add items to your cart to calculate an estimated 30-minute crypto quote.";
+  showWallet();return;
+ }
+ if(reset||!state.quoteAmount||!state.expiresAt){
+  state.quoteAmount=state.usd/rate;state.expiresAt=Date.now()+1800000;
  }
  state.ready=true;
- $("#cryptoAmount").textContent=amountString(state.quoteAmount,state.coin);
- $("#cryptoSpotRate").textContent="1 "+state.coin.symbol+" ≈ "+fmt(rate)+" · "+state.coin.network;
- $("#cryptoRateStatus").textContent="Rate retrieved · "+new Date(Number(state.rates[state.coin.id]?.last_updated_at||Math.floor(Date.now()/1000))*1000).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
- $("#cryptoTimeNote").textContent="30-minute preview quote. Rates are estimates until confirmed by your payment backend.";
+ $("#cryptoAmount").textContent=amountString(state.quoteAmount,c);
+ $("#cryptoTimeNote").textContent="30-minute market estimate only; a backend is required for a guaranteed locked invoice.";
  tick();showWallet();
 }
 function tick(){
  if(!state.ready)return;
- const remaining=Math.max(0,state.expiresAt-Date.now()),sec=Math.ceil(remaining/1000);
+ const remaining=Math.max(0,state.expiresAt-Date.now());
+ const sec=Math.ceil(remaining/1000);
  $("#cryptoClock").textContent=String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0");
- $("#cryptoTimerFill").style.width=String(remaining/1800000*100)+"%";
+ $("#cryptoTimerFill").style.width=(remaining/18000)+"%";
  if(!remaining){
   state.ready=false;state.quoteAmount=null;
   $("#cryptoRateStatus").textContent="Quote expired · refresh to recalculate";
-  $("#cryptoTimeNote").textContent="The 30-minute quote window has ended. Refresh the quote to continue.";
+  $("#cryptoTimeNote").textContent="The 30-minute estimate has expired. Refresh the quote.";
   $("#cryptoAmount").textContent="—";showWallet();
  }
 }
+async function fetchWithTimeout(url,ms=9000){
+ const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),ms);
+ try{
+  const res=await fetch(url,{cache:"no-store",signal:ctl.signal,headers:{Accept:"application/json"}});
+  if(!res.ok)throw new Error("HTTP "+res.status);
+  return await res.json();
+ }finally{clearTimeout(timer)}
+}
+async function fetchCoinGecko(){
+ const ids=COINS.map(c=>c.id).join(",");
+ const url="https://api.coingecko.com/api/v3/simple/price?ids="+encodeURIComponent(ids)+"&vs_currencies=usd&include_last_updated_at=true";
+ const json=await fetchWithTimeout(url);
+ if(!json?.bitcoin?.usd)throw new Error("Incomplete CoinGecko response");
+ return {rates:json,source:"CoinGecko"};
+}
+async function fetchCryptoCompare(){
+ const syms=COINS.map(c=>c.symbol).join(",");
+ const url="https://min-api.cryptocompare.com/data/pricemulti?fsyms="+encodeURIComponent(syms)+"&tsyms=USD";
+ const json=await fetchWithTimeout(url);
+ if(!json?.BTC?.USD)throw new Error("Incomplete CryptoCompare response");
+ const rates={};const now=Math.floor(Date.now()/1000);
+ for(const c of COINS){
+  const price=Number(json[c.symbol]?.USD);
+  if(Number.isFinite(price)&&price>0)rates[c.id]={usd:price,last_updated_at:now};
+ }
+ return {rates,source:"CryptoCompare"};
+}
 async function fetchRates(){
  const b=$("#cryptoRefresh");b.disabled=true;
- $("#cryptoRateStatus").textContent="Fetching current exchange rates…";
+ setRateStatus("Connecting to live pricing…");
  try{
-  const ids=COINS.map(c=>c.id).join(",");
-  const url="https://api.coingecko.com/api/v3/simple/price?ids="+encodeURIComponent(ids)+"&vs_currencies=usd&include_last_updated_at=true";
-  const res=await fetch(url,{cache:"no-store",headers:{Accept:"application/json"}});
-  if(!res.ok)throw new Error("Provider unavailable ("+res.status+")");
-  const rates=await res.json();if(!rates||typeof rates!=="object")throw new Error("Invalid market data");
-  state.rates=rates;applyQuote(true);
+  let result;
+  try{result=await fetchCoinGecko()}
+  catch(firstError){
+   setRateStatus("Primary source unavailable. Checking alternate market feed…");
+   result=await fetchCryptoCompare();
+  }
+  state.rates=result.rates;state.priceSource=result.source;
+  applyQuote(true);
  }catch(e){
-  resetQuote();$("#cryptoRateStatus").textContent="Live rates unavailable. Try refresh.";$("#cryptoSpotRate").textContent=String(e.message||"Connection error");
+  resetQuote("Live rates unavailable. Check your connection and try again.");
+  $("#cryptoSpotRate").textContent="Both market sources are unavailable ("+String(e.message||"network error")+").";
  }finally{b.disabled=false}
 }
 function showWallet(){
