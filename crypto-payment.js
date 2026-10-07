@@ -1,13 +1,13 @@
 (() => {"use strict";
 const COINS=[
- {symbol:"BTC",name:"Bitcoin",id:"bitcoin",network:"Bitcoin",precision:8,logo:"https://cdn.simpleicons.org/bitcoin/F7931A"},
- {symbol:"ETH",name:"Ethereum",id:"ethereum",network:"Ethereum",precision:8,logo:"https://cdn.simpleicons.org/ethereum/627EEA"},
- {symbol:"USDT",name:"Tether",id:"tether",network:"Ethereum · ERC-20",precision:6,logo:"https://cdn.simpleicons.org/tether/26A17B"},
- {symbol:"USDC",name:"USD Coin",id:"usd-coin",network:"Ethereum · ERC-20",precision:6,logo:"https://cdn.simpleicons.org/usdc/2775CA"},
- {symbol:"SOL",name:"Solana",id:"solana",network:"Solana",precision:8,logo:"https://cdn.simpleicons.org/solana/14F195"},
- {symbol:"LTC",name:"Litecoin",id:"litecoin",network:"Litecoin",precision:8,logo:"https://cdn.simpleicons.org/litecoin/345D9D"},
- {symbol:"BNB",name:"BNB",id:"binancecoin",network:"BNB Smart Chain",precision:8,logo:"https://cdn.simpleicons.org/binance/F3BA2F"},
- {symbol:"XMR",name:"Monero",id:"monero",network:"Monero",precision:8,logo:"https://cdn.simpleicons.org/monero/FF6600"}
+ {symbol:"BTC",name:"Bitcoin",id:"bitcoin",network:"Bitcoin",precision:8,logo:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/btc.svg"},
+ {symbol:"ETH",name:"Ethereum",id:"ethereum",network:"Ethereum",precision:8,logo:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/eth.svg"},
+ {symbol:"USDT",name:"Tether",id:"tether",network:"Ethereum · ERC-20",precision:6,logo:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdt.svg"},
+ {symbol:"USDC",name:"USD Coin",id:"usd-coin",network:"Ethereum · ERC-20",precision:6,logo:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdc.svg"},
+ {symbol:"SOL",name:"Solana",id:"solana",network:"Solana",precision:8,logo:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/sol.svg"},
+ {symbol:"LTC",name:"Litecoin",id:"litecoin",network:"Litecoin",precision:8,logo:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/ltc.svg"},
+ {symbol:"BNB",name:"BNB",id:"binancecoin",network:"BNB Smart Chain",precision:8,logo:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/bnb.svg"},
+ {symbol:"XMR",name:"Monero",id:"monero",network:"Monero",precision:8,logo:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/xmr.svg"}
 ];
 // Public receiving addresses only. Never add seeds, private keys, or API secrets.
 // To activate a real merchant invoice, a secure order backend is also required.
