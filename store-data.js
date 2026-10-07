@@ -1,6 +1,6 @@
 window.STORE = {
-  name: "Forma Research",
-  shortName: "FORMA",
+  name: "Aspen Labs",
+  shortName: "ASPEN LABS",
   subName: "RESEARCH",
   currency: "USD",
   shippingThreshold: 250,
