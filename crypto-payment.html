@@ -2,10 +2,10 @@
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#103c2b"><title>Crypto payment | Forma Research</title>
-<link rel="stylesheet" href="crypto-payment.css?v=20261007-wallets11">
+<link rel="stylesheet" href="crypto-payment.css?v=20261007-logos12">
 <script src="store-data.js?v=20261007-wallets11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
-<script src="crypto-payment.js?v=20261007-wallets11" defer></script>
+<script src="crypto-payment.js?v=20261007-logos12" defer></script>
 </head><body class="forma-payment">
 <header class="pay-header"><div class="pay-logo"><strong>FORMA</strong><small>RESEARCH</small></div><div class="pay-header-status"><span></span> Crypto checkout</div></header>
 <main class="pay-main">
@@ -18,14 +18,14 @@
   <section class="pay-card">
    <div class="pay-card-heading"><div><h2>Choose your currency</h2><p>Choose from nine supported cryptocurrencies.</p></div><span>9 options</span></div>
    <div id="payCoinList" class="pay-coin-list"></div>
-   <div class="pay-fetch-status"><span id="payRateStatus" role="status">Loading market rates…</span><button id="retryRates" type="button">↻ Retry</button></div>
+   <div class="pay-fetch-status"><span id="payRateStatus" role="status">Loading market rates…</span></div>
   </section>
  </div>
  <div id="payInvoice" class="pay-screen" hidden>
   <button class="pay-change" id="changeCurrency" type="button">← Change currency</button>
   <div class="pay-invoice-head"><div class="pay-topline"><span class="pay-dot"></span> PAYMENT INSTRUCTIONS</div><h1>Send your <em>payment.</em></h1><p class="pay-description">Use your wallet and send only on the specified network.</p></div>
   <section class="pay-card invoice-card">
-   <div class="invoice-currency-line"><span id="invoiceCoinLogo" class="coin-logo coin-logo-large">₿</span><div class="invoice-currency-label"><span>Selected currency</span><strong id="invoiceCoinName">Bitcoin</strong><small id="invoiceNetwork">Bitcoin</small></div><span id="invoiceStatus" class="invoice-state">Preview</span></div>
+   <div class="invoice-currency-line"><span id="invoiceCoinLogo" class="coin-logo coin-logo-large"></span><div class="invoice-currency-label"><span>Selected currency</span><strong id="invoiceCoinName">Bitcoin</strong><small id="invoiceNetwork">Bitcoin</small></div><span id="invoiceStatus" class="invoice-state">Ready</span></div>
    <div class="invoice-price">
     <span>Amount to send</span>
     <div class="invoice-amount-value"><strong id="invoiceAmount">—</strong><b id="invoiceSymbol">BTC</b><button type="button" class="icon-copy" id="copyAmount" aria-label="Copy amount" disabled>⧉</button></div>
@@ -37,13 +37,10 @@
     <label for="walletAddress">Wallet address</label><div class="copy-field"><input id="walletAddress" value="Not configured" readonly><button id="copyWallet" disabled aria-label="Copy wallet address" type="button">⧉</button></div>
     <label for="walletAmount">Amount (<span id="walletAmountCoin">BTC</span>)</label><div class="copy-field"><input id="walletAmount" value="—" readonly><button id="copyWalletAmount" disabled aria-label="Copy payment amount" type="button">⧉</button></div>
    </div>
-   <div class="invoice-bottom"><div><span>Time remaining</span><strong id="invoiceClock">60:00</strong></div><div><span>Status</span><strong id="invoicePaymentStatus">Not ready to accept payment</strong></div></div>
+   <div class="invoice-bottom"><div><span>Time remaining</span><strong id="invoiceClock">60:00</strong></div><div><span>Status</span><strong id="invoicePaymentStatus">Waiting for payment</strong></div></div>
    <div class="pay-timer-track"><div id="invoiceTimerBar"></div></div>
-   <div class="pay-bottom-note" id="invoiceFootnote">Preview only — live payment collection and manual order review are not yet connected.</div>
-   <button id="refreshInvoice" class="refresh-invoice" type="button">↻ Refresh exchange rate</button>
   </section>
  </div>
 </section>
 </main>
-<footer class="pay-footer"><strong>FORMA RESEARCH</strong><span>Payment preview · No funds accepted</span></footer>
 </body></html>
