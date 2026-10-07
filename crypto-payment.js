@@ -6,7 +6,6 @@ const COINS=[
  {symbol:"USDC",name:"USD Coin",id:"usd-coin",network:"Ethereum · ERC-20",precision:6,logo:"https://cdn.simpleicons.org/usdc/2775CA"},
  {symbol:"SOL",name:"Solana",id:"solana",network:"Solana",precision:8,logo:"https://cdn.simpleicons.org/solana/14F195"},
  {symbol:"LTC",name:"Litecoin",id:"litecoin",network:"Litecoin",precision:8,logo:"https://cdn.simpleicons.org/litecoin/345D9D"},
- {symbol:"XRP",name:"XRP",id:"ripple",network:"XRP Ledger",precision:6,logo:"https://cdn.simpleicons.org/xrp/23292F"},
  {symbol:"BNB",name:"BNB",id:"binancecoin",network:"BNB Smart Chain",precision:8,logo:"https://cdn.simpleicons.org/binance/F3BA2F"},
  {symbol:"XMR",name:"Monero",id:"monero",network:"Monero",precision:8,logo:"https://cdn.simpleicons.org/monero/FF6600"}
 ];
@@ -19,7 +18,6 @@ const WALLETS={
  USDC:"",
  SOL:"NFLLRyuyc43avwW83pRmZZNwNT5TJH3B9Hcac64PM8x",
  LTC:"ltc1ql55pjj969y699fj6w4sf53tfgxcxuq2zx4qf37",
- XRP:"",
  BNB:"0xAE80ce99508A70cDb1947a79e12CEe98B74efD55",
  XMR:"4AZ4p2MyR5rBoSdgbEiJNsdcaVgYApXkgBATAa8LkVSWi7XioyrjEW6MRKER3wus5tc2Pv8iGXNW6PU2USYsrBK7HLFBnTJ"
 };
@@ -170,7 +168,7 @@ async function sourceCoinLore(){
  if(!rates.bitcoin)throw Error("No BTC");return {rates,name:"CoinLore"};
 }
 async function sourceCryptoCompare(){
- const d=await json("https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH,USDT,USDC,SOL,LTC,XRP,BNB,XMR&tsyms=USD");
+ const d=await json("https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH,USDT,USDC,SOL,LTC,BNB,XMR&tsyms=USD");
  const rates={};for(const c of COINS){const v=Number(d[c.symbol]?.USD);if(v>0)rates[c.id]=v}
  if(!rates.bitcoin)throw Error("No BTC");return {rates,name:"CryptoCompare"};
 }
