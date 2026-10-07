@@ -30,8 +30,23 @@ function footer(){
 function cartShell(){
  document.body.insertAdjacentHTML('beforeend','<div class="cart-overlay"></div><aside class="cart-drawer premium-cart"><div class="cart-head premium-cart-head"><div class="cart-title-row"><h2>Your Cart</h2><span class="cart-item-pill" data-drawer-pill>0 items</span></div><button class="close-btn cart-close" aria-label="Close cart">×</button></div><div class="cart-reserve" data-reserve-wrap hidden><div><span class="reserve-label">CART RESERVED FOR</span><strong data-reserve-time>10:00</strong></div><small>Your cart session is held for 10 minutes at a time.</small></div><div class="cart-shipping premium-shipping free-shipping-card" data-shipping-wrap><div class="shipping-copy"><span>FREE SHIPPING · $250+</span><strong data-shipping-msg></strong></div><div class="shipping-progress-row"><div class="progress premium-progress"><span data-progress></span></div><span class="shipping-goal-icon" data-shipping-icon aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v11H3z"/><path d="M14 9h4l3 4v4h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg></span></div></div><div class="cart-items premium-items" data-cart-items></div><div class="cart-foot premium-cart-foot"><div class="cart-summary-row"><span>Subtotal</span><strong data-subtotal>$0.00</strong></div><div class="cart-summary-row shipping-row"><span>Shipping</span><span>Calculated at checkout</span></div><a class="checkout-btn premium-checkout" href="checkout.html"><span>Checkout</span><span>→</span></a><a class="view-cart-link" href="cart.html">View Full Cart</a></div></aside>');
 }
-let cart=JSON.parse(localStorage.getItem('aspen-labs-cart-v2')||'[]');
+const CART_KEY='aspen-labs-cart-v2';
+const CART_BACKUP_KEY='aspen-labs-cart-backup-v1';
+function readStoredCart(){
+  const candidates=[localStorage.getItem(CART_KEY),localStorage.getItem(CART_BACKUP_KEY),localStorage.getItem('forma-cart-v2'),localStorage.getItem('cart')];
+  for(const raw of candidates){
+    if(!raw)continue;
+    try{const parsed=JSON.parse(raw);if(Array.isArray(parsed))return parsed}catch(e){}
+  }
+  return [];
+}
+let cart=readStoredCart();
 cart=Array.isArray(cart)?cart.map(l=>{const p=P.find(x=>x.slug===l.slug);return p?{slug:l.slug,variant:l.variant||defaultVariant(p).label,qty:Math.max(1,Number(l.qty)||1)}:null}).filter(Boolean):[];
+try{
+ const payload=JSON.stringify(cart);
+ localStorage.setItem(CART_KEY,payload);
+ localStorage.setItem(CART_BACKUP_KEY,payload);
+}catch(e){}
 const RESERVE_KEY='aspen-labs-cart-reservation-deadline';
 let reservationTimer=null;
 function reservationMs(){return (S.cartReservationMinutes||10)*60*1000}
@@ -56,7 +71,12 @@ function tickReservation(){
  $$('[data-reserve-wrap]').forEach(e=>e.hidden=false);
 }
 function startReservationTimer(){ensureReservation();tickReservation();if(reservationTimer)clearInterval(reservationTimer);reservationTimer=setInterval(tickReservation,1000)}
-function saveCart(){localStorage.setItem('aspen-labs-cart-v2',JSON.stringify(cart));ensureReservation();renderCart();renderCheckout&&renderCheckout();renderFullCart();tickReservation()}
+function saveCart(){
+ const payload=JSON.stringify(cart);
+ localStorage.setItem(CART_KEY,payload);
+ localStorage.setItem(CART_BACKUP_KEY,payload);
+ ensureReservation();renderCart();renderCheckout&&renderCheckout();renderFullCart();tickReservation();
+}
 function productBySlug(slug){if(slug==="etatrutide")slug="retatrutide";return P.find(p=>p.slug===slug)}
 function productVariants(p){return Array.isArray(p?.variants)&&p.variants.length?[...p.variants].sort((a,b)=>(a.amount??0)-(b.amount??0)):[{label:"Default",amount:0,price:p?.price??null,compareAt:p?.compareAt||null}]}
 function defaultVariant(p){return productVariants(p)[0]}
@@ -265,6 +285,33 @@ function renderFullCart(){
  $$('[data-fremove-slug]').forEach(b=>b.onclick=()=>removeFromCart(b.dataset.fremoveSlug,b.dataset.fremoveVariant));
  tickReservation();
 }
+const CHECKOUT_DATA_KEY='aspen-labs-checkout-data-v1';
+function readCheckoutData(){
+ try{return JSON.parse(localStorage.getItem(CHECKOUT_DATA_KEY)||'{}')||{}}catch(e){return{}}
+}
+function saveCheckoutData(form){
+ if(!form)return;
+ const data={};
+ $('input,select,textarea',form).forEach(el=>{
+   if(!el.name&& !el.matches('.checkout-consent input'))return;
+   const key=el.name||'termsAccepted';
+   if(el.type==='radio'){if(el.checked)data[key]=el.value;return}
+   if(el.type==='checkbox'){data[key]=!!el.checked;return}
+   data[key]=el.value;
+ });
+ localStorage.setItem(CHECKOUT_DATA_KEY,JSON.stringify(data));
+}
+function restoreCheckoutData(form){
+ if(!form)return;
+ const data=readCheckoutData();
+ $('input,select,textarea',form).forEach(el=>{
+   const key=el.name|| (el.matches('.checkout-consent input')?'termsAccepted':'');
+   if(!key||!(key in data))return;
+   if(el.type==='radio'){el.checked=String(data[key])===String(el.value);return}
+   if(el.type==='checkbox'){el.checked=!!data[key];return}
+   el.value=data[key]??'';
+ });
+}
 function initCheckout(){
  const f=$('#checkoutForm');if(!f){renderCheckout();return}
  const country=$('#country');
@@ -277,7 +324,7 @@ function initCheckout(){
  $$('.checkout-method input[type="radio"]').forEach(input=>input.addEventListener('change',()=>{
    const name=input.name;
    $$('.checkout-method input[name="'+name+'"]').forEach(r=>r.closest('.checkout-method').classList.toggle('selected',r.checked));
-   if(name==='ship'&&input.checked){localStorage.setItem('aspen-checkout-shipping-method',input.value);renderCheckout();}
+   if(name==='ship'&&input.checked){localStorage.setItem('aspen-checkout-shipping-method',input.value);saveCheckoutData(f);renderCheckout();}
  }));
  const savedShip=localStorage.getItem('aspen-checkout-shipping-method');
  if(savedShip){
