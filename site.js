@@ -127,7 +127,12 @@ function renderProduct(){
    '<div class="product-gallery-trust"><div><span class="benefit-icon">'+icon('shield')+'</span><strong>99%+ purity</strong><small>Verified by batch testing</small></div><div><span class="benefit-icon">'+icon('document')+'</span><strong>COA included</strong><small>Batch documentation included</small></div><div><span class="benefit-icon">'+icon('delivery')+'</span><strong>U.S. shipped</strong><small>Ships from U.S. fulfillment</small></div></div>'+
   '</div>'+
   '<div class="product-info product-info-v2">'+
-   '<p class="eyebrow">'+p.category+'</p><h1>'+p.name+'</h1><p class="product-sub">'+p.subtitle+'</p>'+
+   '<p class="eyebrow">'+p.category+'</p><h1>'+p.name+'</h1>'+
+   '<div class="product-title-benefits">'+
+    '<div><span>'+icon('shield')+'</span><strong>99%+ purity</strong><small>Batch-tested quality</small></div>'+
+    '<div><span>'+icon('products')+'</span><strong>Controlled handling</strong><small>Consistent lab handling standards</small></div>'+
+    '<div><span>'+icon('document')+'</span><strong>COA included</strong><small>Batch documentation available</small></div>'+
+   '</div>'+
    '<div class="product-price-row"><div class="product-main-price" id="productPrice"><strong>'+money(first.price)+'</strong>'+(first.compareAt?'<s>'+money(first.compareAt)+'</s>':'')+'</div><span class="save-badge" id="saveBadge" hidden></span></div>'+
    '<p class="product-sub product-description">'+p.description+'</p>'+
    '<div class="purchase-box" id="purchaseBox">'+
@@ -237,16 +242,49 @@ function initCheckout(){
    const name=input.name;
    $('.checkout-method input[name="'+name+'"]').forEach(r=>r.closest('.checkout-method').classList.toggle('selected',r.checked));
  }));
- $('.checkout-method').forEach(card=>card.addEventListener('click',()=>{
+ $('.checkout-method').forEach(card=>card.addEventListener('click',e=>{
+   if(e.target.closest('a,button'))return;
    const input=card.querySelector('input[type="radio"]');
    if(!input||input.disabled)return;
-   if(!input.checked){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}))}
+   input.checked=true;
+   input.dispatchEvent(new Event('change',{bubbles:true}));
  }));
+ const showCheckoutError=(field,message)=>{
+   const status=$('#checkoutStatus');
+   status.textContent=message;
+   status.classList.add('error');
+   $('.checkout-field-error').forEach(el=>el.classList.remove('checkout-field-error'));
+   if(field){
+     field.classList.add('checkout-field-error');
+     const card=field.closest('.checkout-card');
+     if(card)card.scrollIntoView({behavior:'smooth',block:'center'});
+   }else{
+     status.scrollIntoView({behavior:'smooth',block:'center'});
+   }
+ };
+ const requiredFields=$('[required]',f);
+ requiredFields.forEach(el=>{
+   el.addEventListener('input',()=>el.classList.remove('checkout-field-error'));
+   el.addEventListener('change',()=>el.classList.remove('checkout-field-error'));
+ });
  f.onsubmit=e=>{
    e.preventDefault();
    const status=$('#checkoutStatus');
-   if(!cart.length){status.textContent='Your cart is empty. Add a product before continuing to payment.';return}
-   status.textContent='Opening your crypto payment preview…';location.href='crypto-payment.html';
+   status.classList.remove('error');
+   if(!cart.length){showCheckoutError(null,'Your cart is empty. Add a product before continuing to payment.');return}
+   const firstInvalid=requiredFields.find(el=>{
+     if(el.type==='checkbox')return !el.checked;
+     if(el.type==='email')return !el.value.trim()||!/^\\S+@\\S+\\.\\S+$/.test(el.value.trim());
+     return !String(el.value||'').trim();
+   });
+   if(firstInvalid){
+     const label=firstInvalid.closest('.field')?.querySelector('label')?.textContent?.trim()||
+       (firstInvalid.type==='checkbox'?'Terms agreement':'required field');
+     showCheckoutError(firstInvalid,'Please complete '+label.replace(/Optional/gi,'').trim()+' before continuing.');
+     return;
+   }
+   status.textContent='Opening payment…';
+   location.assign('crypto-payment.html');
  };
  renderCheckout();
 }
