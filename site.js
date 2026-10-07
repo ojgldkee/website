@@ -1,12 +1,12 @@
 (() => {
 const S=window.STORE||{
-  name:"Forma Research",shortName:"FORMA",subName:"RESEARCH",currency:"USD",
+  name:"Aspen Labs",shortName:"ASPEN LABS",subName:"RESEARCH",currency:"USD",
   shippingThreshold:150,cartReservationMinutes:10,
   promo:{enabled:false,label:"",endsAt:"",cta:"",href:"collections.html"},
   announcements:["COMPLIMENTARY SHIPPING ON ORDERS $150+","PRODUCT DOCUMENTATION ON EVERY LISTING","TRACKED DELIVERY","SUPPORT WHEN YOU NEED IT"]
 },P=Array.isArray(window.PRODUCTS)?window.PRODUCTS:[];
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:S.currency}).format(n);
+const money=n=>new Intl.NumberAspen Labst('en-US',{style:'currency',currency:S.currency}).format(n);
 const icon=(name)=>({
  menu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.4-4.1 4.1-6 8-6s6.6 1.9 8 6"/></svg>',
@@ -154,7 +154,7 @@ function renderProduct(){
   '</div>'+
  '</div>'+
  '<section class="why-brand-section">'+
-  '<div class="why-brand-head"><p class="eyebrow">WHY FORMA RESEARCH</p><h2>Why customers choose Forma Research.</h2><p>Clear product information, straightforward fulfillment, and a simpler buying experience from cart to delivery.</p></div>'+
+  '<div class="why-brand-head"><p class="eyebrow">WHY ASPEN LABS</p><h2>Why customers choose Aspen Labs.</h2><p>Clear product information, straightforward fulfillment, and a simpler buying experience from cart to delivery.</p></div>'+
   '<div class="why-brand-grid">'+
    '<article><span class="why-icon">'+icon('delivery')+'</span><div><strong>Ships from Florida</strong><small>Domestic fulfillment with tracked shipping options.</small></div></article>'+
    '<article><span class="why-icon">'+icon('products')+'</span><div><strong>Free shipping $250+</strong><small>Qualifying orders unlock free shipping automatically.</small></div></article>'+
