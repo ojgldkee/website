@@ -290,7 +290,7 @@ function readCheckoutData(){
 function saveCheckoutData(form){
  if(!form)return;
  const data={};
- $('input,select,textarea',form).forEach(el=>{
+ $$('input,select,textarea',form).forEach(el=>{
    if(!el.name&& !el.matches('.checkout-consent input'))return;
    const key=el.name||'termsAccepted';
    if(el.type==='radio'){if(el.checked)data[key]=el.value;return}
@@ -302,7 +302,7 @@ function saveCheckoutData(form){
 function restoreCheckoutData(form){
  if(!form)return;
  const data=readCheckoutData();
- $('input,select,textarea',form).forEach(el=>{
+ $$('input,select,textarea',form).forEach(el=>{
    const key=el.name|| (el.matches('.checkout-consent input')?'termsAccepted':'');
    if(!key||!(key in data))return;
    if(el.type==='radio'){el.checked=String(data[key])===String(el.value);return}
