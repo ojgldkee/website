@@ -234,11 +234,17 @@ function initCheckout(){
    const options=codes.map(code=>({code,name:display?display.of(code):code})).filter(x=>x.name).sort((a,b)=>a.name.localeCompare(b.name));
    country.insertAdjacentHTML('beforeend',options.map(x=>'<option value="'+x.code+'">'+x.name+'</option>').join(''));
  }
- $('.checkout-method input[type="radio"]').forEach(input=>input.addEventListener('change',()=>{
+ $$('.checkout-method input[type="radio"]').forEach(input=>input.addEventListener('change',()=>{
    const name=input.name;
-   $('.checkout-method input[name="'+name+'"]').forEach(r=>r.closest('.checkout-method').classList.toggle('selected',r.checked));
+   $$('.checkout-method input[name="'+name+'"]').forEach(r=>r.closest('.checkout-method').classList.toggle('selected',r.checked));
+   if(name==='ship'&&input.checked)localStorage.setItem('forma-checkout-shipping-method',input.value);
  }));
- $('.checkout-method').forEach(card=>card.addEventListener('click',e=>{
+ const savedShip=localStorage.getItem('forma-checkout-shipping-method');
+ if(savedShip){
+   const saved=$('.checkout-method input[name="ship"][value="'+savedShip+'"]');
+   if(saved){saved.checked=true;saved.dispatchEvent(new Event('change',{bubbles:true}))}
+ }
+ $$('.checkout-method').forEach(card=>card.addEventListener('click',e=>{
    if(e.target.closest('a,button'))return;
    const input=card.querySelector('input[type="radio"]');
    if(!input||input.disabled)return;
@@ -249,7 +255,7 @@ function initCheckout(){
    const status=$('#checkoutStatus');
    status.textContent=message;
    status.classList.add('error');
-   $('.checkout-field-error').forEach(el=>el.classList.remove('checkout-field-error'));
+   $$('.checkout-field-error').forEach(el=>el.classList.remove('checkout-field-error'));
    if(field){
      field.classList.add('checkout-field-error');
      const card=field.closest('.checkout-card');
@@ -258,7 +264,7 @@ function initCheckout(){
      status.scrollIntoView({behavior:'smooth',block:'center'});
    }
  };
- const requiredFields=$('[required]',f);
+ const requiredFields=$$('[required]',f);
  requiredFields.forEach(el=>{
    el.addEventListener('input',()=>el.classList.remove('checkout-field-error'));
    el.addEventListener('change',()=>el.classList.remove('checkout-field-error'));
