@@ -128,10 +128,10 @@ function renderProduct(){
   '</div>'+
   '<div class="product-info product-info-v2">'+
    '<p class="eyebrow">'+p.category+'</p><h1>'+p.name+'</h1>'+
-   '<div class="product-title-benefits">'+
-    '<div><span>'+icon('shield')+'</span><strong>99%+ purity</strong><small>Batch-tested quality</small></div>'+
-    '<div><span>'+icon('products')+'</span><strong>Controlled handling</strong><small>Consistent lab handling standards</small></div>'+
-    '<div><span>'+icon('document')+'</span><strong>COA included</strong><small>Batch documentation available</small></div>'+
+   '<div class="product-title-benefits product-title-benefits-stack">'+
+    '<div><span>'+icon('products')+'</span><div><strong>Quality-focused sourcing</strong><small>Materials are selected to meet defined research specifications and consistency standards.</small></div></div>'+
+    '<div><span>'+icon('shield')+'</span><div><strong>Controlled handling</strong><small>Products are stored and handled using documented laboratory and fulfillment procedures.</small></div></div>'+
+    '<div><span>'+icon('track')+'</span><div><strong>Reliable U.S. fulfillment</strong><small>Orders ship from our U.S. fulfillment operation with tracked delivery options.</small></div></div>'+
    '</div>'+
    '<div class="product-price-row"><div class="product-main-price" id="productPrice"><strong>'+money(first.price)+'</strong>'+(first.compareAt?'<s>'+money(first.compareAt)+'</s>':'')+'</div><span class="save-badge" id="saveBadge" hidden></span></div>'+
    '<p class="product-sub product-description">'+p.description+'</p>'+
