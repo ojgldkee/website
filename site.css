@@ -2726,3 +2726,83 @@ body{font-size:16px}
   .product-title-benefits strong{font-size:10px}
   .product-title-benefits small{font-size:8px}
 }
+
+/* ===== Product title benefits: stacked full-width rows v20 ===== */
+.product-title-benefits-stack{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:12px!important;
+  margin:18px 0 22px!important;
+}
+.product-title-benefits-stack>div{
+  min-height:0!important;
+  width:100%!important;
+  display:grid!important;
+  grid-template-columns:54px minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:16px!important;
+  padding:17px 18px!important;
+  border:1px solid #dbe6de!important;
+  border-radius:18px!important;
+  background:linear-gradient(180deg,#fbfdfb,#f4f8f5)!important;
+  box-shadow:0 8px 24px rgba(18,60,46,.035)!important;
+}
+.product-title-benefits-stack>div>span{
+  width:54px!important;
+  height:54px!important;
+  border-radius:15px!important;
+  margin:0!important;
+  display:grid!important;
+  place-items:center!important;
+  background:#e8f2eb!important;
+  color:#17563f!important;
+}
+.product-title-benefits-stack>div>span svg{
+  width:26px!important;
+  height:26px!important;
+}
+.product-title-benefits-stack>div>div{
+  min-width:0;
+}
+.product-title-benefits-stack strong{
+  display:block;
+  font-size:16px!important;
+  line-height:1.25!important;
+  color:#143426!important;
+  margin-bottom:5px!important;
+}
+.product-title-benefits-stack small{
+  display:block;
+  font-size:12px!important;
+  line-height:1.5!important;
+  color:#718176!important;
+  margin:0!important;
+}
+@media(max-width:759px){
+  .product-title-benefits-stack{
+    gap:10px!important;
+    margin:15px 0 19px!important;
+  }
+  .product-title-benefits-stack>div{
+    grid-template-columns:48px minmax(0,1fr)!important;
+    gap:13px!important;
+    padding:15px 14px!important;
+    border-radius:16px!important;
+  }
+  .product-title-benefits-stack>div>span{
+    width:48px!important;
+    height:48px!important;
+    border-radius:14px!important;
+  }
+  .product-title-benefits-stack>div>span svg{
+    width:23px!important;
+    height:23px!important;
+  }
+  .product-title-benefits-stack strong{
+    font-size:14px!important;
+  }
+  .product-title-benefits-stack small{
+    font-size:11px!important;
+    line-height:1.45!important;
+  }
+}
