@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#103c2b"><title>Crypto payment | Forma Research</title>
-<link rel="stylesheet" href="crypto-payment.css?v=20261007-clean13">
+<link rel="stylesheet" href="crypto-payment.css?v=20261007-logos14">
 <script src="store-data.js?v=20261007-wallets11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script src="crypto-payment.js?v=20261007-clean13" defer></script>
@@ -18,7 +18,7 @@
   <section class="pay-card">
    <div class="pay-card-heading"><div><h2>Choose your currency</h2><p>Choose from nine supported cryptocurrencies.</p></div><span>9 options</span></div>
    <div id="payCoinList" class="pay-coin-list"></div>
-   <div class="pay-fetch-status"><span id="payRateStatus" role="status">Loading market rates…</span></div>
+   <div class="pay-fetch-status"><span id="payRateStatus" role="status">Loading market rates…</span><button id="retryRates" type="button" hidden aria-hidden="true" tabindex="-1">Refresh</button></div>
   </section>
  </div>
  <div id="payInvoice" class="pay-screen" hidden>
@@ -38,9 +38,47 @@
     <label for="walletAmount">Amount (<span id="walletAmountCoin">BTC</span>)</label><div class="copy-field"><input id="walletAmount" value="—" readonly><button id="copyWalletAmount" disabled aria-label="Copy payment amount" type="button">⧉</button></div>
    </div>
    <div class="invoice-bottom"><div><span>Time remaining</span><strong id="invoiceClock">60:00</strong></div><div><span>Status</span><strong id="invoicePaymentStatus">Waiting for payment</strong></div></div>
-   <div class="pay-timer-track"><div id="invoiceTimerBar"></div></div>
+   <div class="pay-timer-track"><div id="invoiceTimerBar"></div></div><button id="refreshInvoice" type="button" hidden aria-hidden="true" tabindex="-1">Refresh</button>
   </section>
  </div>
 </section>
 </main>
+
+<script id="cryptoPresentationEnhancements">
+window.addEventListener("DOMContentLoaded",function(){
+  const refresh=document.getElementById("refreshInvoice");
+  const clock=document.getElementById("invoiceClock");
+  const symbol=document.getElementById("invoiceSymbol");
+  const largeLogo=document.getElementById("invoiceCoinLogo");
+  const logoMap={
+    BTC:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/btc.svg",
+    ETH:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/eth.svg",
+    USDT:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdt.svg",
+    USDC:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdc.svg",
+    SOL:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/sol.svg",
+    LTC:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/ltc.svg",
+    XRP:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/xrp.svg",
+    BNB:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/bnb.svg",
+    XMR:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/xmr.svg"
+  };
+  function syncLargeLogo(){
+    if(!symbol||!largeLogo)return;
+    const key=(symbol.textContent||"").trim();
+    const src=logoMap[key];
+    if(!src)return;
+    largeLogo.textContent="";
+    largeLogo.style.backgroundImage="url('"+src+"')";
+    largeLogo.style.backgroundRepeat="no-repeat";
+    largeLogo.style.backgroundPosition="center";
+    largeLogo.style.backgroundSize="58% 58%";
+  }
+  if(symbol){
+    new MutationObserver(syncLargeLogo).observe(symbol,{childList:true,characterData:true,subtree:true});
+    syncLargeLogo();
+  }
+  setInterval(function(){
+    if(clock&&clock.textContent.trim()==="Expired"&&refresh)refresh.click();
+  },1000);
+});
+</script>
 </body></html>
