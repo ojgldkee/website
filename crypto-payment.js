@@ -21,31 +21,45 @@ function cartTotals(){
  if(!Array.isArray(list))list=[];
  const products=Array.isArray(window.PRODUCTS)?window.PRODUCTS:[];
  let subtotal=0,count=0;
+ const details=[];
  for(const line of list){
   const p=products.find(p=>p.slug===line.slug);if(!p)continue;
   const variant=(p.variants||[]).find(v=>v.label===line.variant)||(p.variants||[])[0];
-  const price=Number(variant?.price??p.price);const qty=Math.min(100,Math.max(1,Number(line.qty)||1));
+  const price=Number(variant?.price??p.price),qty=Math.min(100,Math.max(1,Number(line.qty)||1));
   if(!Number.isFinite(price)||price<0)continue;
   subtotal+=price*qty;count+=qty;
+  details.push({name:p.name,variant:variant?.label||"",qty});
  }
  const shipping=subtotal>=Number(window.STORE?.shippingThreshold||250)?0:7.95;
  state.hasOrder=count>0;state.total=count?Math.round((subtotal+shipping)*100)/100:0;
  $("#chooseTotal").textContent=state.hasOrder?money(state.total):"No order";
  $("#invoiceUsd").textContent=state.hasOrder?"Estimated order total "+money(state.total):"No order in cart";
+ const root=$("#payOrderProducts");root.replaceChildren();
+ const heading=document.createElement("span");heading.className="pay-products-label";heading.textContent="IN YOUR ORDER";root.append(heading);
+ if(!details.length){
+  const msg=document.createElement("span");msg.className="pay-product-entry";msg.textContent="Your cart is empty";root.append(msg);
+  $("#payOrderSubtitle").textContent="Choose a cryptocurrency to see payment instructions.";
+  return;
+ }
+ for(const item of details.slice(0,3)){
+  const line=document.createElement("span");line.className="pay-product-entry";
+  line.textContent=item.name+(item.variant?" · "+item.variant:"")+(item.qty>1?" × "+item.qty:"");
+  root.append(line);
+ }
+ if(details.length>3){const extra=document.createElement("span");extra.className="pay-product-entry";extra.textContent="+"+(details.length-3)+" more";root.append(extra)}
+ $("#payOrderSubtitle").textContent=count===1?"1 item in your order · Choose your cryptocurrency":count+" items in your order · Choose your cryptocurrency";
 }
 function iconStyle(c){return "--logo:"+c.bg+";--logo-text:"+c.fg}
 function makeList(){
  const root=$("#payCoinList");root.replaceChildren();
- for(const c of COINS){
-  const btn=document.createElement("button");btn.type="button";btn.className="coin-row";
-  const logo=document.createElement("span");logo.className="coin-logo";logo.style.cssText=iconStyle(c);logo.textContent=c.mark;
-  const desc=document.createElement("span");const name=document.createElement("span"),network=document.createElement("span");name.className="coin-title";name.textContent=c.name;network.className="coin-network";network.textContent=c.network;desc.append(name,network);
-  const amount=document.createElement("span");amount.className="coin-conversion";const rate=Number(state.rates[c.id]||0);
-  amount.textContent=rate>0&&state.hasOrder?formatCrypto(state.total/rate,c)+" "+c.symbol:rate>0?"View rate":"—";
-  const sub=document.createElement("small");sub.textContent=rate>0?"1 "+c.symbol+" ≈ "+money(rate):"Rate unavailable";amount.append(sub);
-  const arrow=document.createElement("span");arrow.className="coin-row-arrow";arrow.textContent="›";
-  btn.append(logo,desc,amount,arrow);btn.onclick=()=>openInvoice(c);
-  root.append(btn);
+ for(const coin of COINS){
+  const btn=document.createElement("button");btn.type="button";btn.className="coin-row";btn.setAttribute("aria-label","Pay with "+coin.name);
+  const logo=document.createElement("span");logo.className="coin-logo";logo.style.cssText=iconStyle(coin);logo.textContent=coin.mark;
+  const name=document.createElement("strong");name.className="coin-title";name.textContent=coin.name;
+  const network=document.createElement("small");network.className="coin-network";network.textContent=coin.network;
+  const quote=document.createElement("span");quote.className="coin-conversion";const rate=Number(state.rates[coin.id]||0);
+  quote.textContent=rate>0&&state.hasOrder?formatCrypto(state.total/rate,coin)+" "+coin.symbol:rate>0?"View rate":"Select to continue";
+  btn.append(logo,name,network,quote);btn.onclick=()=>openInvoice(coin);root.append(btn);
  }
 }
 function selectScreen(screen){
