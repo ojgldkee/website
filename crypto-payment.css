@@ -21,3 +21,36 @@ h1{font-size:clamp(38px,6vw,62px);letter-spacing:-.065em;line-height:1.1;margin:
 .pay-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #dfebdf;background:#fff;padding:20px max(20px,calc((100vw - 850px)/2));font-size:11px;color:#879589}.pay-footer strong{color:#2c6948;font-size:11px;letter-spacing:.14em}
 [hidden]{display:none!important}
 @media(max-width:600px){.pay-header{min-height:78px;padding:15px 19px}.pay-header-status{font-size:10px;padding:9px 11px}.pay-main{padding:27px 14px 43px}.pay-topline{font-size:10px}h1{font-size:44px;margin:14px 0 9px}.pay-description{font-size:13px}.pay-total-pill{margin:18px 0;padding:14px 16px}.pay-total-pill strong{font-size:25px}.pay-card{border-radius:21px}.pay-card-heading{padding:18px 17px}.pay-card-heading h2{font-size:17px}.pay-coin-list{padding:8px;max-height:580px}.coin-row{grid-template-columns:43px minmax(0,1fr) auto 18px;gap:8px;padding:11px 8px;min-height:68px}.coin-logo{width:39px;height:39px;font-size:13px}.coin-title{font-size:13px}.coin-network{font-size:10px}.coin-conversion{font-size:11px}.coin-conversion small{font-size:9px}.pay-fetch-status{padding:12px 15px}.invoice-card{padding:18px}.coin-logo-large{width:53px;height:53px;font-size:24px}.invoice-price{margin:22px 0 16px;padding:19px 16px}.invoice-amount-value strong{font-size:30px}.invoice-amount-value b{font-size:14px}.qr-area{padding:23px 0 15px}.qr-placeholder{width:205px;height:205px}.pay-footer{padding:17px;font-size:9px}}
+
+/* Currency grid restoration, with actual cart summary above it */
+.pay-total-pill{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;padding:20px 23px!important;gap:18px!important;margin:22px 0 22px!important;background:#eaf4ed!important}
+.pay-total-left{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.pay-total-left>span,.pay-products-label{font-size:10px!important;letter-spacing:.12em!important;font-weight:850!important;color:#64806e!important}
+.pay-total-left strong{font-size:31px!important;color:#123c2b!important}
+.pay-order-products{display:flex;flex-direction:column;gap:5px;align-items:flex-end;text-align:right;min-width:0;max-width:60%}
+.pay-product-entry{font-size:12px;line-height:1.4;color:#355c44;font-weight:750;overflow-wrap:anywhere}
+.pay-card-heading{padding:22px 23px!important}
+.pay-card-heading h2{font-size:23px!important}
+.pay-card-heading p{margin:4px 0 0;font-size:12px;color:#728679;line-height:1.5}
+.pay-coin-list{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;padding:18px!important;max-height:none!important;overflow:visible!important}
+.coin-row{min-width:0!important;min-height:143px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:7px!important;background:#f8fbf8!important;border:1.5px solid #dce9de!important;border-radius:18px!important;padding:17px 13px!important;box-shadow:none!important;text-align:left!important}
+.coin-row:hover,.coin-row:focus-visible{border-color:#2a7855!important;background:#eaf4ed!important}
+.coin-row .coin-logo{height:42px!important;width:42px!important;flex-shrink:0!important}
+.coin-row .coin-title{display:block!important;font-size:14px!important;line-height:1.25!important;color:#163f2f!important;margin-top:2px!important}
+.coin-row .coin-network{font-size:10px!important;line-height:1.3!important;display:block!important;color:#7b907f!important;margin:0!important}
+.coin-row .coin-conversion{font-size:10px!important;font-weight:750!important;line-height:1.3!important;text-align:left!important;white-space:normal!important;overflow-wrap:anywhere!important;color:#2b7450!important;margin-top:auto!important}
+@media(max-width:600px){
+ .pay-total-pill{padding:15px 16px!important;gap:13px!important;border-radius:17px!important}
+ .pay-total-left strong{font-size:27px!important}
+ .pay-order-products{max-width:57%}
+ .pay-product-entry{font-size:11px}
+ .pay-card-heading{padding:17px 16px!important}
+ .pay-card-heading h2{font-size:19px!important}
+ .pay-card-heading p{font-size:11px}
+ .pay-coin-list{padding:12px!important;gap:9px!important}
+ .coin-row{min-height:144px!important;padding:12px 9px!important;border-radius:15px!important}
+ .coin-row .coin-logo{height:37px!important;width:37px!important}
+ .coin-row .coin-title{font-size:12px!important}
+ .coin-row .coin-network{font-size:9px!important}
+ .coin-row .coin-conversion{font-size:9px!important}
+}
