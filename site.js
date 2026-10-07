@@ -246,7 +246,7 @@ function initCheckout(){
    e.preventDefault();
    const status=$('#checkoutStatus');
    if(!cart.length){status.textContent='Your cart is empty. Add a product before continuing to payment.';return}
-   status.textContent='Checkout details are complete. Connect the production payment backend to create the secure payment session.';
+   status.textContent='Opening your crypto payment preview…';location.href='crypto-payment.html';
  };
  renderCheckout();
 }
