@@ -266,7 +266,7 @@ function syncCheckoutShippingOptions(){
    if(standard){standard.checked=true;current='standard'}
    localStorage.setItem('aspen-checkout-shipping-method','standard');
  }
- $('.checkout-method input[name="ship"]').forEach(r=>r.closest('.checkout-method')?.classList.toggle('selected',r.checked));
+ $$('.checkout-method input[name="ship"]').forEach(r=>r.closest('.checkout-method')?.classList.toggle('selected',r.checked));
 }
 function renderCheckout(){
  const root=$('#checkout-summary');if(!root)return;
@@ -321,9 +321,9 @@ function initCheckout(){
    country.insertAdjacentHTML('beforeend',options.map(x=>'<option value="'+x.code+'">'+x.name+'</option>').join(''));
  }
  restoreCheckoutData(f);
- $('input,select,textarea',f).forEach(el=>el.addEventListener('input',()=>saveCheckoutData(f)));
- $('input,select,textarea',f).forEach(el=>el.addEventListener('change',()=>saveCheckoutData(f)));
- $('.checkout-method input[type="radio"]').forEach(input=>input.addEventListener('change',()=>{
+ $$('input,select,textarea',f).forEach(el=>el.addEventListener('input',()=>saveCheckoutData(f)));
+ $$('input,select,textarea',f).forEach(el=>el.addEventListener('change',()=>saveCheckoutData(f)));
+ $$('.checkout-method input[type="radio"]').forEach(input=>input.addEventListener('change',()=>{
    const name=input.name;
    $$('.checkout-method input[name="'+name+'"]').forEach(r=>r.closest('.checkout-method').classList.toggle('selected',r.checked));
    if(name==='ship'&&input.checked){localStorage.setItem('aspen-checkout-shipping-method',input.value);saveCheckoutData(f);renderCheckout();}
