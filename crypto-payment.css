@@ -109,3 +109,35 @@ body.crypto-pay-page{min-height:100dvh!important;display:flex!important;flex-dir
  .crypto-amount-value strong{font-size:31px!important}
  .crypto-footer{padding:22px 0 26px!important;margin-top:auto!important}
 }
+
+/* ===== Three-step crypto checkout v4 ===== */
+.crypto-progress{display:flex;align-items:center;gap:12px;padding:15px 20px;margin:0 0 20px;background:#fff;border:1px solid #dce8df;border-radius:22px;scroll-margin-top:10px}
+.crypto-progress-tab{display:flex;align-items:center;gap:9px;flex-shrink:0;border:0;background:transparent;color:#8a9a8f;min-height:40px;padding:5px 8px;border-radius:13px;font:inherit;font-size:13px}
+.crypto-progress-tab strong{font-weight:850;color:inherit}
+.crypto-progress-tab>span{height:31px;width:31px;border-radius:50%;display:grid;place-items:center;background:#eef2ef;font-size:12px;font-weight:900}
+.crypto-progress-tab.is-current{background:#eaf4ed;color:#14513a}
+.crypto-progress-tab.is-current>span{background:#175b42;color:white}
+.crypto-progress-tab.is-done{color:#326a51}
+.crypto-progress-tab.is-done>span{background:#e1f1e5}
+.crypto-progress-tab:disabled{cursor:default;opacity:.65}
+.crypto-progress-line{height:1px;flex:1;background:#d9e4dc;min-width:10px}
+.crypto-wizard-panel[hidden]{display:none!important}
+.crypto-wizard-panel{animation:crypto-step-in .2s ease-out}
+@keyframes crypto-step-in{from{opacity:.65;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.crypto-wizard-actions{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:20px;margin-top:20px;border-top:1px solid #edf2ee}
+.crypto-wizard-hint{font-size:11px;color:#718575}
+.crypto-next{padding:15px 21px;min-height:51px;border:0;border-radius:999px;background:#123f2d;color:white;font:inherit;font-weight:850;font-size:13px;display:flex;gap:20px;align-items:center;justify-content:center;margin-left:auto;box-shadow:0 6px 15px rgba(9,56,37,.12)}
+.crypto-next:hover{background:#176345}
+.crypto-prev{padding:12px 14px;border:1px solid #d9e7dc;background:#f3f7f3;border-radius:999px;font:inherit;font-size:12px;font-weight:800;color:#306149}
+.crypto-last-action{justify-content:flex-start}
+.crypto-next:focus-visible,.crypto-prev:focus-visible,.crypto-progress-tab:focus-visible{outline:3px solid #85bd9e;outline-offset:2px}
+@media(max-width:560px){
+ .crypto-progress{padding:10px 8px;gap:3px;border-radius:16px;margin-bottom:14px}
+ .crypto-progress-tab{gap:5px;padding:5px 6px;font-size:11px;min-height:38px}
+ .crypto-progress-tab>span{width:26px;height:26px;font-size:10px}
+ .crypto-progress-line{min-width:4px}
+ .crypto-wizard-actions{margin-top:17px;padding-top:17px;gap:9px}
+ .crypto-next{font-size:11px;padding:13px 15px;min-height:49px;gap:10px}
+ .crypto-prev{font-size:10px;padding:12px 10px}
+ .crypto-wizard-hint{font-size:10px;max-width:110px}
+}
