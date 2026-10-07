@@ -2806,3 +2806,26 @@ body{font-size:16px}
     line-height:1.45!important;
   }
 }
+
+/* ===== Remove title benefits + tighten why-brand spacing v21 ===== */
+.product-title-benefits,
+.product-title-benefits-stack{
+  display:none!important;
+}
+.why-brand-section{
+  margin-bottom:0!important;
+  padding-bottom:18px!important;
+}
+.why-brand-grid{
+  margin-bottom:0!important;
+}
+.why-brand-grid article:last-child,
+.why-brand-grid article:nth-last-child(2){
+  margin-bottom:0!important;
+}
+@media(max-width:759px){
+  .why-brand-section{
+    margin-bottom:0!important;
+    padding-bottom:14px!important;
+  }
+}
