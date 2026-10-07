@@ -58,11 +58,11 @@ function tickReservation(){
 function startReservationTimer(){ensureReservation();tickReservation();if(reservationTimer)clearInterval(reservationTimer);reservationTimer=setInterval(tickReservation,1000)}
 function saveCart(){localStorage.setItem('forma-cart-v2',JSON.stringify(cart));ensureReservation();renderCart();renderCheckout&&renderCheckout();renderFullCart();tickReservation()}
 function productBySlug(slug){if(slug==="etatrutide")slug="retatrutide";return P.find(p=>p.slug===slug)}
-function productVariants(p){return Array.isArray(p?.variants)&&p.variants.length?[...p.variants].sort((a,b)=>(a.amount??0)-(b.amount??0)):[{label:"Default",amount:0,price:p?.price||0,compareAt:p?.compareAt||null}]}
+function productVariants(p){return Array.isArray(p?.variants)&&p.variants.length?[...p.variants].sort((a,b)=>(a.amount??0)-(b.amount??0)):[{label:"Default",amount:0,price:p?.price??null,compareAt:p?.compareAt||null}]}
 function defaultVariant(p){return productVariants(p)[0]}
 function variantFor(p,label){const variants=productVariants(p);return variants.find(v=>v.label===label)||variants[0]}
 function lineVariant(l){const p=productBySlug(l.slug);return p?variantFor(p,l.variant):null}
-function lineUnitPrice(l){const v=lineVariant(l);return v?v.price:0}
+function lineUnitPrice(l){const v=lineVariant(l);return v&&Number.isFinite(Number(v.price))?Number(v.price):0}
 function lineKey(slug,variant){return slug+"||"+(variant||"")}
 function cartCount(){return cart.reduce((n,l)=>n+l.qty,0)}
 function cartSubtotal(){return cart.reduce((n,l)=>n+lineUnitPrice(l)*l.qty,0)}
@@ -106,8 +106,9 @@ function openCart(){$('.cart-drawer').classList.add('open');$('.cart-overlay').c
 function closeCart(){$('.cart-drawer').classList.remove('open');$('.cart-overlay').classList.remove('show');document.body.classList.remove('lock')}
 function countdown(){}
 function productCard(p){
- const variants=productVariants(p),v=variants[0],hasMultiple=variants.length>1,hasSale=Number(v.compareAt)>Number(v.price),save=hasSale?Math.round((1-Number(v.price)/Number(v.compareAt))*100):0;
- return '<article class="product-card" data-cat="'+p.category.toLowerCase()+'" data-name="'+p.name.toLowerCase()+'">'+(p.badge?'<span class="product-badge">'+p.badge+'</span>':'')+(hasSale?'<span class="card-save-badge">Save '+save+'%</span>':'')+'<a class="product-image" href="product.html?slug='+p.slug+'"><img src="'+p.image+'" alt="'+p.name+'"></a><div class="product-body"><div class="product-card-topline"><span class="product-meta">'+p.category+'</span><span class="variant-count">'+variants.length+' '+(variants.length===1?'size':'sizes')+'</span></div><h3><a href="product.html?slug='+p.slug+'">'+p.name+'</a></h3><div class="product-price"><strong>'+(hasMultiple?'From ':'')+money(v.price)+'</strong>'+(hasSale?'<s>'+money(v.compareAt)+'</s>':'')+'</div><a class="product-options-btn" href="product.html?slug='+p.slug+'"><span>View options</span><span>→</span></a></div></article>'
+ const variants=productVariants(p),v=variants[0],hasPrice=Number.isFinite(Number(v.price))&&v.price!==null,hasMultiple=variants.length>1,hasSale=hasPrice&&Number(v.compareAt)>Number(v.price),save=hasSale?Math.round((1-Number(v.price)/Number(v.compareAt))*100):0;
+ const priceHtml=hasPrice?'<strong>'+(hasMultiple?'From ':'')+money(v.price)+'</strong>'+(hasSale?'<s>'+money(v.compareAt)+'</s>':''):'<strong>Pricing coming soon</strong>';
+ return '<article class="product-card" data-cat="'+p.category.toLowerCase()+'" data-name="'+p.name.toLowerCase()+'">'+(p.badge?'<span class="product-badge">'+p.badge+'</span>':'')+(hasSale?'<span class="card-save-badge">Save '+save+'%</span>':'')+'<a class="product-image" href="product.html?slug='+p.slug+'"><img src="'+p.image+'" alt="'+p.name+'"></a><div class="product-body"><div class="product-card-topline"><span class="product-meta">'+p.category+'</span><span class="variant-count">'+variants.length+' '+(variants.length===1?'size':'sizes')+'</span></div><h3><a href="product.html?slug='+p.slug+'">'+p.name+'</a></h3><div class="product-price">'+priceHtml+'</div><a class="product-options-btn" href="product.html?slug='+p.slug+'"><span>View options</span><span>→</span></a></div></article>'
 }
 function bindAdds(root=document){$$('[data-add]',root).forEach(b=>b.onclick=()=>addToCart(b.dataset.add))}
 function renderGrid(sel,items=P){const el=$(sel);if(!el)return;el.innerHTML=items.map(productCard).join('');bindAdds(el)}
@@ -129,10 +130,10 @@ function renderProduct(){
   '<div class="product-info product-info-v2">'+
    '<p class="eyebrow">'+p.category+'</p><h1>'+p.name+'</h1>'+
 
-   '<div class="product-price-row"><div class="product-main-price" id="productPrice"><strong>'+money(first.price)+'</strong>'+(first.compareAt?'<s>'+money(first.compareAt)+'</s>':'')+'</div><span class="save-badge" id="saveBadge" hidden></span></div>'+
+   '<div class="product-price-row"><div class="product-main-price" id="productPrice"><strong>'+((first.price!==null&&Number.isFinite(Number(first.price)))?money(first.price):'Pricing coming soon')+'</strong>'+(first.compareAt&&first.price!==null?'<s>'+money(first.compareAt)+'</s>':'')+'</div><span class="save-badge" id="saveBadge" hidden></span></div>'+
    '<p class="product-sub product-description">'+p.description+'</p>'+
    '<div class="purchase-box" id="purchaseBox">'+
-    '<label class="option-label" for="variantSelect">Choose size</label><div class="variant-select-wrap"><select id="variantSelect" class="variant-select">'+variants.map((v,i)=>'<option value="'+v.label+'" '+(i===0?'selected':'')+'>'+v.label+' — '+money(v.price)+'</option>').join('')+'</select><span class="variant-chevron">⌄</span></div>'+
+    '<label class="option-label" for="variantSelect">Choose size</label><div class="variant-select-wrap"><select id="variantSelect" class="variant-select">'+variants.map((v,i)=>'<option value="'+v.label+'" '+(i===0?'selected':'')+'>'+v.label+((v.price!==null&&Number.isFinite(Number(v.price)))?' — '+money(v.price):'')+'</option>').join('')+'</select><span class="variant-chevron">⌄</span></div>'+
     '<span id="selectedVariantLabel" class="selected-variant-hidden">'+first.label+'</span>'+
     '<label class="option-label">Quantity</label><div class="qty-box qty-box-v3"><button id="prodDec" type="button" aria-label="Decrease quantity">−</button><span id="prodQty">1</span><button id="prodInc" type="button" aria-label="Increase quantity">+</button></div>'+
     '<div class="purchase-actions"><button class="product-add" id="prodAdd" type="button">Add to cart</button><button class="buy-now coa-button" id="viewCoa" type="button">View COA</button></div>'+
@@ -168,21 +169,24 @@ function renderProduct(){
  const qEl=$('#prodQty'),sq=$('#stickyQty'),priceEl=$('#productPrice'),variantLabel=$('#selectedVariantLabel'),stickyVariant=$('#stickyVariant'),stickyPrice=$('#stickyPrice'),select=$('#variantSelect'),saveBadge=$('#saveBadge'),salePill=$('#productSalePill');
  const syncQty=()=>{qEl.textContent=q;if(sq)sq.textContent=q};
  const syncVariant=()=>{
-   const compare=Number(selected.compareAt||0),price=Number(selected.price||0),hasSale=compare>price;
+   const hasPrice=selected.price!==null&&Number.isFinite(Number(selected.price)),compare=Number(selected.compareAt||0),price=hasPrice?Number(selected.price):null,hasSale=hasPrice&&compare>price;
    const savings=hasSale?Math.round((1-price/compare)*100):0;
-   priceEl.innerHTML='<strong>'+money(price)+'</strong>'+(hasSale?'<s>'+money(compare)+'</s>':'');
+   priceEl.innerHTML='<strong>'+(hasPrice?money(price):'Pricing coming soon')+'</strong>'+(hasSale?'<s>'+money(compare)+'</s>':'');
    if(saveBadge){saveBadge.hidden=!hasSale;saveBadge.textContent=hasSale?'Save '+savings+'%':''}
    if(salePill)salePill.hidden=!hasSale;
    variantLabel.textContent=selected.label;
    if(stickyVariant)stickyVariant.textContent=selected.label;
-   if(stickyPrice)stickyPrice.textContent=money(price);
+   if(stickyPrice)stickyPrice.textContent=hasPrice?money(price):'Pricing coming soon';
+   const addBtn=$('#prodAdd'),stickyBtn=$('#stickyAdd');
+   if(addBtn){addBtn.disabled=!hasPrice;addBtn.textContent=hasPrice?'Add to cart':'Pricing coming soon'}
+   if(stickyBtn){stickyBtn.disabled=!hasPrice;stickyBtn.textContent=hasPrice?'Add to cart':'Pricing coming soon'}
  };
  syncVariant();
  select.onchange=()=>{selected=variantFor(p,select.value);syncVariant()};
  $('#prodInc').onclick=()=>{q++;syncQty()};$('#prodDec').onclick=()=>{q=Math.max(1,q-1);syncQty()};
  if($('#stickyInc'))$('#stickyInc').onclick=()=>{q++;syncQty()};if($('#stickyDec'))$('#stickyDec').onclick=()=>{q=Math.max(1,q-1);syncQty()};
- $('#prodAdd').onclick=()=>addToCart(p.slug,q,selected.label,true);
- $('#stickyAdd').onclick=()=>addToCart(p.slug,q,selected.label,true);
+ $('#prodAdd').onclick=()=>{if(selected.price!==null&&Number.isFinite(Number(selected.price)))addToCart(p.slug,q,selected.label,true)};
+ $('#stickyAdd').onclick=()=>{if(selected.price!==null&&Number.isFinite(Number(selected.price)))addToCart(p.slug,q,selected.label,true)};
 
  const detailEls=$('.product-accordions details');
  detailEls.forEach(d=>d.addEventListener('toggle',()=>{if(d.open)detailEls.forEach(o=>{if(o!==d)o.open=false})}));
