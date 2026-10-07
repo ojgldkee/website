@@ -36,7 +36,7 @@ function readStoredCart(){
   const candidates=[localStorage.getItem(CART_KEY),localStorage.getItem(CART_BACKUP_KEY),localStorage.getItem('forma-cart-v2'),localStorage.getItem('cart')];
   for(const raw of candidates){
     if(!raw)continue;
-    try{const parsed=JSON.parse(raw);if(Array.isArray(parsed))return parsed}catch(e){}
+    try{const parsed=JSON.parse(raw);if(Array.isArray(parsed)&&parsed.length)return parsed}catch(e){}
   }
   return [];
 }
@@ -250,7 +250,7 @@ function syncCheckoutShippingOptions(){
  const freeCard=$('[data-ship-method="free"]');
  const freeInput=freeCard?.querySelector('input[name="ship"]');
  const qualifies=subtotal>=S.shippingThreshold;
- if(freeCard)freeCard.hidden=!qualifies;
+ if(freeCard){freeCard.hidden=!qualifies;freeCard.style.display=qualifies?'flex':'none';}
  if(freeInput)freeInput.disabled=!qualifies;
 
  let current=selectedShippingMethod();
@@ -314,6 +314,7 @@ function restoreCheckoutData(form){
 }
 function initCheckout(){
  const f=$('#checkoutForm');if(!f){renderCheckout();return}
+ if(!cart.length){location.replace('cart.html');return}
  const country=$('#country');
  if(country){
    const codes=["US","CA","MX","GB","IE","FR","DE","ES","PT","IT","NL","BE","LU","CH","AT","DK","SE","NO","FI","IS","PL","CZ","SK","HU","RO","BG","GR","HR","SI","RS","BA","ME","MK","AL","EE","LV","LT","UA","MD","BY","RU","TR","CY","MT","AD","MC","SM","VA","LI","AU","NZ","JP","KR","CN","HK","MO","TW","SG","MY","TH","VN","PH","ID","BN","KH","LA","MM","IN","PK","BD","LK","NP","BT","MV","AF","KZ","UZ","TM","KG","TJ","MN","AE","SA","QA","KW","BH","OM","IL","JO","LB","SY","IQ","IR","YE","GE","AM","AZ","ZA","EG","MA","DZ","TN","LY","SD","SS","ET","ER","DJ","SO","KE","UG","TZ","RW","BI","CD","CG","GA","GQ","CM","CF","TD","NG","NE","ML","BF","SN","GM","GW","GN","SL","LR","CI","GH","TG","BJ","MR","CV","ST","AO","ZM","ZW","BW","NA","SZ","LS","MZ","MW","MG","MU","SC","KM","BR","AR","CL","PE","BO","PY","UY","CO","VE","EC","GY","SR","GF","PA","CR","NI","HN","SV","GT","BZ","CU","DO","HT","JM","TT","BB","BS","GD","LC","VC","AG","DM","KN","PR","VI","BM","GL","FO","AI","AW","CW","SX","BQ","KY","TC","VG","MS","FK","GI","JE","GG","IM","AX","SJ","PM","PF","NC","WF","FJ","PG","SB","VU","WS","TO","KI","TV","NR","PW","FM","MH","CK","NU","TK","GU","MP","AS","UM","CC","CX","NF","HM","TF","AQ","BV","SH","IO","PS","EH"];
@@ -321,7 +322,10 @@ function initCheckout(){
    const options=codes.map(code=>({code,name:display?display.of(code):code})).filter(x=>x.name).sort((a,b)=>a.name.localeCompare(b.name));
    country.insertAdjacentHTML('beforeend',options.map(x=>'<option value="'+x.code+'">'+x.name+'</option>').join(''));
  }
- $$('.checkout-method input[type="radio"]').forEach(input=>input.addEventListener('change',()=>{
+ restoreCheckoutData(f);
+ $('input,select,textarea',f).forEach(el=>el.addEventListener('input',()=>saveCheckoutData(f)));
+ $('input,select,textarea',f).forEach(el=>el.addEventListener('change',()=>saveCheckoutData(f)));
+ $('.checkout-method input[type="radio"]').forEach(input=>input.addEventListener('change',()=>{
    const name=input.name;
    $$('.checkout-method input[name="'+name+'"]').forEach(r=>r.closest('.checkout-method').classList.toggle('selected',r.checked));
    if(name==='ship'&&input.checked){localStorage.setItem('aspen-checkout-shipping-method',input.value);saveCheckoutData(f);renderCheckout();}
@@ -372,6 +376,7 @@ function initCheckout(){
      showCheckoutError(firstInvalid,'Please complete '+label.replace(/Optional/gi,'').trim()+' before continuing.');
      return;
    }
+   saveCheckoutData(f);
    status.textContent='Opening payment…';
    location.assign('crypto-payment.html');
  };
