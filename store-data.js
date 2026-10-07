@@ -219,26 +219,5 @@ window.PRODUCTS = [
     variants: [{label:"10 mg",amount:10,price:null}],
     document: "Batch documentation",
     pricingPending: true
-  },
-  {
-    slug: "hgh-somatropin",
-    name: "HGH (Somatropin)",
-    category: "Kits",
-    price: null,
-    compareAt: null,
-    badge: "",
-    image: "public/images/products/product-1.svg",
-    gallery: ["public/images/products/product-1.svg","public/images/products/detail.svg"],
-    subtitle: "",
-    description: "HGH (Somatropin) research kit offered in a 10-vial format with multiple IU options.",
-    specs: [["Product","HGH (Somatropin)"],["Category","Kit"],["Format","10 vials"],["Available variants","10 IU · 24 IU · 36 IU · 100 IU"],["Fulfillment","Florida, USA"]],
-    variants: [
-      {label:"10 IU × 10 Vials",amount:10,price:null},
-      {label:"24 IU × 10 Vials",amount:24,price:null},
-      {label:"36 IU × 10 Vials",amount:36,price:null},
-      {label:"100 IU × 10 Vials",amount:100,price:null}
-    ],
-    document: "Batch documentation",
-    pricingPending: true
   }
 ];
