@@ -1,228 +1,172 @@
-(() => {
-"use strict";
+(() => {"use strict";
 const COINS=[
- {symbol:"BTC",name:"Bitcoin",id:"bitcoin",network:"Bitcoin",precision:8},
- {symbol:"ETH",name:"Ethereum",id:"ethereum",network:"Ethereum",precision:8},
- {symbol:"USDT",name:"Tether",id:"tether",network:"Ethereum · ERC-20",precision:6},
- {symbol:"USDC",name:"USD Coin",id:"usd-coin",network:"Ethereum · ERC-20",precision:6},
- {symbol:"SOL",name:"Solana",id:"solana",network:"Solana",precision:8},
- {symbol:"LTC",name:"Litecoin",id:"litecoin",network:"Litecoin",precision:8},
- {symbol:"XRP",name:"XRP",id:"ripple",network:"XRP Ledger",precision:6},
- {symbol:"BNB",name:"BNB",id:"binancecoin",network:"BNB Smart Chain",precision:8},
- {symbol:"XMR",name:"Monero",id:"monero",network:"Monero",precision:8}
+ {symbol:"BTC",name:"Bitcoin",id:"bitcoin",network:"Bitcoin",precision:8,mark:"₿",bg:"#fff0d8",fg:"#e18a0d"},
+ {symbol:"ETH",name:"Ethereum",id:"ethereum",network:"Ethereum",precision:8,mark:"Ξ",bg:"#e9edff",fg:"#586edb"},
+ {symbol:"USDT",name:"Tether",id:"tether",network:"Ethereum · ERC-20",precision:6,mark:"₮",bg:"#ddf5e9",fg:"#169b71"},
+ {symbol:"USDC",name:"USD Coin",id:"usd-coin",network:"Ethereum · ERC-20",precision:6,mark:"$",bg:"#e5efff",fg:"#316fcd"},
+ {symbol:"SOL",name:"Solana",id:"solana",network:"Solana",precision:8,mark:"◎",bg:"#e9f5f0",fg:"#0c9871"},
+ {symbol:"LTC",name:"Litecoin",id:"litecoin",network:"Litecoin",precision:8,mark:"Ł",bg:"#eaeef4",fg:"#657484"},
+ {symbol:"XRP",name:"XRP",id:"ripple",network:"XRP Ledger",precision:6,mark:"✕",bg:"#e9edf0",fg:"#23333e"},
+ {symbol:"BNB",name:"BNB",id:"binancecoin",network:"BNB Smart Chain",precision:8,mark:"◆",bg:"#fff4d5",fg:"#aa760c"},
+ {symbol:"XMR",name:"Monero",id:"monero",network:"Monero",precision:8,mark:"ɱ",bg:"#fff0e4",fg:"#d66c30"}
 ];
-// Configure receiving addresses only after completing legal/compliance and business verification.
-// Do not put wallet private keys, seed phrases, merchant secrets, or customer data in this public file.
+// Public receiving addresses only. Never add seeds, private keys, or API secrets.
+// To activate a real merchant invoice, a secure order backend is also required.
 const WALLETS={BTC:"",ETH:"",USDT:"",USDC:"",SOL:"",LTC:"",XRP:"",BNB:"",XMR:""};
-const $=s=>document.querySelector(s),fmt=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(n);
-const cartKey="forma-cart-v2";
-const state={coin:COINS[0],usd:0,rates:{},expiresAt:0,quoteAmount:null,ready:false,quoteFetchedAt:0,interval:null,priceSource:""};
-function getCart(){
- let lines=[];try{lines=JSON.parse(localStorage.getItem(cartKey)||"[]")}catch(_){}
- if(!Array.isArray(lines))return [];
+const $=s=>document.querySelector(s),money=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(n);
+const state={coin:COINS[0],rates:{},source:"",total:0,hasOrder:false,expiresAt:0,quoted:null,quoteCoin:"",timer:null,loading:false};
+const formatCrypto=(n,c)=>Number.isFinite(n)&&n>0?n.toFixed(c.precision).replace(/0+$/,"").replace(/\.$/,""):"—";
+function cartTotals(){
+ let list=[];try{list=JSON.parse(localStorage.getItem("forma-cart-v2")||"[]")}catch(_){}
+ if(!Array.isArray(list))list=[];
  const products=Array.isArray(window.PRODUCTS)?window.PRODUCTS:[];
- return lines.map(line=>{
-  const p=products.find(x=>x.slug===line.slug||(line.slug==="etatrutide"&&x.slug==="retatrutide"));
-  if(!p)return null;
-  const variants=Array.isArray(p.variants)&&p.variants.length?p.variants:[{label:"Standard",price:p.price}];
-  const v=variants.find(x=>x.label===line.variant)||variants[0];
-  return {p,v,qty:Math.max(1,Math.floor(Number(line.qty)||1)),total:Number(v.price)*Math.max(1,Math.floor(Number(line.qty)||1))};
- }).filter(Boolean);
-}
-function orderSummary(){
- const lines=getCart(),subtotal=lines.reduce((t,l)=>t+l.total,0),shipping=subtotal>=Number(window.STORE?.shippingThreshold||250)?0:7.95;
- state.usd=lines.length?subtotal+shipping:0;
- $("#cryptoOrderItems").replaceChildren();
- for(const l of lines){
-  const row=document.createElement("div");row.className="crypto-order-line";
-  const img=document.createElement("img");img.src=l.p.image;img.alt=l.p.name;
-  const info=document.createElement("div");const name=document.createElement("strong");name.textContent=l.p.name;
-  const desc=document.createElement("small");desc.textContent=l.v.label+" · Qty "+l.qty;info.append(name,desc);
-  const price=document.createElement("span");price.textContent=fmt(l.total);
-  row.append(img,info,price);$("#cryptoOrderItems").append(row);
+ let subtotal=0,count=0;
+ for(const line of list){
+  const p=products.find(p=>p.slug===line.slug);if(!p)continue;
+  const variant=(p.variants||[]).find(v=>v.label===line.variant)||(p.variants||[])[0];
+  const price=Number(variant?.price??p.price);const qty=Math.min(100,Math.max(1,Number(line.qty)||1));
+  if(!Number.isFinite(price)||price<0)continue;
+  subtotal+=price*qty;count+=qty;
  }
- if(!lines.length){const empty=document.createElement("p");empty.textContent="Your cart is empty. Return to the store before continuing.";empty.style.color="#768579";$("#cryptoOrderItems").append(empty)}
- $("#cryptoSubtotal").textContent=fmt(subtotal);$("#cryptoShipping").textContent=shipping===0?"Free":fmt(shipping);
- $("#cryptoGrandTotal").textContent=fmt(state.usd);$("#cryptoTotalInline").textContent=fmt(state.usd);
+ const shipping=subtotal>=Number(window.STORE?.shippingThreshold||250)?0:7.95;
+ state.hasOrder=count>0;state.total=count?Math.round((subtotal+shipping)*100)/100:0;
+ $("#chooseTotal").textContent=state.hasOrder?money(state.total):"No order";
+ $("#invoiceUsd").textContent=state.hasOrder?"Estimated order total "+money(state.total):"No order in cart";
 }
-function coinUI(){
- const holder=$("#cryptoCoins");holder.replaceChildren();
+function iconStyle(c){return "--logo:"+c.bg+";--logo-text:"+c.fg}
+function makeList(){
+ const root=$("#payCoinList");root.replaceChildren();
  for(const c of COINS){
-  const b=document.createElement("button");b.type="button";b.className="crypto-coin"+(state.coin.symbol===c.symbol?" selected":"");
-  b.setAttribute("role","radio");b.setAttribute("aria-checked",String(state.coin.symbol===c.symbol));
-  const mark=document.createElement("span");mark.className="crypto-coin-badge";mark.textContent=c.symbol==="BTC"?"₿":c.symbol==="ETH"?"Ξ":c.symbol==="XRP"?"✕":c.symbol==="SOL"?"◎":c.symbol;
-  const copy=document.createElement("span"),name=document.createElement("span"),net=document.createElement("span");
-  name.className="crypto-coin-name";name.textContent=c.name;net.className="crypto-coin-network";net.textContent=c.network;copy.append(name,net);b.append(mark,copy);
-  b.onclick=()=>{state.coin=c;coinUI();applyQuote(true)};holder.append(b);
+  const btn=document.createElement("button");btn.type="button";btn.className="coin-row";
+  const logo=document.createElement("span");logo.className="coin-logo";logo.style.cssText=iconStyle(c);logo.textContent=c.mark;
+  const desc=document.createElement("span");const name=document.createElement("span"),network=document.createElement("span");name.className="coin-title";name.textContent=c.name;network.className="coin-network";network.textContent=c.network;desc.append(name,network);
+  const amount=document.createElement("span");amount.className="coin-conversion";const rate=Number(state.rates[c.id]||0);
+  amount.textContent=rate>0&&state.hasOrder?formatCrypto(state.total/rate,c)+" "+c.symbol:rate>0?"View rate":"—";
+  const sub=document.createElement("small");sub.textContent=rate>0?"1 "+c.symbol+" ≈ "+money(rate):"Rate unavailable";amount.append(sub);
+  const arrow=document.createElement("span");arrow.className="coin-row-arrow";arrow.textContent="›";
+  btn.append(logo,desc,amount,arrow);btn.onclick=()=>openInvoice(c);
+  root.append(btn);
  }
 }
-function amountString(amount,c){
- if(!Number.isFinite(amount)||amount<=0)return "—";
- return Number(amount).toLocaleString("en-US",{useGrouping:false,maximumFractionDigits:c.precision});
+function selectScreen(screen){
+ $("#payChoose").hidden=screen!=="choose";$("#payInvoice").hidden=screen!=="invoice";
+ window.scrollTo({top:0,behavior:"instant"});
 }
-function setRateStatus(message,failed=false){
- $("#cryptoRateStatus").textContent=message;
- $("#cryptoLiveDot").classList.toggle("failed",failed);
-}
-function resetQuote(message){
- state.quoteAmount=null;state.expiresAt=0;state.ready=false;
- $("#cryptoAmount").textContent="—";$("#cryptoClock").textContent="--:--";
- setRateStatus(message||"Rates are not available right now.",true);
- $("#cryptoTimeNote").textContent="Try refreshing the quote. No payment address is active.";
- $("#cryptoTimerFill").style.width="0%";
- showWallet();
-}
-function applyQuote(reset=true){
- const c=state.coin,rate=Number(state.rates[c.id]?.usd||0);
- $("#cryptoSymbol").textContent=c.symbol;
- if(!Number.isFinite(rate)||rate<=0){
-  resetQuote("Selected currency rate unavailable. Try refreshing.");
-  $("#cryptoSpotRate").textContent="Rate unavailable";return;
- }
- $("#cryptoSpotRate").textContent="1 "+c.symbol+" ≈ "+fmt(rate)+" · "+c.network;
- const updatedAt=Number(state.rates[c.id]?.last_updated_at||0);
- const updatedText=updatedAt?"Updated "+new Date(updatedAt*1000).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}):"Current market estimate";
- setRateStatus("Rate loaded · "+state.priceSource+" · "+updatedText);
- if(!state.usd){
-  state.ready=false;state.quoteAmount=null;state.expiresAt=0;
-  $("#cryptoAmount").textContent="—";$("#cryptoClock").textContent="--:--";
-  $("#cryptoTimerFill").style.width="0%";
-  $("#cryptoTimeNote").textContent="Add items to your cart to calculate an estimated 30-minute crypto quote.";
-  showWallet();return;
- }
- if(reset||!state.quoteAmount||!state.expiresAt){
-  state.quoteAmount=state.usd/rate;state.expiresAt=Date.now()+1800000;
- }
- state.ready=true;
- $("#cryptoAmount").textContent=amountString(state.quoteAmount,c);
- $("#cryptoTimeNote").textContent="30-minute market estimate only; a backend is required for a guaranteed locked invoice.";
- tick();showWallet();
-}
-function tick(){
- if(!state.ready)return;
- const remaining=Math.max(0,state.expiresAt-Date.now());
- const sec=Math.ceil(remaining/1000);
- $("#cryptoClock").textContent=String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0");
- $("#cryptoTimerFill").style.width=(remaining/18000)+"%";
- if(!remaining){
-  state.ready=false;state.quoteAmount=null;
-  $("#cryptoRateStatus").textContent="Quote expired · refresh to recalculate";
-  $("#cryptoTimeNote").textContent="The 30-minute estimate has expired. Refresh the quote.";
-  $("#cryptoAmount").textContent="—";showWallet();
+function updateClock(){
+ const rest=state.expiresAt?Math.max(0,state.expiresAt-Date.now()):0,sec=Math.ceil(rest/1000);
+ $("#invoiceClock").textContent=state.expiresAt?String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0"):"--:--";
+ $("#invoiceTimerBar").style.width=(state.expiresAt?rest/3600000*100:0)+"%";
+ if(state.expiresAt&&!rest){
+  state.expiresAt=0;state.quoted=null;
+  $("#invoiceClock").textContent="Expired";
+  $("#invoicePaymentStatus").textContent="Quote expired — refresh rate";
+  $("#invoiceAmount").textContent="—";$("#walletAmount").value="—";
+  $("#copyAmount").disabled=true;$("#copyWalletAmount").disabled=true;
+  disableWallet();
  }
 }
-async function fetchWithTimeout(url,ms=9000){
- const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),ms);
- try{
-  const res=await fetch(url,{cache:"no-store",signal:ctl.signal,headers:{Accept:"application/json"}});
-  if(!res.ok)throw new Error("HTTP "+res.status);
-  return await res.json();
- }finally{clearTimeout(timer)}
+function disableWallet(){
+ $("#walletAddress").value="Not configured";
+ $("#copyWallet").disabled=true;$("#qrPlaceholder").hidden=false;$("#qrCode").hidden=true;
+ $("#qrCaption").textContent="Wallet not configured. Do not send any funds.";
+ $("#invoiceStatus").textContent="Preview";
 }
-async function fetchCoinLore(){
- const json=await fetchWithTimeout("https://api.coinlore.net/api/tickers/?start=0&limit=100",8500);
- if(!Array.isArray(json?.data))throw new Error("CoinLore response missing data");
- const rates={},now=Math.floor(Date.now()/1000);
- for(const c of COINS){
-  const entry=json.data.find(x=>x.symbol===c.symbol&&Number(x.price_usd)>0);
-  if(entry)rates[c.id]={usd:Number(entry.price_usd),last_updated_at:now};
+function renderQR(address,amount,c){
+ const node=$("#qrCode");node.replaceChildren();node.hidden=false;$("#qrPlaceholder").hidden=true;
+ if(typeof QRCode!=="function"){node.hidden=true;$("#qrPlaceholder").hidden=false;$("#qrCaption").textContent="QR generator unavailable. Copy the address manually.";return}
+ // Keep the QR payload to the receiving address only; users verify the amount separately.
+ try{new QRCode(node,{text:address,width:220,height:220,colorDark:"#082d20",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});
+ $("#qrCaption").textContent="Scan with your "+c.name+" wallet."}
+ catch(e){node.hidden=true;$("#qrPlaceholder").hidden=false;$("#qrCaption").textContent="QR unavailable. Copy the wallet address manually."}
+}
+function invoiceDetails(){
+ const c=state.coin,rate=Number(state.rates[c.id]||0);
+ $("#invoiceCoinName").textContent=c.name;$("#invoiceSymbol").textContent=c.symbol;
+ $("#invoiceNetwork").textContent=c.network;$("#walletAmountCoin").textContent=c.symbol;
+ const logo=$("#invoiceCoinLogo");logo.style.cssText=iconStyle(c);logo.textContent=c.mark;
+ $("#networkWarningTitle").textContent="Send only "+c.symbol+" on "+c.network;
+ const address=WALLETS[c.symbol];
+ const valid=Boolean(state.hasOrder&&state.expiresAt>Date.now()&&state.quoted>0&&rate>0);
+ const amount=valid?formatCrypto(state.quoted,c):"—";
+ $("#invoiceAmount").textContent=amount;$("#walletAmount").value=amount;
+ $("#copyAmount").disabled=!valid;$("#copyWalletAmount").disabled=!valid;
+ if(address&&valid){
+  $("#walletAddress").value=address;$("#copyWallet").disabled=false;
+  $("#invoiceStatus").textContent="Wallet configured";
+  $("#invoicePaymentStatus").textContent="Manual verification not connected";
+  renderQR(address,amount,c);
+ }else{
+  disableWallet();
+  $("#invoicePaymentStatus").textContent=!state.hasOrder?"No order in cart":!valid?"Waiting for current quote":"Wallet setup required";
  }
- if(!rates.bitcoin?.usd)throw new Error("Bitcoin not returned");
- return {rates,source:"CoinLore"};
+ $("#invoiceFootnote").textContent="Preview only — shipping/tax amounts and payment confirmation require a secure order backend.";
+ updateClock();
 }
-async function fetchCoinGecko(){
+function openInvoice(c){
+ state.coin=c;
+ const rate=Number(state.rates[c.id]||0);
+ // Keep an existing quote when returning from payment view, but never fake an exchange price.
+ if(c.symbol!==state.quoteCoin||!state.expiresAt||state.expiresAt<=Date.now()){
+  state.quoted=rate>0&&state.hasOrder?state.total/rate:null;
+  state.expiresAt=state.quoted?Date.now()+3600000:0;state.quoteCoin=c.symbol;
+ }
+ invoiceDetails();selectScreen("invoice");
+}
+async function copy(text,button){
+ if(!text||text==="—"||text==="Not configured")return;
+ try{await navigator.clipboard.writeText(text);const previous=button.textContent;button.textContent="✓";setTimeout(()=>button.textContent=previous,1500)}catch(e){button.title="Copy unavailable; select and copy manually"}
+}
+async function json(url,timeout=6500){
+ const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),timeout);
+ try{const response=await fetch(url,{cache:"no-store",signal:ctrl.signal});if(!response.ok)throw Error("HTTP "+response.status);return await response.json()}finally{clearTimeout(t)}
+}
+async function sourceCoinLore(){
+ const d=await json("https://api.coinlore.net/api/tickers/?start=0&limit=100");
+ if(!Array.isArray(d.data))throw Error("Missing data");
+ const rates={};for(const c of COINS){const v=d.data.find(x=>x.symbol===c.symbol&&Number(x.price_usd)>0);if(v)rates[c.id]=Number(v.price_usd)}
+ if(!rates.bitcoin)throw Error("No BTC");return {rates,name:"CoinLore"};
+}
+async function sourceCryptoCompare(){
+ const d=await json("https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH,USDT,USDC,SOL,LTC,XRP,BNB,XMR&tsyms=USD");
+ const rates={};for(const c of COINS){const v=Number(d[c.symbol]?.USD);if(v>0)rates[c.id]=v}
+ if(!rates.bitcoin)throw Error("No BTC");return {rates,name:"CryptoCompare"};
+}
+async function sourceCoinGecko(){
  const ids=COINS.map(c=>c.id).join(",");
- const url="https://api.coingecko.com/api/v3/simple/price?ids="+encodeURIComponent(ids)+"&vs_currencies=usd&include_last_updated_at=true";
- const json=await fetchWithTimeout(url);
- if(!json?.bitcoin?.usd)throw new Error("Incomplete CoinGecko response");
- return {rates:json,source:"CoinGecko"};
+ const d=await json("https://api.coingecko.com/api/v3/simple/price?ids="+ids+"&vs_currencies=usd");
+ const rates={};for(const c of COINS){const v=Number(d[c.id]?.usd);if(v>0)rates[c.id]=v}
+ if(!rates.bitcoin)throw Error("No BTC");return {rates,name:"CoinGecko"};
 }
-async function fetchCryptoCompare(){
- const syms=COINS.map(c=>c.symbol).join(",");
- const url="https://min-api.cryptocompare.com/data/pricemulti?fsyms="+encodeURIComponent(syms)+"&tsyms=USD";
- const json=await fetchWithTimeout(url);
- if(!json?.BTC?.USD)throw new Error("Incomplete CryptoCompare response");
- const rates={};const now=Math.floor(Date.now()/1000);
- for(const c of COINS){
-  const price=Number(json[c.symbol]?.USD);
-  if(Number.isFinite(price)&&price>0)rates[c.id]={usd:price,last_updated_at:now};
- }
- return {rates,source:"CryptoCompare"};
-}
-async function fetchRates(){
- const button=$("#cryptoRefresh");button.disabled=true;
- setRateStatus("Loading current market prices…");
- const providers=[fetchCoinLore,fetchCryptoCompare,fetchCoinGecko],failures=[];
+async function loadRates(){
+ if(state.loading)return;state.loading=true;
+ $("#payRateStatus").textContent="Loading current market prices…";$("#retryRates").disabled=true;$("#refreshInvoice").disabled=true;
+ const combined={},sources=[];
+ // Any rate data must come from a successful live endpoint; do not manufacture rates.
  try{
-  const combined={},sources=[];
-  for(const provider of providers){
-   try{
-    const response=await provider();
-    for(const coin of COINS){
-     const entry=response.rates?.[coin.id];
-     if(!combined[coin.id]&&Number(entry?.usd)>0)combined[coin.id]=entry;
-    }
-    sources.push(response.source);
-    if(COINS.every(coin=>Number(combined[coin.id]?.usd)>0))break;
-   }catch(err){failures.push(String(err?.message||"Network error"))}
+  const responses=await Promise.allSettled([sourceCoinLore(),sourceCryptoCompare(),sourceCoinGecko()]);
+  for(const r of responses){if(r.status!=="fulfilled")continue;sources.push(r.value.name);
+   for(const [id,price]of Object.entries(r.value.rates))if(!combined[id]&&Number(price)>0)combined[id]=price;
   }
-  if(!Object.keys(combined).length)throw new Error(failures.join(" | ")||"Market feeds unavailable");
-  state.rates=combined;state.priceSource=sources.join(" + ");
-  applyQuote(true);
- }catch(e){
-  resetQuote("Live prices could not be loaded. Try again.");
-  $("#cryptoSpotRate").textContent="Price lookup failed. A server-side rate service is needed if your browser blocks the public feeds.";
-  console.warn("Crypto rate providers:",e);
- }finally{button.disabled=false}
+  state.rates=combined;state.source=sources.join(", ");
+  $("#payRateStatus").textContent=sources.length?"Live rates: "+state.source+" · "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}):"Live rates unavailable. Retry or use a hosted price endpoint.";
+  makeList();
+  // Explicit refresh creates a new one-hour estimate for the selected currency.
+  if(!$("#payInvoice").hidden){
+   const rate=Number(state.rates[state.coin.id]||0);
+   state.quoted=rate>0&&state.hasOrder?state.total/rate:null;
+   state.expiresAt=state.quoted?Date.now()+3600000:0;
+   invoiceDetails();
+  }
+ }finally{state.loading=false;$("#retryRates").disabled=false;$("#refreshInvoice").disabled=false}
 }
-function showWallet(){
- const wallet=WALLETS[state.coin.symbol]||"";
- const active=Boolean(wallet&&state.ready&&state.usd);
- $("#cryptoWalletEmpty").hidden=active;$("#cryptoWalletReady").hidden=!active;
- $("#cryptoTxHash").disabled=!active;
- // Never enable a simulated "payment complete" flow without a verified order database.
- $("#cryptoSubmit").disabled=true;
- if(active){
-  $("#cryptoAddress").textContent=wallet;$("#cryptoNetworkLabel").textContent=state.coin.network;
-  $("#cryptoTagNote").textContent=state.coin.symbol==="XRP"?"An XRP destination tag may be required; configure it alongside the wallet before accepting payment.":"Verify the address and network before making any transfer.";
- }
-}
-
-function initWizard(){
- let step=1,maxReached=1;
- const panels=[...document.querySelectorAll(".crypto-wizard-panel")];
- const tabs=[...document.querySelectorAll(".crypto-progress-tab")];
- const go=(next)=>{
-  if(![1,2,3].includes(next)||next>maxReached+1)return;
-  step=next;maxReached=Math.max(maxReached,step);
-  panels.forEach(panel=>{panel.hidden=Number(panel.dataset.step)!==step;});
-  tabs.forEach(tab=>{
-   const n=Number(tab.dataset.goStep);
-   tab.classList.toggle("is-current",n===step);
-   tab.classList.toggle("is-done",n<step);
-   tab.setAttribute("aria-current",n===step?"step":"false");
-   tab.disabled=n>maxReached;
-  });
-  const isReview=step===2;
-  if(isReview&&!Number(state.rates[state.coin.id]?.usd))fetchRates();
-  const intro=document.querySelector(".crypto-progress");
-  if(intro)intro.scrollIntoView({behavior:"smooth",block:"start"});
- };
- document.querySelector("#cryptoNext1").onclick=()=>go(2);
- document.querySelector("#cryptoPrev2").onclick=()=>go(1);
- document.querySelector("#cryptoNext2").onclick=()=>go(3);
- document.querySelector("#cryptoPrev3").onclick=()=>go(2);
- tabs.forEach(t=>t.addEventListener("click",()=>go(Number(t.dataset.goStep))));
- go(1);
-}
-
 document.addEventListener("DOMContentLoaded",()=>{
- orderSummary();coinUI();showWallet();
- initWizard();
- $("#cryptoRefresh").onclick=fetchRates;
- $("#cryptoCopy").onclick=async()=>{try{await navigator.clipboard.writeText($("#cryptoAddress").textContent);$("#cryptoCopy").textContent="Copied";setTimeout(()=>$("#cryptoCopy").textContent="Copy",1800)}catch(_){$("#cryptoCopy").textContent="Select & copy"}};
- $("#cryptoSubmit").onclick=()=>{$("#cryptoSubmissionStatus").textContent="Manual payment submission needs a secure backend before it can accept transactions."};
- state.interval=setInterval(tick,1000);
- fetchRates();
+ cartTotals();makeList();disableWallet();
+ $("#changeCurrency").onclick=()=>selectScreen("choose");
+ $("#retryRates").onclick=loadRates;$("#refreshInvoice").onclick=loadRates;
+ $("#copyWallet").onclick=()=>copy($("#walletAddress").value,$("#copyWallet"));
+ $("#copyAmount").onclick=()=>copy($("#walletAmount").value,$("#copyAmount"));
+ $("#copyWalletAmount").onclick=()=>copy($("#walletAmount").value,$("#copyWalletAmount"));
+ state.timer=setInterval(updateClock,1000);
+ loadRates();
 });
 })();
