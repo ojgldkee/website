@@ -61,3 +61,51 @@ body.crypto-pay-page{margin:0;color:var(--cink);background:linear-gradient(180de
 [hidden]{display:none!important}
 @media(max-width:850px){.crypto-layout{grid-template-columns:1fr}.crypto-summary{position:static}.crypto-header{padding:0 22px}.crypto-header-badge{display:none}}
 @media(max-width:560px){.crypto-header{height:75px;padding:0 18px}.crypto-mark{font-size:24px}.crypto-back{font-size:11px}.crypto-wrap{padding:20px 15px}.crypto-intro{margin:18px 2px 25px}.crypto-intro h1{font-size:46px}.crypto-intro p{font-size:13px}.crypto-panel{padding:18px 15px;border-radius:20px}.crypto-section-head{gap:11px;margin-bottom:17px}.crypto-section-head h2{font-size:20px}.crypto-section-head p{font-size:11px}.crypto-index{width:37px;height:37px;border-radius:11px}.crypto-coins{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.crypto-coin{min-height:95px;display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:11px 9px;border-radius:14px}.crypto-coin.selected{padding:10px 8px}.crypto-coin-badge{width:32px;height:32px;font-size:10px}.crypto-coin-name{font-size:11px}.crypto-coin-network{font-size:8px}.crypto-amount{padding:17px}.crypto-amount-value strong{font-size:29px}.crypto-footer{flex-wrap:wrap;justify-content:center;text-align:center}}
+
+/* ===== Forma crypto checkout redesign v3 ===== */
+html{min-height:100%}
+body.crypto-pay-page{min-height:100dvh!important;display:flex!important;flex-direction:column!important}
+.crypto-wrap{width:100%;min-height:calc(100dvh - 90px);display:flex;flex-direction:column;flex:1}
+.crypto-footer{margin-top:auto!important;padding-top:30px!important}
+.crypto-layout{padding-bottom:46px}
+.crypto-header-state{display:flex;align-items:center;gap:9px;border:1px solid #dbe8de;background:#f5f9f6;border-radius:999px;padding:10px 14px;font-size:12px;font-weight:800;color:#345c47;white-space:nowrap}
+.crypto-header-state-dot{width:8px;height:8px;border-radius:50%;background:#249b68}
+.crypto-step-icon{background:#e6f2e9!important}
+.crypto-step-icon svg{width:23px;height:23px;color:#17583f}
+.crypto-coin .crypto-coin-name{color:#163f2f!important;font-weight:850!important}
+.crypto-coin:hover .crypto-coin-name{color:#0f563b!important}
+.crypto-coin.selected .crypto-coin-name{color:#114c35!important}
+.crypto-coin{font-family:inherit!important;text-decoration:none!important}
+.crypto-rate-status{min-height:30px}
+.crypto-live-dot.failed{background:#d6a34a;box-shadow:0 0 0 4px #fff4e0}
+.crypto-amount{position:relative;overflow:hidden}
+.crypto-amount:after{content:"";width:140px;height:140px;right:-75px;top:-85px;position:absolute;border:30px solid rgba(30,102,68,.045);border-radius:50%;pointer-events:none}
+.crypto-timer-wrap strong{font-variant-numeric:tabular-nums}
+.crypto-form-hint{font-size:10px;font-weight:600;letter-spacing:0;color:#8c9a8d;margin-left:5px}
+.crypto-quote-panel,.crypto-instructions{scroll-margin-top:20px}
+.crypto-intro{margin-top:10px!important;margin-bottom:24px!important}
+.crypto-intro h1{max-width:830px;font-size:clamp(42px,5vw,68px)!important}
+.crypto-intro p{margin-top:13px}
+.crypto-coins{gap:11px}
+.crypto-coin{min-height:87px}
+.crypto-coin-badge{font-size:11px!important}
+.crypto-panel{border-radius:23px}
+.crypto-summary-notice{background:#eff6f0}
+.crypto-support{background:linear-gradient(130deg,#103c2c,#21543e)}
+@media(max-width:850px){.crypto-wrap{min-height:calc(100dvh - 80px)}}
+@media(max-width:560px){
+ .crypto-header{padding:0 17px!important}
+ .crypto-header-state{font-size:10px!important;padding:9px 11px!important;max-width:54%;white-space:normal;line-height:1.25}
+ .crypto-wrap{padding:16px 14px 0!important;min-height:calc(100dvh - 75px)}
+ .crypto-intro{margin:9px 3px 22px!important}
+ .crypto-intro h1{font-size:41px!important;line-height:1.08!important;margin:12px 0!important}
+ .crypto-intro p{font-size:13px!important;line-height:1.55!important}
+ .crypto-layout{gap:16px;padding-bottom:35px}
+ .crypto-panel{border-radius:21px!important}
+ .crypto-coin{min-height:100px!important}
+ .crypto-coin-name{font-size:12px!important;line-height:1.18!important}
+ .crypto-step-icon svg{width:22px;height:22px}
+ .crypto-section-head h2{font-size:21px!important}
+ .crypto-amount-value strong{font-size:31px!important}
+ .crypto-footer{padding:22px 0 26px!important;margin-top:auto!important}
+}
