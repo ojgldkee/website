@@ -25,25 +25,47 @@ const $=s=>document.querySelector(s),money=n=>new Intl.NumberFormat("en-US",{sty
 const state={coin:COINS[0],rates:{},source:"",total:0,hasOrder:false,expiresAt:0,quoted:null,quoteCoin:"",timer:null,loading:false,shippingMethod:"standard"};
 const formatCrypto=(n,c)=>Number.isFinite(n)&&n>0?n.toFixed(c.precision).replace(/0+$/,"").replace(/\.$/,""):"—";
 function cartTotals(){
- let list=[];try{list=JSON.parse(localStorage.getItem("forma-cart-v2")||"[]")}catch(_){}
- if(!Array.isArray(list))list=[];
  const products=Array.isArray(window.PRODUCTS)?window.PRODUCTS:[];
- let subtotal=0,count=0;
- const details=[];
- for(const line of list){
-  const p=products.find(p=>p.slug===line.slug);if(!p)continue;
-  const variant=(p.variants||[]).find(v=>v.label===line.variant)||(p.variants||[])[0];
-  const price=Number(variant?.price??p.price),qty=Math.min(100,Math.max(1,Number(line.qty)||1));
-  if(!Number.isFinite(price)||price<0)continue;
-  subtotal+=price*qty;count+=qty;
-  details.push({name:p.name,variant:variant?.label||"",qty});
+ let details=[],subtotal=0,count=0,shippingMethod="standard",shipping=0,total=0;
+
+ try{
+   const snap=JSON.parse(localStorage.getItem("aspen-labs-payment-order-v1")||"null");
+   if(snap&&Array.isArray(snap.items)&&snap.items.length&&Number(snap.total)>0){
+     details=snap.items.map(x=>({name:x.name,variant:x.variant||"",qty:Math.max(1,Number(x.qty)||1)}));
+     count=snap.items.reduce((n,x)=>n+Math.max(1,Number(x.qty)||1),0);
+     subtotal=Number(snap.subtotal)||0;
+     shipping=Number(snap.shipping)||0;
+     shippingMethod=snap.shippingMethod||"standard";
+     total=Number(snap.total)||subtotal+shipping;
+   }
+ }catch(_){}
+
+ if(!details.length){
+   let list=[];
+   for(const key of ["aspen-labs-cart-v2","aspen-labs-cart-backup-v1","forma-cart-v2"]){
+     try{
+       const v=JSON.parse(localStorage.getItem(key)||"[]");
+       if(Array.isArray(v)&&v.length){list=v;break}
+     }catch(_){}
+   }
+   for(const line of list){
+     const p=products.find(p=>p.slug===line.slug);if(!p)continue;
+     const variant=(p.variants||[]).find(v=>v.label===line.variant)||(p.variants||[])[0];
+     const price=Number(variant?.price??p.price),qty=Math.min(100,Math.max(1,Number(line.qty)||1));
+     if(!Number.isFinite(price)||price<0)continue;
+     subtotal+=price*qty;count+=qty;
+     details.push({name:p.name,variant:variant?.label||"",qty});
+   }
+   shippingMethod=localStorage.getItem("aspen-checkout-shipping-method")||"standard";
+   const threshold=Number(window.STORE?.shippingThreshold||250);
+   shipping=shippingMethod==="priority"?14.99:(shippingMethod==="free"&&subtotal>=threshold?0:4.99);
+   total=subtotal+shipping;
  }
- const shippingMethod=localStorage.getItem("forma-checkout-shipping-method")||"standard";
- const shipping=subtotal>=Number(window.STORE?.shippingThreshold||250)?0:7.95;
  state.shippingMethod=shippingMethod;
- state.hasOrder=count>0;state.total=count?Math.round((subtotal+shipping)*100)/100:0;
+ state.hasOrder=count>0;
+ state.total=state.hasOrder?Math.round(total*100)/100:0;
  $("#chooseTotal").textContent=state.hasOrder?money(state.total):"No order";
- $("#invoiceUsd").textContent=state.hasOrder?"Estimated order total "+money(state.total):"No order in cart";
+ $("#invoiceUsd").textContent=state.hasOrder?"Order total "+money(state.total):"No order in cart";
  const root=$("#payOrderProducts");root.replaceChildren();
  const heading=document.createElement("span");heading.className="pay-products-label";heading.textContent="IN YOUR ORDER";root.append(heading);
  if(!details.length){
