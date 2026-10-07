@@ -216,8 +216,44 @@ function initTracking(){
 }
 function initContact(){const f=$('#contactForm');if(f)f.onsubmit=e=>{e.preventDefault();$('#contactStatus').textContent='The support form design is ready. Email delivery will be connected before launch.'}}
 function initAccount(){const f=$('#loginForm');if(f)f.onsubmit=e=>{e.preventDefault();$('#loginStatus').textContent='Account authentication will be connected before launch.'}}
+function selectedShippingMethod(){
+ const checked=$('.checkout-method input[name="ship"]:checked');
+ return checked?checked.value:'standard';
+}
+function shippingCostFor(method,subtotal){
+ if(method==='free'&&subtotal>=S.shippingThreshold)return 0;
+ if(method==='priority')return 14.99;
+ return 4.99;
+}
+function syncCheckoutShippingOptions(){
+ const subtotal=cartSubtotal();
+ const freeCard=$('[data-ship-method="free"]');
+ const freeInput=freeCard?.querySelector('input[name="ship"]');
+ const qualifies=subtotal>=S.shippingThreshold;
+ if(freeCard)freeCard.hidden=!qualifies;
+ if(freeInput)freeInput.disabled=!qualifies;
+
+ let current=selectedShippingMethod();
+ if(qualifies){
+   const saved=localStorage.getItem('aspen-checkout-shipping-method');
+   if(!saved||saved==='standard'||saved==='free'){
+     if(freeInput&&!freeInput.checked){
+       freeInput.checked=true;
+       current='free';
+       localStorage.setItem('aspen-checkout-shipping-method','free');
+     }
+   }
+ }else if(current==='free'){
+   const standard=$('.checkout-method input[name="ship"][value="standard"]');
+   if(standard){standard.checked=true;current='standard'}
+   localStorage.setItem('aspen-checkout-shipping-method','standard');
+ }
+ $('.checkout-method input[name="ship"]').forEach(r=>r.closest('.checkout-method')?.classList.toggle('selected',r.checked));
+}
 function renderCheckout(){
- const root=$('#checkout-summary');if(!root)return;const subtotal=cartSubtotal(),shipping=subtotal>=S.shippingThreshold?0:7.95;
+ const root=$('#checkout-summary');if(!root)return;
+ syncCheckoutShippingOptions();
+ const subtotal=cartSubtotal(),method=selectedShippingMethod(),shipping=shippingCostFor(method,subtotal);
  root.innerHTML=(cart.length?cart.map(l=>{const p=productBySlug(l.slug);if(!p)return'';const v=lineVariant(l),unit=lineUnitPrice(l);return '<div class="summary-line"><span>'+p.name+' <small>'+v.label+'</small> × '+l.qty+'</span><strong>'+money(unit*l.qty)+'</strong></div>'}).join(''):'<div class="summary-line"><span>Your cart is empty</span><span>—</span></div>')+'<div class="summary-line"><span>Subtotal</span><strong>'+money(subtotal)+'</strong></div><div class="summary-line"><span>Shipping</span><strong>'+(shipping===0?'Free':money(shipping))+'</strong></div><div class="summary-line total"><strong>Estimated total</strong><strong>'+money(subtotal+shipping)+'</strong></div>'
 }
 function renderFullCart(){
@@ -241,9 +277,9 @@ function initCheckout(){
  $$('.checkout-method input[type="radio"]').forEach(input=>input.addEventListener('change',()=>{
    const name=input.name;
    $$('.checkout-method input[name="'+name+'"]').forEach(r=>r.closest('.checkout-method').classList.toggle('selected',r.checked));
-   if(name==='ship'&&input.checked)localStorage.setItem('forma-checkout-shipping-method',input.value);
+   if(name==='ship'&&input.checked){localStorage.setItem('aspen-checkout-shipping-method',input.value);renderCheckout();}
  }));
- const savedShip=localStorage.getItem('forma-checkout-shipping-method');
+ const savedShip=localStorage.getItem('aspen-checkout-shipping-method');
  if(savedShip){
    const saved=$('.checkout-method input[name="ship"][value="'+savedShip+'"]');
    if(saved){saved.checked=true;saved.dispatchEvent(new Event('change',{bubbles:true}))}
@@ -280,7 +316,7 @@ function initCheckout(){
    if(!cart.length){showCheckoutError(null,'Your cart is empty. Add a product before continuing to payment.');return}
    const firstInvalid=requiredFields.find(el=>{
      if(el.type==='checkbox')return !el.checked;
-     if(el.type==='email')return !el.value.trim()||!/^\\S+@\\S+\\.\\S+$/.test(el.value.trim());
+     if(el.type==='email')return !el.value.trim()||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim());
      return !String(el.value||'').trim();
    });
    if(firstInvalid){
