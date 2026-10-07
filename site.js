@@ -383,5 +383,5 @@ function initCheckout(){
 function bindGlobal(){
  $('.menu-trigger').onclick=openMenu;$('.menu-close').onclick=closeMenu;$('.menu-overlay').onclick=closeMenu;$$('.cart-trigger').forEach(b=>b.onclick=openCart);$('.cart-close').onclick=closeCart;$('.cart-overlay').onclick=closeCart;$$('[data-year]').forEach(e=>e.textContent=new Date().getFullYear());renderCart();startReservationTimer()
 }
-document.addEventListener('DOMContentLoaded',()=>{header();footer();cartShell();bindGlobal();renderGrid('#home-products',P.slice(0,4));initCatalog();renderProduct();initTracking();initContact();initAccount();initCheckout();renderFullCart();bindAdds()});
+document.addEventListener('DOMContentLoaded',()=>{header();footer();cartShell();bindGlobal();renderGrid('#home-products',P.slice(0,4));initCatalog();renderProduct();initTracking();initContact();initAccount();if(!window.ASPEN_CHECKOUT_CONTROLLER)initCheckout();renderFullCart();bindAdds()});
 })();
