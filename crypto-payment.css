@@ -1,143 +1,23 @@
-/* Standalone Forma crypto checkout */
-:root{--cp:#123c2e;--cp2:#0b3024;--cink:#152a20;--cmute:#6c7e73;--cborder:#dce7df;--cbg:#f5f8f4}
-*{box-sizing:border-box}
-body.crypto-pay-page{margin:0;color:var(--cink);background:linear-gradient(180deg,#f0f5f0 0%,#fafbf9 560px);font-family:Manrope,Inter,system-ui,-apple-system,sans-serif}
-.crypto-pay-page button{cursor:pointer}.crypto-pay-page button:disabled{cursor:not-allowed;opacity:.55}
-.crypto-header{height:90px;display:flex;align-items:center;gap:25px;justify-content:space-between;border-bottom:1px solid var(--cborder);background:#fff;padding:0 max(20px,calc((100vw - 1230px)/2))}
-.crypto-mark{font-size:26px;font-weight:850;letter-spacing:-.065em;line-height:.85;color:#0e3024;display:flex;flex-direction:column;gap:6px}
-.crypto-mark span{font-size:10px;letter-spacing:.36em;font-weight:800}
-.crypto-header-badge{display:flex;align-items:center;gap:8px;color:#567367;font-size:12px;font-weight:750}
-.crypto-header-badge svg{width:18px;height:18px;color:#176849}.crypto-back{font-size:12px;font-weight:800;color:#285545;text-decoration:underline;text-underline-offset:5px}
-.crypto-wrap{max-width:1230px;margin:auto;padding:36px 24px 24px}
-.crypto-intro{max-width:750px;margin:18px 0 38px}
-.crypto-eyebrow{font-size:11px;font-weight:800;letter-spacing:.18em;color:#678777;display:flex;align-items:center;gap:8px}
-.crypto-signal,.crypto-live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#28a678;box-shadow:0 0 0 4px #dff4e9}
-.crypto-intro h1{font-size:clamp(43px,6vw,74px);line-height:1.06;letter-spacing:-.075em;font-weight:850;margin:16px 0 12px}
-.crypto-intro em{font-style:normal;color:#247155}.crypto-intro p{max-width:590px;line-height:1.7;font-size:15px;color:#62756a}
-.crypto-layout{display:grid;grid-template-columns:minmax(0,1.48fr) minmax(310px,.82fr);gap:20px;align-items:start}
-.crypto-column{display:grid;gap:18px}.crypto-panel{background:#fff;border:1px solid var(--cborder);box-shadow:0 16px 50px rgba(19,60,45,.035);border-radius:24px;padding:25px}
-.crypto-section-head{display:flex;gap:14px;align-items:center;margin-bottom:21px}.crypto-index{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;flex-shrink:0;background:#eaf3ec;color:#235c42;font-size:12px;font-weight:900}
-.crypto-section-head h2,.crypto-summary h2{font-size:23px;font-weight:850;letter-spacing:-.045em;margin:0}.crypto-section-head p{font-size:12px;color:var(--cmute);margin:4px 0 0;line-height:1.4}
-.crypto-coins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.crypto-coin{border:1px solid #dce6df;background:#fbfcfa;min-height:83px;border-radius:16px;padding:12px;display:flex;align-items:center;gap:10px;text-align:left;transition:background .16s,border-color .16s}
-.crypto-coin:hover{border-color:#7eab92;background:#f2f8f2}.crypto-coin.selected{background:#ecf5ee;border:2px solid #246a4d;padding:11px;box-shadow:0 0 0 2px rgba(32,108,75,.05)}
-.crypto-coin-badge{width:38px;height:38px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:#e0ede4;color:#17513b;font-size:11px;font-weight:900}
-.crypto-coin.selected .crypto-coin-badge{background:#16503a;color:white}
-.crypto-coin-name{display:block;font-size:12px;font-weight:850}.crypto-coin-network{display:block;font-size:9px;color:#74867a;margin-top:3px;line-height:1.3}
-.crypto-smallnote{font-size:11px;color:#788b7e;line-height:1.6;margin:14px 2px 0}
-.crypto-rate-status{display:flex;align-items:center;gap:12px;font-size:11px;font-weight:750;color:#527667;margin-bottom:18px}
-.crypto-amount{padding:24px;border:1px solid #d8e6dc;border-radius:20px;background:linear-gradient(140deg,#eff7f0,#f9fcf9)}
-.crypto-amount-label{font-size:11px;letter-spacing:.1em;font-weight:850;color:#698375;text-transform:uppercase}
-.crypto-amount-value{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;margin:9px 0 4px}
-.crypto-amount-value strong{font-size:clamp(27px,4vw,45px);letter-spacing:-.06em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;line-height:1.15}
-.crypto-amount-value span{font-size:16px;font-weight:850;color:#397359}
-.crypto-usd{font-size:12px;color:#718478}.crypto-usd strong{color:#244c37}
-.crypto-timer-wrap{margin-top:17px;border-radius:16px;border:1px solid #dfe8e1;padding:17px;background:#fff}
-.crypto-timer-wrap>div:first-child{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:850;letter-spacing:.1em;color:#728778}
-.crypto-timer-wrap strong{font-size:23px;letter-spacing:-.04em;color:#124432;font-variant-numeric:tabular-nums}
-.crypto-timer-track{height:8px;background:#e8efea;border-radius:100px;margin:11px 0 9px;overflow:hidden}
-.crypto-timer-track span{display:block;height:100%;width:100%;background:#1b6548;border-radius:100px;transition:width .5s}
-.crypto-timer-wrap p{margin:0;color:#75877d;font-size:11px;line-height:1.45}
-.crypto-rate-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;color:#738478;font-size:11px}
-.crypto-rate-meta button{padding:10px 14px;border-radius:999px;background:#e8f2eb;border:0;color:#235b41;font-size:11px;font-weight:850}
-.crypto-wallet-unconfigured{background:#f4f7f3;border:1px dashed #adc8b6;border-radius:19px;padding:28px 16px;text-align:center}
-.crypto-wallet-icon{height:50px;width:50px;border-radius:15px;display:grid;place-items:center;background:#dcece1;color:#205a3e;margin:0 auto 12px}.crypto-wallet-icon svg{width:28px;height:28px}
-.crypto-wallet-unconfigured strong{font-size:16px}.crypto-wallet-unconfigured p{max-width:370px;margin:8px auto 0;line-height:1.55;color:#6e8275;font-size:12px}
-.crypto-address-label,.crypto-tx-label{display:block;color:#456453;font-weight:850;font-size:11px;letter-spacing:.06em;margin:0 0 8px}
-.crypto-address{display:flex;align-items:center;gap:7px;border:1px solid #d9e7de;border-radius:15px;padding:10px;background:#f6faf6}.crypto-address code{font-size:12px;word-break:break-all;flex:1}.crypto-address button{border:0;background:#124e39;color:white;padding:11px 13px;border-radius:10px;font-weight:800}
-.crypto-address-note,.crypto-reference{font-size:12px;line-height:1.6;color:#66786b}.crypto-reference{padding:12px;background:#fff8ed;border-radius:12px}
-.crypto-steps{display:grid;gap:10px;padding:20px 0}.crypto-steps div{display:flex;align-items:center;gap:11px;font-size:12px;color:#52695b;font-weight:650}.crypto-steps span{height:25px;width:25px;border-radius:50%;display:grid;place-items:center;background:#e8f2ea;color:#275c43;font-size:11px;font-weight:850;flex-shrink:0}
-.crypto-tx{display:block;width:100%;min-height:50px;border:1px solid #cfddd2;border-radius:13px;background:white;padding:0 14px;color:#123c2e;font-size:13px}
-.crypto-submit{width:100%;min-height:55px;padding:0 19px;margin-top:14px;border:0;border-radius:999px;background:#123c2e;color:white;display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:850;letter-spacing:.06em}
-.crypto-submission-status{font-size:11px;line-height:1.5;color:#7a8a7e;margin:13px 4px 0}
-.crypto-summary{position:sticky;top:18px}.crypto-summary-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.crypto-summary-top a{font-size:12px;color:#33664a;font-weight:800;text-decoration:underline;text-underline-offset:4px}.crypto-summary h2{margin:13px 0 22px}
-.crypto-order-line{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #ecf0ed}
-.crypto-order-line img{width:52px;height:52px;border-radius:12px;object-fit:cover;background:#eef3ed}.crypto-order-line strong{font-size:12px}.crypto-order-line small{display:block;color:#718478;font-size:10px;margin-top:5px}.crypto-order-line>span{font-size:12px;font-weight:850;white-space:nowrap}
-.crypto-summary-totals{padding-top:17px;display:grid;gap:14px}.crypto-summary-totals>div{display:flex;justify-content:space-between;align-items:center;gap:9px;font-size:12px;color:#728275}.crypto-summary-totals strong{color:#1b3326;font-size:13px}
-.crypto-summary-totals .crypto-total{padding-top:17px;border-top:1px solid #dfe8e1;color:#183b2b;font-weight:850}.crypto-summary-totals .crypto-total strong{font-size:25px;letter-spacing:-.04em}
-.crypto-summary-notice{margin-top:22px;background:#f1f7f2;border-radius:14px;padding:14px;display:flex;gap:9px;align-items:start;color:#617a69;font-size:11px;line-height:1.5}.crypto-summary-notice svg{flex-shrink:0;width:19px;height:19px}
-.crypto-support{margin:15px 0 0;border-radius:20px;padding:20px 24px;background:#123c2e;color:white;display:flex;flex-direction:column;gap:9px}.crypto-support span{font-size:10px;letter-spacing:.15em;color:#a9c6b4}.crypto-support strong{font-size:15px}.crypto-support a{color:#d4ecda;text-decoration:underline;text-underline-offset:4px;font-size:12px;font-weight:800}
-.crypto-footer{margin:40px 0 0;padding:25px 0;border-top:1px solid #dbe7de;display:flex;justify-content:space-between;align-items:center;gap:18px;font-size:10px;color:#7a887b}.crypto-footer>span:first-child{font-weight:900;letter-spacing:.13em}.crypto-footer a{text-decoration:underline;text-underline-offset:3px}.crypto-footer>div{display:flex;gap:17px}
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{--forest:#103c2b;--text:#152c21;--muted:#6d7c73;--line:#dce6dd;--bg:#f3f7f3}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}body.forma-payment{min-height:100dvh;display:flex;flex-direction:column;font-family:Manrope,Inter,system-ui,-apple-system,sans-serif;background:radial-gradient(circle at 90% 0%,#e0eee4,transparent 48%),linear-gradient(165deg,#f4f9f4,#f9fbf8);color:var(--text)}
+button{font:inherit;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible{outline:3px solid #82c2a0;outline-offset:3px}
+.pay-header{background:#fff;border-bottom:1px solid var(--line);min-height:83px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px max(22px,calc((100vw - 850px)/2))}
+.pay-logo{display:flex;flex-direction:column;line-height:.9;letter-spacing:-.07em;color:var(--forest);font-size:26px}.pay-logo small{font-size:10px;letter-spacing:.38em;margin-top:9px;font-weight:800}.pay-header-status{border-radius:999px;border:1px solid #d6e6db;padding:10px 14px;color:#446a54;font-size:12px;font-weight:800;display:flex;align-items:center;gap:8px}.pay-header-status span,.pay-dot{height:8px;width:8px;border-radius:50%;display:inline-block;background:#36a873;box-shadow:0 0 0 4px #e3f5e9}
+.pay-main{flex:1;width:100%;padding:38px 18px 54px}.pay-shell{max-width:760px;margin:0 auto}.pay-topline{font-size:11px;letter-spacing:.18em;color:#63836e;font-weight:800;display:flex;gap:13px;align-items:center}
+h1{font-size:clamp(38px,6vw,62px);letter-spacing:-.065em;line-height:1.1;margin:22px 0 10px;font-weight:800}h1 em{font-style:normal;color:#257c54}.pay-description{font-size:14px;line-height:1.7;color:var(--muted);margin:0 0 23px}
+.pay-total-pill{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:17px 21px;background:#e4f1e7;border:1px solid #d5e7d8;border-radius:18px;margin:24px 0}.pay-total-pill span{font-size:14px;color:#527562;font-weight:700}.pay-total-pill strong{font-size:27px;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.pay-card{border:1px solid #dbe5dc;border-radius:25px;background:#fff;box-shadow:0 19px 55px rgba(20,54,33,.07);overflow:hidden}.pay-card-heading{padding:23px 25px;border-bottom:1px solid #ecf0eb;display:flex;align-items:center;justify-content:space-between;gap:10px}.pay-card-heading h2{font-weight:800;letter-spacing:-.04em;font-size:20px;margin:0}.pay-card-heading span{font-size:11px;font-weight:800;color:#618271;background:#eaf2eb;padding:8px 12px;border-radius:999px}
+.pay-coin-list{padding:12px 16px;max-height:605px;overflow:auto;overscroll-behavior:contain}.coin-row{display:grid;grid-template-columns:50px minmax(0,1fr) auto 26px;align-items:center;gap:13px;padding:13px 12px;min-height:76px;width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:16px;color:var(--text)}.coin-row:hover,.coin-row:focus-visible{background:#f0f7f1;border-color:#d1e6d6}.coin-logo{display:grid;place-items:center;border-radius:50%;background:var(--logo,#e5eee8);color:var(--logo-text,#1a5e42);height:45px;width:45px;font-size:15px;font-weight:900}.coin-title{font-size:15px;font-weight:800;display:block}.coin-network{font-size:11px;color:#839086;margin-top:3px;display:block}.coin-conversion{text-align:right;font-weight:850;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}.coin-conversion small{display:block;margin-top:4px;color:#859389;font-size:10px;font-weight:600}.coin-row-arrow{font-size:20px;color:#4c8160;text-align:right}
+.pay-fetch-status{border-top:1px solid #edf1ee;padding:15px 23px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#708678;font-size:11px;line-height:1.5}.pay-fetch-status button{border:0;background:#e8f3e9;color:#246448;border-radius:999px;padding:9px 15px;font-size:12px;font-weight:800}
+.pay-change{display:block;background:transparent;border:0;color:#2b7050;font-size:13px;font-weight:850;padding:8px 0;margin-bottom:23px}.pay-invoice-head .pay-description{margin-bottom:24px}
+.invoice-card{padding:25px}.invoice-currency-line{display:flex;align-items:center;gap:15px}.coin-logo-large{height:64px;width:64px;font-size:29px}.invoice-currency-label{display:flex;flex-direction:column;gap:3px;flex:1}.invoice-currency-label>span,.invoice-currency-label small{font-size:11px;color:#829185}.invoice-currency-label strong{font-size:19px}.invoice-state{background:#e9f3ed;color:#376d52;font-size:11px;padding:8px 12px;border-radius:100px;font-weight:850}
+.invoice-price{margin:28px 0 20px;padding:25px;background:#f1f7f2;border-radius:19px}.invoice-price>span{font-size:12px;font-weight:700;color:#6b8272}.invoice-amount-value{display:flex;align-items:center;gap:9px;margin:7px 0}.invoice-amount-value strong{font-size:clamp(26px,5vw,43px);font-variant-numeric:tabular-nums;letter-spacing:-.05em;overflow-wrap:anywhere;line-height:1.2}.invoice-amount-value b{font-size:18px;color:#2c7951}.icon-copy{margin-left:auto;border:0;border-radius:10px;background:#e0efe5;color:#2b704e;padding:8px;font-size:19px}.invoice-usd{font-size:13px;color:#778a7d}
+.network-warning{display:flex;gap:12px;align-items:flex-start;background:#fff9ed;border:1px solid #f1dbb4;padding:14px;border-radius:14px;color:#80531f;font-size:12px;line-height:1.55}.network-warning svg{width:21px;height:21px;flex-shrink:0}.network-warning strong{display:block;font-size:12px;margin-bottom:3px}.network-warning span{display:block;color:#896633}
+.qr-area{text-align:center;padding:26px 0 19px}.qr-code{display:flex;align-items:center;justify-content:center;min-height:0}.qr-code>img,.qr-code>canvas{max-width:100%;width:220px!important;height:220px!important;image-rendering:pixelated}.qr-placeholder{width:220px;height:220px;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;background:#f2f7f3;border:1px dashed #b6d0be;border-radius:18px;color:#829789;font-size:12px}.qr-placeholder svg{width:80px;height:80px;opacity:.55}.qr-area p{font-size:11px;color:#829186;margin:15px 0 0}
+.invoice-fields{display:grid;gap:8px}.invoice-fields label{font-size:12px;font-weight:800;color:#4b6e59;margin-top:12px}.copy-field{display:flex;align-items:center;background:#f4f7f4;border:1px solid #e1e8e1;border-radius:14px;overflow:hidden}.copy-field input{font:inherit;font-size:13px;color:#263e2e;background:transparent;min-width:0;flex:1;border:0;outline:0;padding:15px 17px}.copy-field button{border:0;background:transparent;padding:12px 18px;font-size:24px;color:#2c6d4c}
+.invoice-bottom{margin-top:22px;padding-top:22px;border-top:1px solid #e4eae4;display:grid;gap:13px}.invoice-bottom>div{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:#789081}.invoice-bottom strong{font-size:15px;color:#235e42;text-align:right;font-variant-numeric:tabular-nums}
+.pay-timer-track{height:7px;background:#e4eee6;border-radius:20px;overflow:hidden;margin-top:13px}.pay-timer-track>div{height:100%;background:#277f55;width:100%;border-radius:20px;transition:width .4s}.pay-bottom-note{font-size:11px;color:#829286;line-height:1.5;margin-top:20px;padding:12px 15px;background:#f5f8f5;border-radius:13px}.refresh-invoice{margin:13px 0 0;padding:10px 15px;border:1px solid #d1e4d6;border-radius:999px;background:white;color:#246f4c;font-size:12px;font-weight:850}
+.pay-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #dfebdf;background:#fff;padding:20px max(20px,calc((100vw - 850px)/2));font-size:11px;color:#879589}.pay-footer strong{color:#2c6948;font-size:11px;letter-spacing:.14em}
 [hidden]{display:none!important}
-@media(max-width:850px){.crypto-layout{grid-template-columns:1fr}.crypto-summary{position:static}.crypto-header{padding:0 22px}.crypto-header-badge{display:none}}
-@media(max-width:560px){.crypto-header{height:75px;padding:0 18px}.crypto-mark{font-size:24px}.crypto-back{font-size:11px}.crypto-wrap{padding:20px 15px}.crypto-intro{margin:18px 2px 25px}.crypto-intro h1{font-size:46px}.crypto-intro p{font-size:13px}.crypto-panel{padding:18px 15px;border-radius:20px}.crypto-section-head{gap:11px;margin-bottom:17px}.crypto-section-head h2{font-size:20px}.crypto-section-head p{font-size:11px}.crypto-index{width:37px;height:37px;border-radius:11px}.crypto-coins{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.crypto-coin{min-height:95px;display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:11px 9px;border-radius:14px}.crypto-coin.selected{padding:10px 8px}.crypto-coin-badge{width:32px;height:32px;font-size:10px}.crypto-coin-name{font-size:11px}.crypto-coin-network{font-size:8px}.crypto-amount{padding:17px}.crypto-amount-value strong{font-size:29px}.crypto-footer{flex-wrap:wrap;justify-content:center;text-align:center}}
-
-/* ===== Forma crypto checkout redesign v3 ===== */
-html{min-height:100%}
-body.crypto-pay-page{min-height:100dvh!important;display:flex!important;flex-direction:column!important}
-.crypto-wrap{width:100%;min-height:calc(100dvh - 90px);display:flex;flex-direction:column;flex:1}
-.crypto-footer{margin-top:auto!important;padding-top:30px!important}
-.crypto-layout{padding-bottom:46px}
-.crypto-header-state{display:flex;align-items:center;gap:9px;border:1px solid #dbe8de;background:#f5f9f6;border-radius:999px;padding:10px 14px;font-size:12px;font-weight:800;color:#345c47;white-space:nowrap}
-.crypto-header-state-dot{width:8px;height:8px;border-radius:50%;background:#249b68}
-.crypto-step-icon{background:#e6f2e9!important}
-.crypto-step-icon svg{width:23px;height:23px;color:#17583f}
-.crypto-coin .crypto-coin-name{color:#163f2f!important;font-weight:850!important}
-.crypto-coin:hover .crypto-coin-name{color:#0f563b!important}
-.crypto-coin.selected .crypto-coin-name{color:#114c35!important}
-.crypto-coin{font-family:inherit!important;text-decoration:none!important}
-.crypto-rate-status{min-height:30px}
-.crypto-live-dot.failed{background:#d6a34a;box-shadow:0 0 0 4px #fff4e0}
-.crypto-amount{position:relative;overflow:hidden}
-.crypto-amount:after{content:"";width:140px;height:140px;right:-75px;top:-85px;position:absolute;border:30px solid rgba(30,102,68,.045);border-radius:50%;pointer-events:none}
-.crypto-timer-wrap strong{font-variant-numeric:tabular-nums}
-.crypto-form-hint{font-size:10px;font-weight:600;letter-spacing:0;color:#8c9a8d;margin-left:5px}
-.crypto-quote-panel,.crypto-instructions{scroll-margin-top:20px}
-.crypto-intro{margin-top:10px!important;margin-bottom:24px!important}
-.crypto-intro h1{max-width:830px;font-size:clamp(42px,5vw,68px)!important}
-.crypto-intro p{margin-top:13px}
-.crypto-coins{gap:11px}
-.crypto-coin{min-height:87px}
-.crypto-coin-badge{font-size:11px!important}
-.crypto-panel{border-radius:23px}
-.crypto-summary-notice{background:#eff6f0}
-.crypto-support{background:linear-gradient(130deg,#103c2c,#21543e)}
-@media(max-width:850px){.crypto-wrap{min-height:calc(100dvh - 80px)}}
-@media(max-width:560px){
- .crypto-header{padding:0 17px!important}
- .crypto-header-state{font-size:10px!important;padding:9px 11px!important;max-width:54%;white-space:normal;line-height:1.25}
- .crypto-wrap{padding:16px 14px 0!important;min-height:calc(100dvh - 75px)}
- .crypto-intro{margin:9px 3px 22px!important}
- .crypto-intro h1{font-size:41px!important;line-height:1.08!important;margin:12px 0!important}
- .crypto-intro p{font-size:13px!important;line-height:1.55!important}
- .crypto-layout{gap:16px;padding-bottom:35px}
- .crypto-panel{border-radius:21px!important}
- .crypto-coin{min-height:100px!important}
- .crypto-coin-name{font-size:12px!important;line-height:1.18!important}
- .crypto-step-icon svg{width:22px;height:22px}
- .crypto-section-head h2{font-size:21px!important}
- .crypto-amount-value strong{font-size:31px!important}
- .crypto-footer{padding:22px 0 26px!important;margin-top:auto!important}
-}
-
-/* ===== Three-step crypto checkout v4 ===== */
-.crypto-progress{display:flex;align-items:center;gap:12px;padding:15px 20px;margin:0 0 20px;background:#fff;border:1px solid #dce8df;border-radius:22px;scroll-margin-top:10px}
-.crypto-progress-tab{display:flex;align-items:center;gap:9px;flex-shrink:0;border:0;background:transparent;color:#8a9a8f;min-height:40px;padding:5px 8px;border-radius:13px;font:inherit;font-size:13px}
-.crypto-progress-tab strong{font-weight:850;color:inherit}
-.crypto-progress-tab>span{height:31px;width:31px;border-radius:50%;display:grid;place-items:center;background:#eef2ef;font-size:12px;font-weight:900}
-.crypto-progress-tab.is-current{background:#eaf4ed;color:#14513a}
-.crypto-progress-tab.is-current>span{background:#175b42;color:white}
-.crypto-progress-tab.is-done{color:#326a51}
-.crypto-progress-tab.is-done>span{background:#e1f1e5}
-.crypto-progress-tab:disabled{cursor:default;opacity:.65}
-.crypto-progress-line{height:1px;flex:1;background:#d9e4dc;min-width:10px}
-.crypto-wizard-panel[hidden]{display:none!important}
-.crypto-wizard-panel{animation:crypto-step-in .2s ease-out}
-@keyframes crypto-step-in{from{opacity:.65;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.crypto-wizard-actions{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:20px;margin-top:20px;border-top:1px solid #edf2ee}
-.crypto-wizard-hint{font-size:11px;color:#718575}
-.crypto-next{padding:15px 21px;min-height:51px;border:0;border-radius:999px;background:#123f2d;color:white;font:inherit;font-weight:850;font-size:13px;display:flex;gap:20px;align-items:center;justify-content:center;margin-left:auto;box-shadow:0 6px 15px rgba(9,56,37,.12)}
-.crypto-next:hover{background:#176345}
-.crypto-prev{padding:12px 14px;border:1px solid #d9e7dc;background:#f3f7f3;border-radius:999px;font:inherit;font-size:12px;font-weight:800;color:#306149}
-.crypto-last-action{justify-content:flex-start}
-.crypto-next:focus-visible,.crypto-prev:focus-visible,.crypto-progress-tab:focus-visible{outline:3px solid #85bd9e;outline-offset:2px}
-@media(max-width:560px){
- .crypto-progress{padding:10px 8px;gap:3px;border-radius:16px;margin-bottom:14px}
- .crypto-progress-tab{gap:5px;padding:5px 6px;font-size:11px;min-height:38px}
- .crypto-progress-tab>span{width:26px;height:26px;font-size:10px}
- .crypto-progress-line{min-width:4px}
- .crypto-wizard-actions{margin-top:17px;padding-top:17px;gap:9px}
- .crypto-next{font-size:11px;padding:13px 15px;min-height:49px;gap:10px}
- .crypto-prev{font-size:10px;padding:12px 10px}
- .crypto-wizard-hint{font-size:10px;max-width:110px}
-}
+@media(max-width:600px){.pay-header{min-height:78px;padding:15px 19px}.pay-header-status{font-size:10px;padding:9px 11px}.pay-main{padding:27px 14px 43px}.pay-topline{font-size:10px}h1{font-size:44px;margin:14px 0 9px}.pay-description{font-size:13px}.pay-total-pill{margin:18px 0;padding:14px 16px}.pay-total-pill strong{font-size:25px}.pay-card{border-radius:21px}.pay-card-heading{padding:18px 17px}.pay-card-heading h2{font-size:17px}.pay-coin-list{padding:8px;max-height:580px}.coin-row{grid-template-columns:43px minmax(0,1fr) auto 18px;gap:8px;padding:11px 8px;min-height:68px}.coin-logo{width:39px;height:39px;font-size:13px}.coin-title{font-size:13px}.coin-network{font-size:10px}.coin-conversion{font-size:11px}.coin-conversion small{font-size:9px}.pay-fetch-status{padding:12px 15px}.invoice-card{padding:18px}.coin-logo-large{width:53px;height:53px;font-size:24px}.invoice-price{margin:22px 0 16px;padding:19px 16px}.invoice-amount-value strong{font-size:30px}.invoice-amount-value b{font-size:14px}.qr-area{padding:23px 0 15px}.qr-placeholder{width:205px;height:205px}.pay-footer{padding:17px;font-size:9px}}
