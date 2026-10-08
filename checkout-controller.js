@@ -34,7 +34,10 @@ function buildOrderLines(){
     const price=Number(v?.price??p.price);
     const qty=Math.max(1,Math.min(100,Number(line.qty)||1));
     if(!Number.isFinite(price)||price<0)continue;
-    out.push({slug:p.slug,name:p.name,variant:v?.label||"",qty,unitPrice:price,lineTotal:price*qty});
+    const variants=Array.isArray(p?.variants)?p.variants:[];
+    const variantIndex=Math.max(0,variants.findIndex(x=>x.label===v?.label));
+    const image=(Array.isArray(p?.gallery)&&p.gallery[variantIndex])?p.gallery[variantIndex]:p.image;
+    out.push({slug:p.slug,name:p.name,variant:v?.label||"",qty,unitPrice:price,lineTotal:price*qty,image});
   }
   return out;
 }
@@ -46,7 +49,8 @@ function shippingCost(method,subtotal){
   return 4.99;
 }
 function availableMethod(method,subtotal){
-  return method!=="free"||qualifiesFree(subtotal);
+  const qualifies=qualifiesFree(subtotal);
+  return qualifies ? (method==="free"||method==="priority") : (method==="standard"||method==="priority");
 }
 function chosenMethod(subtotal){
   let method=localStorage.getItem(SHIP_KEY)||"";
@@ -57,20 +61,30 @@ function chosenMethod(subtotal){
 function syncShipping(lines){
   const subtotal=subtotalOf(lines);
   const qualifies=qualifiesFree(subtotal);
+  const standard=$('[data-ship-method="standard"]');
   const free=$('[data-ship-method="free"]');
+  if(standard){
+    standard.hidden=qualifies;
+    const input=$('input[name="ship"]',standard);
+    if(input)input.disabled=qualifies;
+  }
   if(free){
     free.hidden=!qualifies;
-    free.style.display=qualifies?"flex":"none";
     const input=$('input[name="ship"]',free);
     if(input)input.disabled=!qualifies;
   }
   let method=chosenMethod(subtotal);
   const input=$('input[name="ship"][value="'+method+'"]');
   if(input)input.checked=true;
-  $$('.checkout-method').forEach(card=>{
+  $('#shippingMethods .checkout-method').forEach(card=>{
     const radio=$('input[name="ship"]',card);
     card.classList.toggle("selected",Boolean(radio?.checked));
   });
+  const crypto=$('input[name="payment"][value="crypto"]');
+  if(crypto){
+    crypto.checked=true;
+    crypto.closest('.checkout-method')?.classList.add('selected');
+  }
   localStorage.setItem(SHIP_KEY,method);
   return method;
 }
@@ -86,7 +100,14 @@ function renderSummary(){
   const shipping=shippingCost(method,subtotal);
   const total=subtotal+shipping;
   root.innerHTML=
-    lines.map(x=>'<div class="summary-line"><span>'+escapeHtml(x.name)+(x.variant?' <small>'+escapeHtml(x.variant)+'</small>':'')+(x.qty>1?' × '+x.qty:'')+'</span><strong>'+money(x.lineTotal)+'</strong></div>').join("")+
+    lines.map(x=>'<div class="checkout-order-item">'+
+      '<div class="checkout-order-thumb"><img src="'+escapeHtml(x.image||"")+'" alt=""></div>'+
+      '<div class="checkout-order-copy"><strong>'+escapeHtml(x.name)+'</strong>'+
+        (x.variant?'<small>'+escapeHtml(x.variant)+'</small>':'')+
+        '<small>Qty '+x.qty+' · '+money(x.unitPrice)+' each</small>'+
+      '</div>'+
+      '<strong class="checkout-order-line-total">'+money(x.lineTotal)+'</strong>'+
+    '</div>').join("")+
     '<div class="summary-line"><span>Subtotal</span><strong>'+money(subtotal)+'</strong></div>'+
     '<div class="summary-line"><span>Shipping</span><strong>'+(shipping===0?'Free':money(shipping))+'</strong></div>'+
     '<div class="summary-line total"><strong>Estimated total</strong><strong>'+money(total)+'</strong></div>';
@@ -157,6 +178,11 @@ function init(){
   if(!lines.length){location.replace("cart.html");return}
   populateCountries();
   restoreData(form);
+  const crypto=$('input[name="payment"][value="crypto"]',form);
+  if(crypto){
+    crypto.checked=true;
+    crypto.closest('.checkout-method')?.classList.add('selected');
+  }
   const subtotal=subtotalOf(lines);
   const restoredShip=$('input[name="ship"]:checked',form)?.value;
   if(restoredShip&&availableMethod(restoredShip,subtotal))localStorage.setItem(SHIP_KEY,restoredShip);
