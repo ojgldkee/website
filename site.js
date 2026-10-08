@@ -246,33 +246,33 @@ function shippingCostFor(method,subtotal){
  return 4.99;
 }
 function syncCheckoutShippingOptions(){
- const subtotal=cartSubtotal();
- const freeCard=$('[data-ship-method="free"]');
- const freeInput=freeCard?.querySelector('input[name="ship"]');
- const qualifies=subtotal>=S.shippingThreshold;
- if(freeCard){freeCard.hidden=!qualifies;freeCard.style.display=qualifies?'flex':'none';}
- if(freeInput)freeInput.disabled=!qualifies;
-
- let current=selectedShippingMethod();
- if(qualifies){
-   const saved=localStorage.getItem('aspen-checkout-shipping-method');
-   if(!saved&&freeInput){
-     freeInput.checked=true;
-     current='free';
-     localStorage.setItem('aspen-checkout-shipping-method','free');
-   }
- }else if(current==='free'){
-   const standard=$('.checkout-method input[name="ship"][value="standard"]');
-   if(standard){standard.checked=true;current='standard'}
-   localStorage.setItem('aspen-checkout-shipping-method','standard');
- }
- $$('.checkout-method input[name="ship"]').forEach(r=>r.closest('.checkout-method')?.classList.toggle('selected',r.checked));
+ const subtotal=cartSubtotal(),qualifies=subtotal>=S.shippingThreshold;
+ const standard=$('[data-ship-method="standard"]'),free=$('[data-ship-method="free"]');
+ if(standard){standard.hidden=qualifies;standard.style.display=qualifies?'none':'flex';standard.querySelector('input').disabled=qualifies}
+ if(free){free.hidden=!qualifies;free.style.display=qualifies?'flex':'none';free.querySelector('input').disabled=!qualifies}
+ const allowed=qualifies?['free','priority']:['standard','priority'];
+ const saved=localStorage.getItem('aspen-checkout-shipping-method');
+ const current=$('.checkout-method input[name="ship"]:checked')?.value;
+ const chosen=allowed.includes(current)&&current===saved?current:(allowed.includes(saved)?saved:allowed[0]);
+ const effective=allowed.includes(chosen)?chosen:allowed[0];
+ $$('.checkout-method input[name="ship"]').forEach(r=>{
+   r.checked=r.value===effective;
+   r.closest('.checkout-method')?.classList.toggle('selected',r.checked);
+ });
+ localStorage.setItem('aspen-checkout-shipping-method',effective);
 }
 function renderCheckout(){
  const root=$('#checkout-summary');if(!root)return;
  syncCheckoutShippingOptions();
  const subtotal=cartSubtotal(),method=selectedShippingMethod(),shipping=shippingCostFor(method,subtotal);
- root.innerHTML=(cart.length?cart.map(l=>{const p=productBySlug(l.slug);if(!p)return'';const v=lineVariant(l),unit=lineUnitPrice(l);return '<div class="summary-line"><span>'+p.name+' <small>'+v.label+'</small> × '+l.qty+'</span><strong>'+money(unit*l.qty)+'</strong></div>'}).join(''):'<div class="summary-line"><span>Your cart is empty</span><span>—</span></div>')+'<div class="summary-line"><span>Subtotal</span><strong>'+money(subtotal)+'</strong></div><div class="summary-line"><span>Shipping</span><strong>'+(shipping===0?'Free':money(shipping))+'</strong></div><div class="summary-line total"><strong>Estimated total</strong><strong>'+money(subtotal+shipping)+'</strong></div>'
+ const lines=cart.length?cart.map(l=>{
+   const p=productBySlug(l.slug);if(!p)return'';
+   const v=lineVariant(l),unit=lineUnitPrice(l);
+   const idx=productVariants(p).findIndex(x=>x.label===v.label);
+   const image=p.slug==='hgh-kit'&&idx>=0&&p.gallery?.[idx]?p.gallery[idx]:p.image;
+   return '<div class="summary-line checkout-product-line"><img class="checkout-product-image" src="'+image+'" alt=""><span class="checkout-product-details"><strong>'+p.name+'</strong><small>'+v.label+'</small><small>Qty '+l.qty+' · '+money(unit)+' each</small></span><strong>'+money(unit*l.qty)+'</strong></div>';
+ }).join(''):'<div class="summary-line"><span>Your cart is empty</span><span>—</span></div>';
+ root.innerHTML=lines+'<div class="summary-line"><span>Subtotal</span><strong>'+money(subtotal)+'</strong></div><div class="summary-line"><span>Shipping · '+(method==='priority'?'Priority':shipping===0?'Free tracked':'Standard')+'</span><strong>'+(shipping===0?'Free':money(shipping))+'</strong></div><div class="summary-line total"><strong>Estimated total</strong><strong>'+money(subtotal+shipping)+'</strong></div>';
 }
 function renderFullCart(){
  const root=$('#fullCart');if(!root)return;
@@ -321,7 +321,9 @@ function initCheckout(){
    country.insertAdjacentHTML('beforeend',options.map(x=>'<option value="'+x.code+'">'+x.name+'</option>').join(''));
  }
  restoreCheckoutData(f);
- $$('input,select,textarea',f).forEach(el=>el.addEventListener('input',()=>saveCheckoutData(f)));
+ const cryptoRadio=$('.checkout-method input[name="payment"][value="crypto"]');if(cryptoRadio){cryptoRadio.checked=true;cryptoRadio.closest('.checkout-method')?.classList.add('selected')}
+ syncCheckoutShippingOptions();
+ $('input,select,textarea',f).forEach(el=>el.addEventListener('input',()=>saveCheckoutData(f)));
  $$('input,select,textarea',f).forEach(el=>el.addEventListener('change',()=>saveCheckoutData(f)));
  $$('.checkout-method input[type="radio"]').forEach(input=>input.addEventListener('change',()=>{
    const name=input.name;
@@ -331,7 +333,7 @@ function initCheckout(){
  const savedShip=localStorage.getItem('aspen-checkout-shipping-method');
  if(savedShip){
    const saved=$('.checkout-method input[name="ship"][value="'+savedShip+'"]');
-   if(saved){saved.checked=true;saved.dispatchEvent(new Event('change',{bubbles:true}))}
+   if(saved&&!saved.disabled){saved.checked=true;saved.dispatchEvent(new Event('change',{bubbles:true}))}
  }
  $$('.checkout-method').forEach(card=>card.addEventListener('click',e=>{
    if(e.target.closest('a,button'))return;
