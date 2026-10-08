@@ -237,3 +237,11 @@ body.payment-method-open{overflow:hidden}
   .payment-method-option{grid-template-columns:44px minmax(0,1fr) 26px;padding:13px;gap:11px}
   .payment-method-option-icon{width:42px;height:42px}
 }
+
+.aspen-payment-help{margin:22px 0 40px;padding:23px;border:1px solid #dce8df;border-radius:21px;background:#fff;box-shadow:0 8px 24px rgba(12,51,32,.04)}
+.aspen-payment-help-head>span{font-size:10px;font-weight:850;letter-spacing:.13em;color:#48755c}
+.aspen-payment-help h2{margin:9px 0;font-size:23px;letter-spacing:-.04em;color:#133a2a}
+.aspen-payment-help p{font-size:12px;line-height:1.75;color:#63786b}
+.aspen-payment-help-details{margin-top:17px;padding-top:13px;border-top:1px solid #e5ede7}
+.aspen-payment-help-details strong{color:#193e2d}
+.aspen-payment-help a{display:inline-flex;align-items:center;justify-content:center;min-height:45px;margin-top:9px;padding:0 20px;border-radius:999px;background:#123c2e;color:white;text-decoration:none;font-size:12px;font-weight:800}
