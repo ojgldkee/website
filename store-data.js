@@ -86,7 +86,7 @@ window.PRODUCTS = [
     slug:"ghk-cu-kit",
     name:"GHK-CU Kit — 10 Vials",
     category:"Kits",
-    price:null,
+    price:75,
     compareAt:null,
     badge:"KIT",
     image:"public/images/products/ghk-cu/50mg.PNG",
@@ -95,11 +95,10 @@ window.PRODUCTS = [
     description:"GHK-CU kit with selectable vial strength so one product page handles both kit variants.",
     specs:[["Format","10-vial kit"],["Available strengths","50 mg · 100 mg"],["Fulfillment","Florida, USA"]],
     variants:[
-      {label:"50 mg × 10 vials",amount:50,price:null},
-      {label:"100 mg × 10 vials",amount:100,price:null}
+      {label:"50 mg × 10 vials",amount:50,price:75},
+      {label:"100 mg × 10 vials",amount:100,price:130}
     ],
-    document:"Batch documentation",
-    pricingPending:true
+    document:"Batch documentation"
   },
   {
     slug:"wolverine-blend-kit",
@@ -135,7 +134,7 @@ window.PRODUCTS = [
     slug:"kpv-kit",
     name:"KPV Kit — 10 Vials",
     category:"Kits",
-    price:180,
+    price:160,
     compareAt:220,
     badge:"SALE",
     image:"public/images/products/kpv/10mg.PNG",
@@ -143,7 +142,7 @@ window.PRODUCTS = [
     subtitle:"10-vial kit.",
     description:"KPV kit sold as a complete 10-vial listing.",
     specs:[["Format","10-vial kit"],["Strength","10 mg per vial"],["Fulfillment","Florida, USA"]],
-    variants:[{label:"10 mg × 10 vials",amount:10,price:180,compareAt:220}],
+    variants:[{label:"10 mg × 10 vials",amount:10,price:160,compareAt:220}],
     document:"Batch documentation"
   },
   {
