@@ -3136,3 +3136,20 @@ body{font-size:16px}
   .faq-list details p{padding:0 15px 17px;font-size:12.5px!important}
   .cashapp-payment-icon{width:40px!important;height:40px!important}
 }
+
+
+/* Cash App logo treatment */
+.cashapp-payment-icon{
+  background:#fff!important;
+  border:1px solid #dce8df!important;
+  overflow:hidden;
+}
+.cashapp-payment-icon img{
+  width:24px;
+  height:24px;
+  display:block;
+  object-fit:contain;
+}
+@media(max-width:620px){
+  .cashapp-payment-icon img{width:23px;height:23px}
+}
