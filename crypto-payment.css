@@ -107,3 +107,42 @@ h1{font-size:clamp(38px,6vw,62px);letter-spacing:-.065em;line-height:1.1;margin:
 .pay-logo-image{display:flex;align-items:center}
 .pay-logo-image img{display:block;width:clamp(150px,24vw,220px);height:auto;object-fit:contain}
 @media(max-width:600px){.pay-logo-image img{width:150px}}
+
+
+/* ===== Cash App Bitcoin flow 2026-10-08 ===== */
+.pay-header-status b{font:inherit}
+.cashapp-guide{
+  margin:0 0 18px;
+  padding:20px;
+  border:1px solid #cfe2d5;
+  border-radius:20px;
+  background:#edf7f0;
+}
+.cashapp-guide-title{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.cashapp-guide-title strong{display:block;font-size:16px;color:#123c2b}
+.cashapp-guide-title small{display:block;margin-top:3px;font-size:10px;color:#6b8173;line-height:1.4}
+.cashapp-mark{
+  width:40px;height:40px;border-radius:12px;background:#123c2b;color:#fff;
+  display:grid;place-items:center;font-size:22px;font-weight:900;flex:0 0 auto
+}
+.cashapp-guide ol{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.cashapp-guide li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start}
+.cashapp-guide li>span{
+  width:28px;height:28px;border-radius:50%;background:#d9ecdf;color:#15543b;
+  display:grid;place-items:center;font-size:11px;font-weight:900
+}
+.cashapp-guide li p{margin:2px 0 0;font-size:12px;line-height:1.65;color:#4f6759}
+.cashapp-guide li p strong{color:#193d2d}
+.cashapp-sent-button{
+  width:100%;min-height:55px;margin-top:18px;border:0;border-radius:999px;background:#123c2b;color:#fff;
+  font:800 12px Manrope,Inter,system-ui,sans-serif;letter-spacing:.04em
+}
+.cashapp-sent-button:hover{background:#0b2f22}
+.cashapp-sent-button:disabled{opacity:1;background:#2d7657;color:#fff}
+.cashapp-sent-status{min-height:17px;margin:10px 2px 0;font-size:11px;line-height:1.55;color:#256346}
+.cashapp-note{margin:12px 0 0;padding:12px 14px;border-radius:13px;background:#f5f8f5;color:#718078;font-size:10px;line-height:1.55}
+@media(max-width:600px){
+  .cashapp-guide{padding:16px;border-radius:17px}
+  .cashapp-guide-title strong{font-size:15px}
+  .cashapp-guide li p{font-size:11px}
+}
