@@ -2851,3 +2851,11 @@ body{font-size:16px}
 /* Compact product detail accordions */
 .product-accordion,.product-accordion details,.product-info-accordion,.product-detail-accordion{margin-block:8px!important}
 .product-accordion summary,.product-info-accordion summary,.product-detail-accordion summary{padding-block:17px!important}
+
+/* Checkout order summary */
+.checkout-product-line{display:flex;align-items:center;gap:14px;padding:16px 0}
+.checkout-product-image{width:68px;height:68px;flex:0 0 68px;object-fit:cover;border-radius:12px;background:#f4f4f0;border:1px solid #dce6dd}
+.checkout-product-details{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.checkout-product-details strong{font-size:15px;line-height:1.35}
+.checkout-product-details small{display:block;font-size:12px;color:#697d70;line-height:1.4}
+.checkout-product-line>strong:last-child{white-space:nowrap;font-size:15px}
