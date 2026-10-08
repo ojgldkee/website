@@ -100,5 +100,33 @@ export const products: Product[] = [
   ],
   resources: [{ label: "Documentation center", href: "/documentation" }],
 })) as Product[];
+const hgh: Product = {
+  id: "hgh-kit",
+  slug: "hgh-kit",
+  name: "HGH Kit — 10 Vials",
+  category: "Research essentials",
+  subtitle: "Choose your IU strength · 10 vials per kit",
+  price: 11500,
+  description: "HGH kit listing with four selectable strengths. Product imagery and documentation are provided separately.",
+  images: [
+    { src: "/images/products/hgh/10iu.PNG", alt: "HGH kit 10 IU / 3 mL" },
+    { src: "/images/products/hgh/24iu.PNG", alt: "HGH kit 24 IU / 3 mL" },
+    { src: "/images/products/hgh/36iu.PNG", alt: "HGH kit 36 IU / 3 mL" },
+    { src: "/images/products/hgh/100iu.PNG", alt: "HGH kit 100 IU / 3 mL" },
+  ],
+  variants: [
+    { id: "10iu", label: "10 IU / 3 mL", price: 11500 },
+    { id: "24iu", label: "24 IU / 3 mL", price: 18500 },
+    { id: "36iu", label: "36 IU / 3 mL", price: 25000 },
+    { id: "100iu", label: "100 IU / 3 mL", price: 50000 },
+  ],
+  specifications: [
+    { label: "Kit size", value: "10 vials" },
+    { label: "Strength", value: "10, 24, 36, or 100 IU / 3 mL per vial" },
+    { label: "Documentation", value: "Pending verification" },
+  ],
+  resources: [{ label: "Documentation center", href: "/documentation" }],
+};
+products.unshift(hgh);
 export const getProduct = (slug: string) =>
   products.find((p) => p.slug === slug);
