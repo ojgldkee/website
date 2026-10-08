@@ -11,9 +11,8 @@ window.STORE = {
   promo: { enabled: false, label: "", endsAt: "", cta: "", href: "collections.html" },
   announcements: [
     "FREE SHIPPING ON ORDERS $250+",
-    "KITS-ONLY CATALOG",
-    "TRACKED DELIVERY",
-    "SUPPORT WHEN YOU NEED IT"
+    "SAME-DAY SHIPPING ON ORDERS BEFORE 2 PM PST",
+    "THIRD-PARTY LAB TESTED"
   ]
 };
 
