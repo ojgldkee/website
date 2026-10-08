@@ -15,7 +15,7 @@ const WALLETS={
  BTC:"bc1qeeltwzzfd2dp4xtvpsja0ndkagtsu7urweh2a5",
  ETH:"0xAE80ce99508A70cDb1947a79e12CEe98B74efD55",
  USDT:"0xAE80ce99508A70cDb1947a79e12CEe98B74efD55",
- USDC:"",
+ USDC:"0xAE80ce99508A70cDb1947a79e12CEe98B74efD55",
  SOL:"NFLLRyuyc43avwW83pRmZZNwNT5TJH3B9Hcac64PM8x",
  LTC:"ltc1ql55pjj969y699fj6w4sf53tfgxcxuq2zx4qf37",
  BNB:"0xAE80ce99508A70cDb1947a79e12CEe98B74efD55",
@@ -231,7 +231,7 @@ function syncPaymentMethodUi(){
  $("#payHeaderStatus").textContent=cashApp?"Cash App — Bitcoin":"Crypto checkout";
  $("#cashAppGuide").hidden=!cashApp;
  $("#cashAppOrderRow").hidden=!cashApp;
- $("#cashAppSentButton").hidden=!cashApp;
+ $("#cashAppSentButton").hidden=true;
  $("#cashAppNote").hidden=!cashApp;
  $("#changeCurrency").hidden=cashApp;
  $("#invoiceHeading").innerHTML=cashApp?'Pay with <em>Cash App.</em>':'Send your <em>payment.</em>';
