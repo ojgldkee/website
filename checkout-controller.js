@@ -161,17 +161,17 @@ function syncShipping(lines) {
   return method;
 }
 
-function syncCryptoSelection(form) {
-  const crypto = q('input[name="payment"][value="crypto"]', form);
-  qa('input[name="payment"]', form).forEach(radio => {
-    radio.checked = false;
-    radio.closest(".checkout-method")?.classList.remove("selected");
+function syncPaymentSelection(form) {
+  const radios = qa('input[name="payment"]', form);
+  let selected = radios.find(radio => radio.checked && !radio.disabled);
+  if (!selected) selected = radios.find(radio => radio.value === "crypto") || radios[0];
+
+  radios.forEach(radio => {
+    radio.checked = radio === selected;
+    radio.closest(".checkout-method")?.classList.toggle("selected", radio.checked);
   });
 
-  if (crypto) {
-    crypto.checked = true;
-    crypto.closest(".checkout-method")?.classList.add("selected");
-  }
+  return selected?.value || "crypto";
 }
 
 function escapeHtml(value) {
@@ -351,19 +351,37 @@ function validate(form) {
   return null;
 }
 
-function savePaymentOrder() {
+function savePaymentOrder(paymentMethod) {
   const lines = buildOrderLines();
   const subtotal = subtotalOf(lines);
   const method = chooseShippingMethod(subtotal);
   const shipping = shippingCost(method, subtotal);
+  const checkoutData = readCheckoutData();
+  const orderId = "ASP-" + Date.now().toString(36).toUpperCase();
 
   const order = {
+    orderId,
     createdAt: Date.now(),
     items: lines,
     subtotal,
     shipping,
     shippingMethod: method,
-    total: subtotal + shipping
+    total: subtotal + shipping,
+    paymentMethod: paymentMethod || "crypto",
+    contact: {
+      email: checkoutData.email || "",
+      phone: checkoutData.phone || ""
+    },
+    shippingAddress: {
+      firstName: checkoutData.firstName || "",
+      lastName: checkoutData.lastName || "",
+      country: checkoutData.country || "",
+      address1: checkoutData.address1 || "",
+      address2: checkoutData.address2 || "",
+      city: checkoutData.city || "",
+      region: checkoutData.region || "",
+      postal: checkoutData.postal || ""
+    }
   };
 
   localStorage.setItem(ORDER_KEY, JSON.stringify(order));
@@ -396,7 +414,7 @@ function init() {
     );
   }
 
-  syncCryptoSelection(form);
+  syncPaymentSelection(form);
   syncShipping(lines);
   renderSummary();
 
@@ -436,7 +454,7 @@ function init() {
     }
 
     if (event.target.matches('input[name="payment"]')) {
-      syncCryptoSelection(form);
+      syncPaymentSelection(form);
     }
 
     saveCheckoutData(form);
@@ -456,7 +474,7 @@ function init() {
         status.classList.remove("error");
       }
 
-      syncCryptoSelection(form);
+      const paymentMethod = syncPaymentSelection(form);
 
       const validationError = validate(form);
       if (validationError) {
@@ -464,17 +482,18 @@ function init() {
         return;
       }
 
-      const order = savePaymentOrder();
+      saveCheckoutData(form);
+      const order = savePaymentOrder(paymentMethod);
 
       if (!order.items.length) {
         showError(null, "Your cart is empty. Add a product before continuing.");
         return;
       }
 
-      saveCheckoutData(form);
-
       if (status) status.textContent = "Opening payment…";
-      location.href = "crypto-payment.html";
+      location.href = paymentMethod === "cashapp-btc"
+        ? "crypto-payment.html?method=cashapp-btc"
+        : "crypto-payment.html";
     },
     true
   );
