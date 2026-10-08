@@ -105,6 +105,7 @@ window.addEventListener("DOMContentLoaded",function(){
   const clock=document.getElementById("invoiceClock");
   const symbol=document.getElementById("invoiceSymbol");
   const largeLogo=document.getElementById("invoiceCoinLogo");
+  const methodStatus=document.getElementById("payHeaderStatus");
   const logoMap={
     BTC:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/btc.svg",
     ETH:"https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/eth.svg",
@@ -118,16 +119,18 @@ window.addEventListener("DOMContentLoaded",function(){
   function syncLargeLogo(){
     if(!symbol||!largeLogo)return;
     const key=(symbol.textContent||"").trim();
-    const src=logoMap[key];
+    const cashApp=(methodStatus?.textContent||"").includes("Cash App");
+    const src=cashApp?"https://cdn.simpleicons.org/cashapp/00D64F":logoMap[key];
     if(!src)return;
-    largeLogo.textContent="";
+    largeLogo.replaceChildren();
     largeLogo.style.backgroundImage="url('"+src+"')";
     largeLogo.style.backgroundRepeat="no-repeat";
     largeLogo.style.backgroundPosition="center";
-    largeLogo.style.backgroundSize="68% 68%";
+    largeLogo.style.backgroundSize=cashApp?"58% 58%":"68% 68%";
   }
   if(symbol){
     new MutationObserver(syncLargeLogo).observe(symbol,{childList:true,characterData:true,subtree:true});
+    if(methodStatus)new MutationObserver(syncLargeLogo).observe(methodStatus,{childList:true,characterData:true,subtree:true});
     syncLargeLogo();
   }
   setInterval(function(){
