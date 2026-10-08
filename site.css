@@ -3180,3 +3180,23 @@ body{font-size:16px}
 .aspen-catalog-arrow{display:grid;place-items:center;width:39px;height:39px;border-radius:50%;background:rgba(255,255,255,.17);font-size:21px}
 @media(max-width:600px){.aspen-catalog-cta{margin-top:22px}.aspen-catalog-button{min-height:55px;font-size:15px}.aspen-hero-visual .hero-product{animation-duration:6s}}
 @media(prefers-reduced-motion:reduce){.aspen-hero-visual .hero-product{animation:none!important}}
+
+.aspen-single-hero{min-height:0!important;display:flex!important;align-items:center;justify-content:center;padding:18px 16px 8px!important;background:linear-gradient(155deg,#f1f3eb,#e4ece3)!important}
+.aspen-single-hero:before{display:none!important}
+.aspen-single-hero-image{display:block;width:100%;max-width:700px;height:auto;object-fit:contain;animation:aspen-single-bob 7s ease-in-out infinite;filter:drop-shadow(0 18px 18px rgba(20,52,38,.13))}
+@keyframes aspen-single-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.aspen-stats{margin-bottom:0!important}
+.aspen-stats+.aspen-featured,.aspen-stats+.featured-section{margin-top:0!important;padding-top:22px!important}
+.footer-badges span{display:inline-flex;align-items:center;gap:7px}
+.footer-badges svg{width:18px;height:18px;flex-shrink:0}
+.aspen-coa-dialog{border:0;border-radius:22px;padding:0;width:min(420px,calc(100% - 36px));max-height:calc(100dvh - 40px);box-shadow:0 30px 90px rgba(0,0,0,.3);color:#123e2f;background:#fff;position:fixed;inset:0;margin:auto}
+.aspen-coa-dialog::backdrop{background:rgba(7,28,21,.68);backdrop-filter:blur(5px)}
+.aspen-coa-dialog-content{padding:32px 26px;text-align:center}
+.aspen-coa-dialog-icon{margin:0 auto 16px;display:grid;place-items:center;width:58px;height:58px;background:#e6eee7;border-radius:18px;font-size:30px}
+.aspen-coa-dialog h2{font-size:25px;line-height:1.2;margin:0 0 14px}
+.aspen-coa-dialog p{font-size:15px;line-height:1.65;color:#5b6a62;margin:0 0 25px}
+.aspen-coa-dialog-actions{display:grid;gap:10px}
+.aspen-coa-contact,.aspen-coa-close{border-radius:12px;padding:14px;font:700 15px system-ui;text-decoration:none;cursor:pointer}
+.aspen-coa-contact{background:#123e2f;color:white!important}
+.aspen-coa-close{background:#eef2ee;border:0;color:#123e2f}
+@media(prefers-reduced-motion:reduce){.aspen-single-hero-image{animation:none}}
