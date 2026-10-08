@@ -202,7 +202,7 @@ function renderProduct(){
    if(stickyBtn){stickyBtn.disabled=!hasPrice;stickyBtn.textContent=hasPrice?'Add to cart':'Pricing coming soon'}
  };
  syncVariant();
- select.onchange=()=>{selected=variantFor(p,select.value);syncVariant();if(p.slug==='hgh-kit'){const idx=variants.findIndex(v=>v.label===selected.label);if(idx>=0)goTo(idx)}};
+ select.onchange=()=>{selected=variantFor(p,select.value);syncVariant();const idx=variants.findIndex(v=>v.label===selected.label);if(idx>=0&&gallery.length===variants.length)goTo(idx)};
  $('#prodInc').onclick=()=>{q++;syncQty()};$('#prodDec').onclick=()=>{q=Math.max(1,q-1);syncQty()};
  if($('#stickyInc'))$('#stickyInc').onclick=()=>{q++;syncQty()};if($('#stickyDec'))$('#stickyDec').onclick=()=>{q=Math.max(1,q-1);syncQty()};
  $('#prodAdd').onclick=()=>{if(selected.price!==null&&Number.isFinite(Number(selected.price)))addToCart(p.slug,q,selected.label,true)};
