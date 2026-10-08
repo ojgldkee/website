@@ -217,6 +217,9 @@ function persistPaymentMethod(method){
    order.paymentMethod=state.paymentMethod;
    localStorage.setItem("aspen-labs-payment-order-v1",JSON.stringify(order));
   }
+  const checkout=JSON.parse(localStorage.getItem("aspen-labs-checkout-data-v1")||"{}")||{};
+  checkout.payment=state.paymentMethod;
+  localStorage.setItem("aspen-labs-checkout-data-v1",JSON.stringify(checkout));
  }catch(_){}
  const url=new URL(location.href);
  if(state.paymentMethod==="cashapp-btc")url.searchParams.set("method","cashapp-btc");
