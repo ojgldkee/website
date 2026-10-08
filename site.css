@@ -3065,7 +3065,7 @@ body{font-size:16px}
   .aspen-hero{grid-template-columns:1.02fr .98fr;min-height:650px}
   .aspen-hero-copy{padding:92px 6vw 72px;display:flex;flex-direction:column;justify-content:center}
   .aspen-hero-visual{min-height:650px}
-  .aspen-stats{grid-template-columns:repeat(4,1fr)}
+  .aspen-stats{grid-template-columns:repeat(5,1fr)}
   .aspen-stats div{padding:28px 20px;border-bottom:0}
   .aspen-benefit-grid{grid-template-columns:repeat(3,1fr)}
   .aspen-why{padding:58px 48px}
@@ -3084,3 +3084,5 @@ body{font-size:16px}
   .aspen-cta{margin-left:16px;margin-right:16px}
   .aspen-section-head{align-items:flex-start}
 }
+
+@media(max-width:779px){.aspen-stats>div:last-child{grid-column:1/-1}}
