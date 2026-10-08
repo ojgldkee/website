@@ -22,7 +22,8 @@ const WALLETS={
  XMR:"4AZ4p2MyR5rBoSdgbEiJNsdcaVgYApXkgBATAa8LkVSWi7XioyrjEW6MRKER3wus5tc2Pv8iGXNW6PU2USYsrBK7HLFBnTJ"
 };
 const $=s=>document.querySelector(s),money=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(n);
-const state={coin:COINS[0],rates:{},source:"",total:0,hasOrder:false,expiresAt:0,quoted:null,quoteCoin:"",timer:null,loading:false,shippingMethod:"standard"};
+const requestedMethod=new URLSearchParams(location.search).get("method");
+const state={coin:COINS[0],rates:{},source:"",total:0,hasOrder:false,expiresAt:0,quoted:null,quoteCoin:"",timer:null,loading:false,shippingMethod:"standard",paymentMethod:requestedMethod==="cashapp-btc"?"cashapp-btc":"crypto",orderId:""};
 const formatCrypto=(n,c)=>Number.isFinite(n)&&n>0?n.toFixed(c.precision).replace(/0+$/,"").replace(/\.$/,""):"—";
 function cartTotals(){
  const products=Array.isArray(window.PRODUCTS)?window.PRODUCTS:[];
@@ -66,6 +67,7 @@ function cartTotals(){
  state.total=state.hasOrder?Math.round(total*100)/100:0;
  $("#chooseTotal").textContent=state.hasOrder?money(state.total):"No order";
  $("#invoiceUsd").textContent=state.hasOrder?"Order total "+money(state.total):"No order in cart";
+ const orderNode=$("#cashAppOrderId");if(orderNode)orderNode.textContent=state.orderId||"—";
  const root=$("#payOrderProducts");root.replaceChildren();
  const heading=document.createElement("span");heading.className="pay-products-label";heading.textContent="IN YOUR ORDER";root.append(heading);
  if(!details.length){
@@ -141,11 +143,11 @@ function renderQR(address,amount,c){
  }
 }
 function invoiceDetails(){
- const c=state.coin,rate=Number(state.rates[c.id]||0);
+ const c=state.coin,rate=Number(state.rates[c.id]||0),cashApp=state.paymentMethod==="cashapp-btc";
  $("#invoiceCoinName").textContent=c.name;$("#invoiceSymbol").textContent=c.symbol;
  $("#invoiceNetwork").textContent=c.network;$("#walletAmountCoin").textContent=c.symbol;
  const logo=$("#invoiceCoinLogo");logo.replaceChildren();const logoImg=document.createElement("img");logoImg.src=c.logo;logoImg.alt="";logoImg.decoding="async";logo.appendChild(logoImg);
- $("#networkWarningTitle").textContent="Send only "+c.symbol+" on "+c.network;
+ $("#networkWarningTitle").textContent=cashApp?"Bitcoin network only":"Send only "+c.symbol+" on "+c.network;
  const address=WALLETS[c.symbol];
  const valid=Boolean(state.hasOrder&&state.expiresAt>Date.now()&&state.quoted>0&&rate>0);
  const amount=valid?formatCrypto(state.quoted,c):"—";
@@ -156,6 +158,9 @@ function invoiceDetails(){
   $("#invoiceStatus").textContent="Ready";
   $("#invoicePaymentStatus").textContent="Waiting for payment";
   renderQR(address,amount,c);
+  if(cashApp){
+    $("#qrCaption").textContent="Scan this QR code from Cash App Bitcoin, or copy the Aspen Labs BTC address below.";
+  }
  }else{
   disableWallet();
   $("#invoicePaymentStatus").textContent=!state.hasOrder?"No order in cart":!valid?"Waiting for current quote":"Wallet setup required";
@@ -214,7 +219,9 @@ async function loadRates(){
   state.rates=combined;state.source=sources.join(", ");
   $("#payRateStatus").textContent=sources.length?"Live market rates · "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}):"Live rates are reconnecting…";
   makeList();
-  if(!$("#payInvoice").hidden){
+  if(state.paymentMethod==="cashapp-btc"&&state.hasOrder){
+   openInvoice(COINS[0]);
+  }else if(!$("#payInvoice").hidden){
    const rate=Number(state.rates[state.coin.id]||0);
    state.quoted=rate>0&&state.hasOrder?state.total/rate:null;
    state.expiresAt=state.quoted?Date.now()+3600000:0;
@@ -225,10 +232,50 @@ async function loadRates(){
 }
 document.addEventListener("DOMContentLoaded",()=>{
  cartTotals();makeList();disableWallet();
+
+ const cashApp=state.paymentMethod==="cashapp-btc";
+ if(cashApp){
+   $("#payHeaderStatus").textContent="Cash App — Bitcoin";
+   $("#changeCurrency").hidden=true;
+   $("#cashAppGuide").hidden=false;
+   $("#cashAppOrderRow").hidden=false;
+   $("#cashAppSentButton").hidden=false;
+   $("#cashAppNote").hidden=false;
+   $("#invoiceHeading").innerHTML='Pay with <em>Cash App.</em>';
+   $("#invoiceDescription").textContent="Send Bitcoin from Cash App using the exact amount and Aspen Labs BTC address below.";
+ }else{
+   $("#changeCurrency").hidden=false;
+ }
+
  $("#changeCurrency").onclick=()=>selectScreen("choose");
  $("#copyWallet").onclick=()=>copy($("#walletAddress").value,$("#copyWallet"));
  $("#copyAmount").onclick=()=>copy($("#walletAmount").value,$("#copyAmount"));
  $("#copyWalletAmount").onclick=()=>copy($("#walletAmount").value,$("#copyWalletAmount"));
+
+ const sent=$("#cashAppSentButton");
+ if(sent)sent.onclick=()=>{
+   if(!state.hasOrder||state.coin.symbol!=="BTC"||!state.quoted||state.expiresAt<=Date.now()){
+     $("#cashAppSentStatus").textContent="Your BTC quote is not ready. Wait for the current amount and address before sending.";
+     return;
+   }
+   try{
+     const order=JSON.parse(localStorage.getItem("aspen-labs-payment-order-v1")||"null");
+     if(order){
+       order.paymentMethod="cashapp-btc";
+       order.paymentStatus="payment-submitted-manual-review";
+       order.paymentSubmittedAt=Date.now();
+       order.paymentCoin="BTC";
+       order.paymentAddress=WALLETS.BTC;
+       order.paymentAmount=formatCrypto(state.quoted,COINS[0]);
+       localStorage.setItem("aspen-labs-payment-order-v1",JSON.stringify(order));
+     }
+   }catch(_){}
+   sent.disabled=true;
+   sent.textContent="Payment submitted ✓";
+   $("#invoicePaymentStatus").textContent="Submitted for verification";
+   $("#cashAppSentStatus").textContent="Payment submitted for manual verification. Keep your Cash App transaction details until your order is confirmed.";
+ };
+
  state.timer=setInterval(updateClock,1000);
  loadRates();
 });
