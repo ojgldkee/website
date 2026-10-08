@@ -2,10 +2,10 @@
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#103c2b"><title>Crypto payment | Aspen Labs</title>
-<link rel="stylesheet" href="crypto-payment.css?v=20261008-cashapp3">
+<link rel="stylesheet" href="crypto-payment.css?v=20261008-paymethod1">
 <script src="store-data.js?v=announcements-20261008a"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
-<script src="crypto-payment.js?v=20261008-cashapp3" defer></script>
+<script src="crypto-payment.js?v=20261008-paymethod1" defer></script>
 </head><body class="forma-payment"><script>try{
  const snap=JSON.parse(localStorage.getItem('aspen-labs-payment-order-v1')||'null');
  const keys=['aspen-labs-cart-v2','aspen-labs-cart-backup-v1'];
@@ -16,6 +16,9 @@
 <header class="pay-header"><div class="pay-logo pay-logo-image"><img src="public/brand/aspen-labs-header.PNG" alt="Aspen Labs"></div><div class="pay-header-status"><span></span> <b id="payHeaderStatus">Crypto checkout</b></div></header>
 <main class="pay-main">
 <section class="pay-shell">
+ <button class="payment-method-switch" id="changePaymentMethod" type="button">
+   <span>Choose a different payment method</span><span aria-hidden="true">⌄</span>
+ </button>
  <div id="payChoose" class="pay-screen">
   <div class="pay-topline"><span class="pay-dot"></span> SELECT PAYMENT CURRENCY</div>
   <h1>Choose your <em>crypto.</em></h1>
@@ -31,7 +34,7 @@
   <button class="pay-change" id="changeCurrency" type="button">← Change currency</button>
   <div class="pay-invoice-head"><div class="pay-topline"><span class="pay-dot"></span> PAYMENT INSTRUCTIONS</div><h1 id="invoiceHeading">Send your <em>payment.</em></h1><p class="pay-description" id="invoiceDescription">Use your wallet and send only on the specified network.</p></div>
   <section class="cashapp-guide" id="cashAppGuide" hidden>
-    <div class="cashapp-guide-title"><span class="cashapp-mark">₿</span><div><strong>Pay with Cash App — Bitcoin</strong><small>Your BTC quote is locked for this payment session.</small></div></div>
+    <div class="cashapp-guide-title"><span class="cashapp-mark"><img src="https://cdn.simpleicons.org/cashapp/00D64F" alt=""></span><div><strong>Pay with Cash App — Bitcoin</strong><small>Your BTC quote is locked for this payment session.</small></div></div>
     <ol>
       <li><span>1</span><p>Open <strong>Cash App</strong> and go to Bitcoin. If needed, buy enough BTC to cover the exact amount shown below.</p></li>
       <li><span>2</span><p>Choose <strong>Send Bitcoin</strong>, then scan the QR code or paste the Aspen Labs Bitcoin address shown below.</p></li>
@@ -66,6 +69,35 @@
  </div>
 </section>
 </main>
+
+<div class="payment-method-modal" id="paymentMethodModal" hidden>
+  <button class="payment-method-backdrop" id="paymentMethodBackdrop" type="button" aria-label="Close payment method selector"></button>
+  <section class="payment-method-sheet" role="dialog" aria-modal="true" aria-labelledby="paymentMethodTitle">
+    <div class="payment-method-sheet-head">
+      <div>
+        <p class="pay-topline"><span class="pay-dot"></span> PAYMENT METHOD</p>
+        <h2 id="paymentMethodTitle">Choose how to pay</h2>
+        <p>Your order total and shipping stay the same when you switch methods.</p>
+      </div>
+      <button class="payment-method-close" id="paymentMethodClose" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="payment-method-options">
+      <button class="payment-method-option" id="selectCryptoMethod" type="button" data-payment-method="crypto">
+        <span class="payment-method-option-icon crypto-option-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14.36 10.36c.36-1.43-.87-2.2-2.67-2.72l.55-2.18-1.33-.33-.53 2.12c-.35-.09-.71-.17-1.07-.25l.54-2.14-1.33-.33-.55 2.18c-.29-.07-.57-.13-.84-.2v-.01l-1.84-.46-.35 1.42s.99.23.97.24c.54.13.64.49.62.77L5.86 11l.14.03-.15-.04-.87 3.49c-.07.16-.23.4-.61.31.01.02-.97-.24-.97-.24l-.66 1.52 1.74.44c.32.08.64.17.95.25l-.56 2.2 1.33.33.55-2.18c.36.1.71.19 1.06.27l-.55 2.17 1.33.33.55-2.2c2.27.43 3.98.26 4.7-1.8.58-1.66-.03-2.61-1.23-3.23.88-.2 1.54-.78 1.72-1.98Zm-3.08 4.32c-.41 1.66-3.2.76-4.1.54l.74-2.92c.9.22 3.79.65 3.36 2.38Zm.41-4.35c-.38 1.51-2.7.74-3.45.55l.67-2.65c.75.19 3.17.54 2.78 2.1Z"/></svg>
+        </span>
+        <span class="payment-method-option-copy"><strong>Crypto</strong><small>Choose BTC, ETH, USDT, SOL, LTC, BNB, XMR, and other supported currencies.</small></span>
+        <span class="payment-method-check">✓</span>
+      </button>
+
+      <button class="payment-method-option" id="selectCashAppMethod" type="button" data-payment-method="cashapp-btc">
+        <span class="payment-method-option-icon cashapp-option-icon"><img src="https://cdn.simpleicons.org/cashapp/00D64F" alt=""></span>
+        <span class="payment-method-option-copy"><strong>Cash App — Bitcoin</strong><small>Send BTC from Cash App using the Bitcoin network.</small></span>
+        <span class="payment-method-check">✓</span>
+      </button>
+    </div>
+  </section>
+</div>
 
 <script id="cryptoPresentationEnhancements">
 window.addEventListener("DOMContentLoaded",function(){
