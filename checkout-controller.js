@@ -223,7 +223,7 @@ function renderSummary() {
 
   const shippingLabel =
     method === "priority"
-      ? "Priority shipping"
+      ? "Express shipping"
       : method === "free"
         ? "Free tracked shipping"
         : "Standard shipping";
