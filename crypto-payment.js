@@ -38,6 +38,8 @@ function cartTotals(){
      shipping=Number(snap.shipping)||0;
      shippingMethod=snap.shippingMethod||"standard";
      total=Number(snap.total)||subtotal+shipping;
+     state.paymentMethod=requestedMethod==="cashapp-btc"?"cashapp-btc":(snap.paymentMethod==="cashapp-btc"?"cashapp-btc":"crypto");
+     state.orderId=snap.orderId||"";
    }
  }catch(_){}
 
