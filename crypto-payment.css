@@ -146,3 +146,15 @@ h1{font-size:clamp(38px,6vw,62px);letter-spacing:-.065em;line-height:1.1;margin:
   .cashapp-guide-title strong{font-size:15px}
   .cashapp-guide li p{font-size:11px}
 }
+
+.copy-field #copyWallet,.copy-field #copyWalletAmount{
+  font-size:10px!important;
+  font-weight:800!important;
+  color:#235f43!important;
+  white-space:nowrap;
+  padding:12px 14px!important;
+  border-left:1px solid #dfe8e1!important;
+}
+@media(max-width:600px){
+  .copy-field #copyWallet,.copy-field #copyWalletAmount{font-size:9px!important;padding:12px 10px!important}
+}
