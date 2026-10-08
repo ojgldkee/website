@@ -8,11 +8,16 @@ import { money } from "@/lib/commerce";
 import { store } from "@/data/store";
 import { useCart } from "./cart-provider";
 import { Quantity } from "./cart";
-export function ProductGallery({ product }: { product: Product }) {
+export function ProductGallery({ product, selectedVariantId }: { product: Product; selectedVariantId: string }) {
   const [active, setActive] = useState(0);
+  const startX = useRef<number | null>(null);
+  useEffect(() => {
+    const index = product.variants.findIndex(v => v.id === selectedVariantId);
+    setActive(Math.min(Math.max(index, 0), product.images.length - 1));
+  }, [selectedVariantId, product]);
   return (
     <div className="gallery">
-      <div className="gallery-main">
+      <div className="gallery-main" onTouchStart={e => { startX.current = e.touches[0].clientX; }} onTouchEnd={e => { if (startX.current === null) return; const dx = e.changedTouches[0].clientX - startX.current; if (Math.abs(dx) > 45) setActive(i => (i + (dx < 0 ? 1 : -1) + product.images.length) % product.images.length); startX.current = null; }}>
         <Image
           priority
           src={product.images[active].src}
@@ -68,7 +73,7 @@ export function ProductDetail({ product: p }: { product: Product }) {
   return (
     <>
       <div className="product-detail">
-        <ProductGallery product={p} />
+        <ProductGallery product={p} selectedVariantId={variantId} />
         <div className="product-info">
           <p className="eyebrow">{p.category}</p>
           <h1>{p.name}</h1>
