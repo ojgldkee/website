@@ -2,10 +2,10 @@
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#103c2b"><title>Crypto payment | Aspen Labs</title>
-<link rel="stylesheet" href="crypto-payment.css?v=20261008-paymethod2">
+<link rel="stylesheet" href="crypto-payment.css?v=20261008-polish4">
 <script src="store-data.js?v=announcements-20261008a"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
-<script src="crypto-payment.js?v=20261008-paymethod2" defer></script>
+<script src="crypto-payment.js?v=20261008-polish4" defer></script>
 </head><body class="forma-payment"><script>try{
  const snap=JSON.parse(localStorage.getItem('aspen-labs-payment-order-v1')||'null');
  const keys=['aspen-labs-cart-v2','aspen-labs-cart-backup-v1'];
@@ -39,7 +39,7 @@
       <li><span>1</span><p>Open <strong>Cash App</strong> and go to Bitcoin. If needed, buy enough BTC to cover the exact amount shown below.</p></li>
       <li><span>2</span><p>Choose <strong>Send Bitcoin</strong>, then scan the QR code or paste the Aspen Labs Bitcoin address shown below.</p></li>
       <li><span>3</span><p>Send the <strong>exact BTC amount</strong> displayed below using the <strong>Bitcoin network only</strong>.</p></li>
-      <li><span>4</span><p>After sending, tap <strong>I’ve sent payment</strong>. Aspen Labs will manually verify the payment before fulfillment.</p></li>
+      <li><span>4</span><p>After sending, keep your transaction ID. Payment is reviewed manually before your order is confirmed.</p></li>
     </ol>
   </section>
   <section class="pay-card invoice-card">
@@ -61,11 +61,12 @@
      <div id="cashAppOrderRow" hidden><span>Order ID</span><strong id="cashAppOrderId">—</strong></div>
    </div>
    <div class="pay-timer-track"><div id="invoiceTimerBar"></div></div>
-   <button class="cashapp-sent-button" id="cashAppSentButton" type="button" hidden>I’ve sent payment →</button>
+   <button class="cashapp-sent-button" id="cashAppSentButton" type="button" hidden disabled>Payment review</button>
    <p class="cashapp-sent-status" id="cashAppSentStatus" role="status"></p>
    <p class="cashapp-note" id="cashAppNote" hidden>Payment is verified manually. Keep your Cash App transaction details until your order is confirmed.</p>
    <button id="refreshInvoice" type="button" hidden aria-hidden="true" tabindex="-1">Refresh</button>
   </section>
+  <section class="aspen-payment-help"><div class="aspen-payment-help-head"><span>ORDER ASSISTANCE</span><h2>Questions about your payment?</h2><p>Keep your order ID and transaction ID. Payments are reviewed manually; please allow up to 24 hours for review after funds are received. Confirmation email is available once email notifications are connected.</p></div><div class="aspen-payment-help-details"><p><strong>Same-day shipping:</strong> Orders must be paid and verified before 2 PM PST to qualify for same-day processing, subject to business days and carrier pickup.</p><p><strong>Need help with your order?</strong> Contact our support team with your order ID and payment details. Never share your wallet recovery phrase or private keys.</p><a href="contact.html">Contact support →</a></div></section>
  </div>
 </section>
 </main>
