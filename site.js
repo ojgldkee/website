@@ -217,7 +217,7 @@ function renderProduct(){
  const detailEls=$('.product-accordions details');
  detailEls.forEach(d=>d.addEventListener('toggle',()=>{if(d.open)detailEls.forEach(o=>{if(o!==d)o.open=false})}));
  const viewCoa=$('#viewCoa');
- if(viewCoa)viewCoa.addEventListener('click',()=>{const docs=Array.isArray(p.coas)?p.coas.filter(d=>d&&d.url):[];if(docs.length){window.open(docs[0].url,'_blank','noopener,noreferrer')}else showCoaDialog(p)});
+ // View COA is handled by the delegated listener registered at startup.
 
  const track=$('#galleryTrack'),slides=$$('.product-slide',track),dots=$$('.gallery-dot');
  const goTo=i=>{currentSlide=(i+gallery.length)%gallery.length;slides[currentSlide].scrollIntoView({behavior:'smooth',inline:'start',block:'nearest'});dots.forEach((d,n)=>d.classList.toggle('active',n===currentSlide))};
@@ -391,5 +391,6 @@ function initCheckout(){
 function bindGlobal(){
  $('.menu-trigger').onclick=openMenu;$('.menu-close').onclick=closeMenu;$('.menu-overlay').onclick=closeMenu;$$('.cart-trigger').forEach(b=>b.onclick=openCart);$('.cart-close').onclick=closeCart;$('.cart-overlay').onclick=closeCart;$$('[data-year]').forEach(e=>e.textContent=new Date().getFullYear());renderCart();startReservationTimer()
 }
+document.addEventListener('click',event=>{const button=event.target.closest('#viewCoa');if(!button)return;event.preventDefault();event.stopPropagation();const slug=new URLSearchParams(location.search).get('slug');const product=productBySlug(slug)||P[0];const docs=product&&Array.isArray(product.coas)?product.coas.filter(d=>d&&d.url):[];if(docs.length){window.open(docs[0].url,'_blank','noopener,noreferrer')}else showCoaDialog(product)},true);
 document.addEventListener('DOMContentLoaded',()=>{header();footer();cartShell();bindGlobal();renderGrid('#home-products',P.slice(0,8));initCatalog();renderProduct();initTracking();initContact();initAccount();if(!window.ASPEN_CHECKOUT_CONTROLLER)initCheckout();renderFullCart();renderDocumentation();bindAdds()});
 })();
