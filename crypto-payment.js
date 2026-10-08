@@ -146,9 +146,11 @@ function renderQR(address,amount,c){
 }
 function invoiceDetails(){
  const c=state.coin,rate=Number(state.rates[c.id]||0),cashApp=state.paymentMethod==="cashapp-btc";
- $("#invoiceCoinName").textContent=c.name;$("#invoiceSymbol").textContent=c.symbol;
- $("#invoiceNetwork").textContent=c.network;$("#walletAmountCoin").textContent=c.symbol;
- const logo=$("#invoiceCoinLogo");logo.replaceChildren();const logoImg=document.createElement("img");logoImg.src=c.logo;logoImg.alt="";logoImg.decoding="async";logo.appendChild(logoImg);
+ $("#invoiceCoinName").textContent=cashApp?"Cash App — Bitcoin":c.name;$("#invoiceSymbol").textContent=c.symbol;
+ $("#invoiceNetwork").textContent=cashApp?"Bitcoin network":c.network;$("#walletAmountCoin").textContent=c.symbol;
+ const logo=$("#invoiceCoinLogo");logo.replaceChildren();const logoImg=document.createElement("img");
+ logoImg.src=cashApp?"https://cdn.simpleicons.org/cashapp/00D64F":c.logo;
+ logoImg.alt="";logoImg.decoding="async";logo.appendChild(logoImg);
  $("#networkWarningTitle").textContent=cashApp?"Bitcoin network only":"Send only "+c.symbol+" on "+c.network;
  const address=WALLETS[c.symbol];
  const valid=Boolean(state.hasOrder&&state.expiresAt>Date.now()&&state.quoted>0&&rate>0);
@@ -207,6 +209,71 @@ async function sourceCoinGecko(){
  const rates={};for(const c of COINS){const v=Number(d[c.id]?.usd);if(v>0)rates[c.id]=v}
  if(!rates.bitcoin)throw Error("No BTC");return {rates,name:"CoinGecko"};
 }
+function persistPaymentMethod(method){
+ state.paymentMethod=method==="cashapp-btc"?"cashapp-btc":"crypto";
+ try{
+  const order=JSON.parse(localStorage.getItem("aspen-labs-payment-order-v1")||"null");
+  if(order){
+   order.paymentMethod=state.paymentMethod;
+   localStorage.setItem("aspen-labs-payment-order-v1",JSON.stringify(order));
+  }
+ }catch(_){}
+ const url=new URL(location.href);
+ if(state.paymentMethod==="cashapp-btc")url.searchParams.set("method","cashapp-btc");
+ else url.searchParams.delete("method");
+ history.replaceState(null,"",url.pathname+url.search+url.hash);
+}
+function syncPaymentMethodUi(){
+ const cashApp=state.paymentMethod==="cashapp-btc";
+ $("#payHeaderStatus").textContent=cashApp?"Cash App — Bitcoin":"Crypto checkout";
+ $("#cashAppGuide").hidden=!cashApp;
+ $("#cashAppOrderRow").hidden=!cashApp;
+ $("#cashAppSentButton").hidden=!cashApp;
+ $("#cashAppNote").hidden=!cashApp;
+ $("#changeCurrency").hidden=cashApp;
+ $("#invoiceHeading").innerHTML=cashApp?'Pay with <em>Cash App.</em>':'Send your <em>payment.</em>';
+ $("#invoiceDescription").textContent=cashApp
+   ?"Send Bitcoin from Cash App using the exact amount and Aspen Labs BTC address below."
+   :"Use your wallet and send only on the specified network.";
+ document.querySelectorAll(".payment-method-option").forEach(btn=>{
+   btn.classList.toggle("selected",btn.dataset.paymentMethod===state.paymentMethod);
+ });
+ const sent=$("#cashAppSentButton");
+ if(sent&&cashApp&&!sent.disabled)sent.textContent="I’ve sent payment →";
+}
+function openPaymentMethodSelector(){
+ const modal=$("#paymentMethodModal");
+ if(!modal)return;
+ syncPaymentMethodUi();
+ modal.hidden=false;
+ document.body.classList.add("payment-method-open");
+}
+function closePaymentMethodSelector(){
+ const modal=$("#paymentMethodModal");
+ if(!modal)return;
+ modal.hidden=true;
+ document.body.classList.remove("payment-method-open");
+}
+function choosePaymentMethod(method){
+ const cashApp=method==="cashapp-btc";
+ persistPaymentMethod(cashApp?"cashapp-btc":"crypto");
+ const sent=$("#cashAppSentButton");
+ if(sent){
+  sent.disabled=false;
+  sent.textContent="I’ve sent payment →";
+ }
+ const sentStatus=$("#cashAppSentStatus");
+ if(sentStatus)sentStatus.textContent="";
+ syncPaymentMethodUi();
+ closePaymentMethodSelector();
+ if(cashApp){
+  state.coin=COINS[0];
+  openInvoice(COINS[0]);
+ }else{
+  selectScreen("choose");
+  makeList();
+ }
+}
 async function loadRates(){
  if(state.loading)return;state.loading=true;
  $("#payRateStatus").textContent="Loading current market prices…";
@@ -234,22 +301,17 @@ async function loadRates(){
 }
 document.addEventListener("DOMContentLoaded",()=>{
  cartTotals();makeList();disableWallet();
-
- const cashApp=state.paymentMethod==="cashapp-btc";
- if(cashApp){
-   $("#payHeaderStatus").textContent="Cash App — Bitcoin";
-   $("#changeCurrency").hidden=true;
-   $("#cashAppGuide").hidden=false;
-   $("#cashAppOrderRow").hidden=false;
-   $("#cashAppSentButton").hidden=false;
-   $("#cashAppNote").hidden=false;
-   $("#invoiceHeading").innerHTML='Pay with <em>Cash App.</em>';
-   $("#invoiceDescription").textContent="Send Bitcoin from Cash App using the exact amount and Aspen Labs BTC address below.";
- }else{
-   $("#changeCurrency").hidden=false;
- }
+ syncPaymentMethodUi();
 
  $("#changeCurrency").onclick=()=>selectScreen("choose");
+ $("#changePaymentMethod").onclick=openPaymentMethodSelector;
+ $("#paymentMethodBackdrop").onclick=closePaymentMethodSelector;
+ $("#paymentMethodClose").onclick=closePaymentMethodSelector;
+ $("#selectCryptoMethod").onclick=()=>choosePaymentMethod("crypto");
+ $("#selectCashAppMethod").onclick=()=>choosePaymentMethod("cashapp-btc");
+ document.addEventListener("keydown",event=>{
+   if(event.key==="Escape"&&!$("#paymentMethodModal").hidden)closePaymentMethodSelector();
+ });
  $("#copyWallet").onclick=()=>copy($("#walletAddress").value,$("#copyWallet"));
  $("#copyAmount").onclick=()=>copy($("#walletAmount").value,$("#copyAmount"));
  $("#copyWalletAmount").onclick=()=>copy($("#walletAmount").value,$("#copyWalletAmount"));
