@@ -82,6 +82,7 @@ function syncShipping(lines){
   });
   const crypto=$('input[name="payment"][value="crypto"]');
   if(crypto){
+    $('input[name="payment"]',form).forEach(r=>{r.checked=false;r.closest('.checkout-method')?.classList.remove('selected')});
     crypto.checked=true;
     crypto.closest('.checkout-method')?.classList.add('selected');
   }
@@ -190,9 +191,11 @@ function init(){
   renderSummary();
 
   $("#shippingMethods")?.addEventListener("click",e=>{
-    const card=e.target.closest(".checkout-method");if(!card)return;
+    const card=e.target.closest(".checkout-method");if(!card||card.hidden)return;
     const radio=$('input[name="ship"]',card);if(!radio||radio.disabled)return;
+    $('input[name="ship"]',form).forEach(r=>{r.checked=false;r.closest('.checkout-method')?.classList.remove('selected')});
     radio.checked=true;
+    card.classList.add('selected');
     localStorage.setItem(SHIP_KEY,radio.value);
     saveData(form);
     renderSummary();
@@ -200,6 +203,7 @@ function init(){
   form.addEventListener("change",e=>{
     saveData(form);
     if(e.target.matches('input[name="ship"]')){
+      $('input[name="ship"]',form).forEach(r=>r.closest('.checkout-method')?.classList.toggle('selected',r.checked));
       localStorage.setItem(SHIP_KEY,e.target.value);
       renderSummary();
     }
