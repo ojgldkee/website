@@ -19,6 +19,26 @@ window.STORE = {
 
 window.PRODUCTS = [
   {
+    slug:"hgh-kit",
+    name:"HGH Kit — 10 Vials",
+    category:"Kits",
+    price:115,
+    badge:"KIT",
+    image:"public/images/products/hgh/10iu.PNG",
+    gallery:["public/images/products/hgh/10iu.PNG","public/images/products/hgh/24iu.PNG","public/images/products/hgh/36iu.PNG","public/images/products/hgh/100iu.PNG"],
+    subtitle:"10-vial kit with selectable IU strength.",
+    description:"HGH kit with ten vials. Choose the strength to view its corresponding product image.",
+    specs:[["Format","10-vial kit"],["Available strengths","10 IU · 24 IU · 36 IU · 100 IU"],["Volume","3 mL"]],
+    variants:[
+      {label:"10 IU / 3 mL",amount:10,price:115},
+      {label:"24 IU / 3 mL",amount:24,price:185},
+      {label:"36 IU / 3 mL",amount:36,price:250},
+      {label:"100 IU / 3 mL",amount:100,price:500}
+    ],
+    document:"Product documentation"
+  },
+
+  {
     slug:"retatrutide-kit",
     name:"RETATRUTIDE Kit — 10 Vials",
     category:"Kits",
